@@ -201,7 +201,7 @@ body,html{min-height:100%;font-family:Inter,sans-serif;background:#0f172a;color:
 const QS=new URLSearchParams(location.search);
 const BATCH_ID=QS.get('batchId')||'';
 const BATCH_NAME=QS.get('batchName')||'';
-if(!BATCH_ID)location.href='https://alparsalan005.github.io/rarestudyapp/batches';
+if(!BATCH_ID)location.href='https://pw-aura-max.vercel.app/batches';
 document.getElementById('back-label').textContent=BATCH_NAME||'Batches';
 const TEACHER_BG='https://study-mf.pw.live/static/image/teacherbg.807b2b2f.png';
 const PW_HDR={"Accept-Encoding": "gzip", "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 11; SM-A707F Build/RP1A.200720.012)", "authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3OTAyMzU5ODUsImV4cCI6MTc5MDg0MDc4NS4wNDgsImRhdGEiOnsiX2lkIjoiNjhiODA3MjgyYzQxMTYxNTI5N2ZjMWM1IiwidXNlcm5hbWUiOiI5OTc3NDY3MjA1IiwiZmlyc3ROYW1lIjoiIiwibGFzdE5hbWUiOiIiLCJvcmdhbml6YXRpb24iOnsiX2lkIjoiNWViMzkzZWU5NWZhYjc0NjhhNzlkMTg5Iiwid2Vic2l0ZSI6InBoeXNpY3N3YWxsYWguY29tIiwibmFtZSI6IlBoeXNpY3N3YWxsYWgifSwicm9sZXMiOlsiNWIyN2JkOTY1ODQyZjk1MGE3NzhjNmVmIl0sImNvdW50cnlHcm91cCI6IklOIiwib25lUm9sZXMiOltdLCJ0eXBlIjoiVVNFUiJ9LCJqdGkiOiJhSDNtNzlYb1J1MmJSU1o0bzlBU2RBXzY4YjgwNzI4MmM0MTE2MTUyOTdmYzFjNSJ9.DcusWUAmEB8lfaI2qZzn9rHvi4U_lIb7y8n9ohJa6d0", "client-id": "ADMIN", "client-type": "MOBILE", "client-version": "538", "content-type": "application/json", "device-meta": "{\"APP_VERSION\":\"538\",\"APP_VERSION_NAME\":\"15.32.0\",\"DEVICE_MAKE\":\"Samsung\",\"DEVICE_MODEL\":\"SM-A707F\",\"OS_VERSION\":\"11\",\"PACKAGE_NAME\":\"xyz.penpencil.physicswala\",\"network\":\"wifi_data\",\"carrier\":\"UNDEFINED\"}", "randomid": "3d3b49f068728fa3", "referer": "https://android.pw.live"};
@@ -298,7 +298,7 @@ if(it.type==='LECTURE'&&isVideoClass(d)){
 any=true;
 const a=document.createElement('a');
 a.className='sc';
-a.href=`https://alparsalan005.github.io/rarestudyapp/schedule-details.html?batchId=${ep(BATCH_ID)}&subjectId=${ep(sid)}&scheduleId=${ep(schId)}&tap=video`;
+a.href=`https://pw-aura-max.vercel.app/schedule-details.html?batchId=${ep(BATCH_ID)}&subjectId=${ep(sid)}&scheduleId=${ep(schId)}&tap=video`;
 if(tagL==='upcoming'){
 a.onclick=ev=>{ev.preventDefault();showMsg(`Class not started yet. Begins at ${st}.`);};
 }
@@ -333,7 +333,7 @@ any=true;
 const dpp=d.dppData||{};
 const a=document.createElement('a');
 a.className='sc';
-a.href=`https://alparsalan005.github.io/rarestudyapp/schedule-details.html?batchId=${ep(BATCH_ID)}&subjectId=${ep(sid)}&scheduleId=${ep(schId)}&tap=note&dppId=${ep(dpp.dppId||'')}&isDpp=true&isSubjective=${dpp.isSubjective?'true':'false'}`;
+a.href=`https://pw-aura-max.vercel.app/schedule-details.html?batchId=${ep(BATCH_ID)}&subjectId=${ep(sid)}&scheduleId=${ep(schId)}&tap=note&dppId=${ep(dpp.dppId||'')}&isDpp=true&isSubjective=${dpp.isSubjective?'true':'false'}`;
 a.target='_self';
 const body=document.createElement('div');
 body.className='sc-body';
@@ -367,7 +367,7 @@ if(!subs.length){list.innerHTML='<li style="text-align:center;padding:40px;color
 subs.forEach(sub=>{
 const img=sub.imageId?sub.imageId.baseUrl+sub.imageId.key:'https://cdn-icons-png.flaticon.com/512/5780/5780875.png';
 const li=document.createElement('li');li.className='subj-item';
-li.innerHTML=`<a class="subj-link" href="https://alparsalan005.github.io/rarestudyapp/content.html?batchId=${ep(BATCH_ID)}&subjectId=${ep(sub._id)}&batchName=${ep(BATCH_NAME)}&subjectName=${ep(sub.subject)}"><img class="subj-img" src="${esc(img)}" alt="${esc(sub.subject)}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/5780/5780875.png'"><div class="subj-cnt"><div class="subj-info"><div class="subj-name">${esc(sub.subject)}</div><div class="subj-count">${sub.tagCount||0} Chapters</div></div><span class="subj-arr"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span></div></a>`;
+li.innerHTML=`<a class="subj-link" href="https://pw-aura-max.vercel.app/content.html?batchId=${ep(BATCH_ID)}&subjectId=${ep(sub._id)}&batchName=${ep(BATCH_NAME)}&subjectName=${ep(sub.subject)}"><img class="subj-img" src="${esc(img)}" alt="${esc(sub.subject)}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/5780/5780875.png'"><div class="subj-cnt"><div class="subj-info"><div class="subj-name">${esc(sub.subject)}</div><div class="subj-count">${sub.tagCount||0} Chapters</div></div><span class="subj-arr"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span></div></a>`;
 list.appendChild(li);
 });
 }catch{document.getElementById('subj-list').innerHTML='<li style="text-align:center;padding:40px;color:#64748b">Failed to load</li>';}
@@ -388,12 +388,12 @@ const data=await pw(`https://api.penpencil.co/v2/programs/${khazanaId}/filters?p
 const khName=data.data?.name||'Khazana';
 list.innerHTML='';
 const li=document.createElement('li');li.className='subj-item';
-li.innerHTML=`<a class="subj-link" href="https://alparsalan005.github.io/rarestudyapp/khazana.html?khazanaProgramId=${ep(khazanaId)}&batchName=${ep(BATCH_NAME)}&batchId=${ep(BATCH_ID)}"><img class="subj-img" src="https://cdn-icons-png.flaticon.com/512/5780/5780875.png" alt="${esc(khName)}"><div class="subj-cnt"><div class="subj-info"><div class="subj-name">${esc(khName)}</div></div><span class="subj-arr"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span></div></a>`;
+li.innerHTML=`<a class="subj-link" href="https://pw-aura-max.vercel.app/khazana.html?khazanaProgramId=${ep(khazanaId)}&batchName=${ep(BATCH_NAME)}&batchId=${ep(BATCH_ID)}"><img class="subj-img" src="https://cdn-icons-png.flaticon.com/512/5780/5780875.png" alt="${esc(khName)}"><div class="subj-cnt"><div class="subj-info"><div class="subj-name">${esc(khName)}</div></div><span class="subj-arr"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span></div></a>`;
 list.appendChild(li);
 }catch{
 list.innerHTML='';
 const li=document.createElement('li');li.className='subj-item';
-li.innerHTML=`<a class="subj-link" href="https://alparsalan005.github.io/rarestudyapp/khazana.html?khazanaProgramId=${ep(khazanaId)}&batchName=${ep(BATCH_NAME)}&batchId=${ep(BATCH_ID)}"><img class="subj-img" src="https://cdn-icons-png.flaticon.com/512/5780/5780875.png" alt="Khazana"><div class="subj-cnt"><div class="subj-info"><div class="subj-name">Khazana</div></div><span class="subj-arr"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span></div></a>`;
+li.innerHTML=`<a class="subj-link" href="https://pw-aura-max.vercel.app/khazana.html?khazanaProgramId=${ep(khazanaId)}&batchName=${ep(BATCH_NAME)}&batchId=${ep(BATCH_ID)}"><img class="subj-img" src="https://cdn-icons-png.flaticon.com/512/5780/5780875.png" alt="Khazana"><div class="subj-cnt"><div class="subj-info"><div class="subj-name">Khazana</div></div><span class="subj-arr"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span></div></a>`;
 list.appendChild(li);
 }
 }
@@ -504,7 +504,7 @@ card.querySelector('.test-card-body').addEventListener('click',()=>{
 const si=card.dataset.siso,isRa=card.dataset.ra==='true',held=card.dataset.held;
 if(si){const ms=new Date(si).getTime();if(!isNaN(ms)&&ms>Date.now()){showInfo('⏳','Test Not Started Yet',`Scheduled:\n\n📅 ${held}\n\nCome back at scheduled time 💪`);return;}}
 if(isRa){showInfo('📊','Result Not Published','Result not published yet. Once out, you can start. 🔔');return;}
-location.href=`https://alparsalan005.github.io/rarestudyapp/get-batch-test.html?testId=${ep(card.dataset.tid)}&testName=${ep(card.dataset.tname)}&batchId=${ep(BATCH_ID)}`;
+location.href=`https://pw-aura-max.vercel.app/get-batch-test.html?testId=${ep(card.dataset.tid)}&testName=${ep(card.dataset.tname)}&batchId=${ep(BATCH_ID)}`;
 });
 list.appendChild(card);
 });
