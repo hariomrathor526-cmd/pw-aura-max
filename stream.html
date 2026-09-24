@@ -180,7 +180,7 @@ function buildNoteItems(item, isDpp){
             let gIdx=0;
             for(let i=0;i<hwIdx;i++) gIdx+=(item.homeworkIds[i].attachmentIds||[]).length;
             gIdx+=attIdx;
-            const href=`https://alparsalan005.github.io/rarestudyapp/schedule-details.html?batchId=${ep(BATCH_ID)}&subjectId=${ep(SUBJECT_ID)}&scheduleId=${ep(item._id)}&tap=note&noteIndex=${gIdx}&isDpp=${isDpp?'true':'false'}`;
+            const href=`https://pw-aura-max.vercel.app/schedule-details.html?batchId=${ep(BATCH_ID)}&subjectId=${ep(SUBJECT_ID)}&scheduleId=${ep(item._id)}&tap=note&noteIndex=${gIdx}&isDpp=${isDpp?'true':'false'}`;
             const li=document.createElement('li');
             li.className='content-item';
             li.innerHTML=`<a class="content-link" href="${esc(href)}">
@@ -199,7 +199,7 @@ function buildNoteItems(item, isDpp){
 function buildDppItem(item){
     const test=item.test||{};
     const isFree=item.isFree===true;
-    const href=`https://alparsalan005.github.io/rarestudyapp/get-dpp-quiz?batchId=${ep(BATCH_ID)}&scheduleId=${ep(item.scheduleId||'')}&testId=${ep(test._id||'')}&tag=${ep(item.tag||'Start')}&isFreeTest=${isFree}`;
+    const href=`https://pw-aura-max.vercel.app/get-dpp-quiz?batchId=${ep(BATCH_ID)}&scheduleId=${ep(item.scheduleId||'')}&testId=${ep(test._id||'')}&tag=${ep(item.tag||'Start')}&isFreeTest=${isFree}`;
     const li=document.createElement('li');
     li.className='dpp-item';
     li.innerHTML=`<a class="dpp-link" href="${esc(href)}">
