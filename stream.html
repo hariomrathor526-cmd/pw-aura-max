@@ -61,7 +61,6 @@ body,html{min-height:100%;font-family:Inter,sans-serif;background:#0f172a;color:
 </style>
 </head>
 <body>
-</div>
 
 <div class="back-section">
     <button class="back-link" onclick="history.back()">
@@ -105,7 +104,7 @@ document.getElementById('back-label').textContent = CHAPTER_NAME||'Chapters';
 const SITE_NAME='rarestudy';
 document.title = (CHAPTER_NAME||'Content')+' — '+SITE_NAME;
 
-const PW_HDR={"Accept-Encoding": "gzip", "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 11; SM-A707F Build/RP1A.200720.012)", "authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3ODI4ODA3NzUuMTU1LCJkYXRhIjp7Il9pZCI6IjYxMzlkZGI2ZDljZmEzMDAxODEzOGJmZiIsInVzZXJuYW1lIjoiODExNTcwNzY1OSIsImZpcnN0TmFtZSI6Ik1vaGl0IiwibGFzdE5hbWUiOiJLdW1hciBHdXB0YSIsIm9yZ2FuaXphdGlvbiI6eyJfaWQiOiI1ZWIzOTNlZTk1ZmFiNzQ2OGE3OWQxODkiLCJ3ZWJzaXRlIjoicGh5c2ljc3dhbGxhaC5jb20iLCJuYW1lIjoiUGh5c2ljc3dhbGxhaCJ9LCJlbWFpbCI6bnVsbCwicm9sZXMiOlsiNWIyN2JkOTY1ODQyZjk1MGE3NzhjNmVmIl0sImNvdW50cnlHcm91cCI6IklOIiwidHlwZSI6IlVTRVIifSwianRpIjoickQwdHVHTmhUektuSzJELXJSdVEtZ182MTM5ZGRiNmQ5Y2ZhMzAwMTgxMzhiZmYiLCJpYXQiOjE3ODIyNzU5NzV9.8W3qjF4tHz7qnbf2L-hydaLAgdZ3WZcIGugLqGkzt6U", "client-id": "ADMIN", "client-type": "MOBILE", "client-version": "538", "content-type": "application/json", "device-meta": "{\"APP_VERSION\":\"538\",\"APP_VERSION_NAME\":\"15.32.0\",\"DEVICE_MAKE\":\"Samsung\",\"DEVICE_MODEL\":\"SM-A707F\",\"OS_VERSION\":\"11\",\"PACKAGE_NAME\":\"xyz.penpencil.physicswala\",\"network\":\"wifi_data\",\"carrier\":\"UNDEFINED\"}", "randomid": "3d3b49f068728fa3", "referer": "https://android.pw.live"};
+const PW_HDR={"Accept-Encoding": "gzip", "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 11; SM-A707F Build/RP1A.200720.012)", "authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3OTAyMzU5ODUsImV4cCI6MTc5MDg0MDc4NS4wNDgsImRhdGEiOnsiX2lkIjoiNjhiODA3MjgyYzQxMTYxNTI5N2ZjMWM1IiwidXNlcm5hbWUiOiI5OTc3NDY3MjA1IiwiZmlyc3ROYW1lIjoiIiwibGFzdE5hbWUiOiIiLCJvcmdhbml6YXRpb24iOnsiX2lkIjoiNWViMzkzZWU5NWZhYjc0NjhhNzlkMTg5Iiwid2Vic2l0ZSI6InBoeXNpY3N3YWxsYWguY29tIiwibmFtZSI6IlBoeXNpY3N3YWxsYWgifSwicm9sZXMiOlsiNWIyN2JkOTY1ODQyZjk1MGE3NzhjNmVmIl0sImNvdW50cnlHcm91cCI6IklOIiwib25lUm9sZXMiOltdLCJ0eXBlIjoiVVNFUiJ9LCJqdGkiOiJhSDNtNzlYb1J1MmJSU1o0bzlBU2RBXzY4YjgwNzI4MmM0MTE2MTUyOTdmYzFjNSJ9.DcusWUAmEB8lfaI2qZzn9rHvi4U_lIb7y8n9ohJa6d0", "client-id": "ADMIN", "client-type": "MOBILE", "client-version": "538", "content-type": "application/json", "device-meta": "{\"APP_VERSION\":\"538\",\"APP_VERSION_NAME\":\"15.32.0\",\"DEVICE_MAKE\":\"Samsung\",\"DEVICE_MODEL\":\"SM-A707F\",\"OS_VERSION\":\"11\",\"PACKAGE_NAME\":\"xyz.penpencil.physicswala\",\"network\":\"wifi_data\",\"carrier\":\"UNDEFINED\"}", "randomid": "3d3b49f068728fa3", "referer": "https://android.pw.live"};
 async function pw(url){return fetch(url,{headers:PW_HDR}).then(r=>r.json());}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function ep(v){return encodeURIComponent(v||'')}
