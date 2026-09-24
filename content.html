@@ -50,7 +50,7 @@ body,html{min-height:100%;font-family:Inter,sans-serif;background:#0f172a;color:
 const QS=new URLSearchParams(location.search);
 const BATCH_ID=QS.get('batchId')||'',SUBJECT_ID=QS.get('subjectId')||'';
 const BATCH_NAME=QS.get('batchName')||'',SUBJECT_NAME=QS.get('subjectName')||'';
-if(!BATCH_ID||!SUBJECT_ID)location.href='https://alparsalan005.github.io/rarestudyapp/batches';
+if(!BATCH_ID||!SUBJECT_ID)location.href='https://pw-aura-max.vercel.app/batches';
 document.getElementById('back-label').textContent=SUBJECT_NAME||'Subjects';
 
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
@@ -91,7 +91,7 @@ async function loadPage(){
         }
         data.data.forEach(ch=>{
             const li=document.createElement('li'); li.className='chapter-item';
-            li.innerHTML=`<a class="chapter-link" href="https://alparsalan005.github.io/rarestudyapp/stream.html?batchId=${ep(BATCH_ID)}&subjectId=${ep(SUBJECT_ID)}&chapterId=${ep(ch._id)}&batchName=${ep(BATCH_NAME)}&subjectName=${ep(SUBJECT_NAME)}&chapterName=${ep(ch.name)}&section=videos">
+            li.innerHTML=`<a class="chapter-link" href="https://pw-aura-max.vercel.app/stream.html?batchId=${ep(BATCH_ID)}&subjectId=${ep(SUBJECT_ID)}&chapterId=${ep(ch._id)}&batchName=${ep(BATCH_NAME)}&subjectName=${ep(SUBJECT_NAME)}&chapterName=${ep(ch.name)}&section=videos">
                 <div class="chapter-content"><div class="chapter-name">${esc(ch.name)}</div><div class="chapter-counts">${ch.videos||0} Videos | ${ch.exercises||0} Exercises | ${ch.notes||0} Notes</div></div>
                 <span class="chapter-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></span></a>`;
             list.appendChild(li);
