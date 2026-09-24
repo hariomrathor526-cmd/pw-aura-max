@@ -99,7 +99,7 @@ const SUBJECT_NAME = QS.get('subjectName')||'';
 const CHAPTER_NAME = QS.get('chapterName')||'';
 const INIT_SEC     = QS.get('section')    ||'videos';
 
-if(!BATCH_ID||!SUBJECT_ID||!CHAPTER_ID) location.href='https://alparsalan005.github.io/rarestudyapp/batches';
+if(!BATCH_ID||!SUBJECT_ID||!CHAPTER_ID) location.href='https://pw-aura-max.vercel.app/batches';
 document.getElementById('back-label').textContent = CHAPTER_NAME||'Chapters';
 const SITE_NAME='rarestudy';
 document.title = (CHAPTER_NAME||'Content')+' — '+SITE_NAME;
@@ -157,7 +157,7 @@ function buildVideoItem(item){
     const id_=item._id||'';
     const name=item.topic||vd.name||'';
     const done=getC()[id_]?'done':'';
-    const href=`https://alparsalan005.github.io/rarestudyapp/schedule-details.html?batchId=${ep(BATCH_ID)}&subjectId=${ep(SUBJECT_ID)}&scheduleId=${ep(id_)}&tap=video`;
+    const href=`https://pw-aura-max.vercel.app/schedule-details.html?batchId=${ep(BATCH_ID)}&subjectId=${ep(SUBJECT_ID)}&scheduleId=${ep(id_)}&tap=video`;
     const li=document.createElement('li');
     li.className='content-item';
     li.innerHTML=`<a class="content-link" href="${esc(href)}">
