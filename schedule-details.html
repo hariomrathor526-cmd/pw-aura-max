@@ -82,8 +82,7 @@
                 object-fit: contain;
                 background: #000;
                 display: block;
-                outline: none;
-                pointer-events: none
+                outline: none
             }
 
             .ov {
@@ -197,12 +196,7 @@
                 inset: 0;
                 z-index: 19;
                 background: transparent;
-                cursor: pointer;
-                display: none
-            }
-
-            #tap-shield.on {
-                display: block
+                cursor: pointer
             }
 
             #player-header {
@@ -326,10 +320,6 @@
                 padding: 6px 0 10px
             }
 
-            body.yt-mode #player-footer,body.yt-mode #bufSpin,body.yt-mode #ovLoad,body.yt-mode #ovErr {
-                display: none!important
-            }
-
             .prog-wrap {
                 padding: 0 14px 6px
             }
@@ -362,27 +352,6 @@
                 padding: 1px 5px;
                 border-radius: 4px;
                 font-family: sans-serif
-            }
-
-            .live-badge {
-                display: none;
-                align-items: center;
-                gap: 4px;
-                font-size: 11px;
-                font-weight: 700;
-                color: #fff
-            }
-
-            .live-badge.on {
-                display: flex
-            }
-
-            .live-dot {
-                width: 7px;
-                height: 7px;
-                border-radius: 50%;
-                background: red;
-                animation: blink 1.4s ease infinite
             }
 
             .bar-wrap {
@@ -429,12 +398,7 @@
                 background: #fff;
                 border-radius: 50%;
                 pointer-events: none;
-                box-shadow: 0 0 5px rgba(0,0,0,.6);
-                will-change: left
-            }
-
-            .bar-wrap:hover .bar-thumb {
-                transform: translate(-50%,-50%) scale(1.3)
+                box-shadow: 0 0 5px rgba(0,0,0,.6)
             }
 
             .bar-input {
@@ -494,8 +458,7 @@
                 outline: none;
                 cursor: pointer;
                 opacity: 0;
-                transition: width .3s,opacity .3s;
-                margin-left: 0
+                transition: width .3s,opacity .3s
             }
 
             .vol-grp:hover .vol-range,.vol-grp:focus-within .vol-range {
@@ -510,22 +473,6 @@
                 height: 13px;
                 border-radius: 50%;
                 background: #fff
-            }
-
-            .vol-range::-moz-range-thumb {
-                width: 13px;
-                height: 13px;
-                border-radius: 50%;
-                background: #fff;
-                border: none
-            }
-
-            .tl-btn {
-                display: none
-            }
-
-            .layout-desktop .tl-btn {
-                display: flex
             }
 
             #settBd {
@@ -545,8 +492,7 @@
                 right: 8px;
                 width: min(260px,calc(100% - 16px));
                 z-index: 100;
-                display: none;
-                isolation: isolate
+                display: none
             }
 
             #settPanel.on {
@@ -592,10 +538,6 @@
                 border-bottom: none
             }
 
-            .s-row:active {
-                background: rgba(255,255,255,.05)
-            }
-
             .s-lbl {
                 color: #fff;
                 font-size: 15px;
@@ -639,10 +581,6 @@
                 border-bottom: 1px solid rgba(255,255,255,.06)
             }
 
-            .sopt:last-child {
-                border-bottom: none
-            }
-
             .sopt.active {
                 background: rgba(90,75,218,.2)
             }
@@ -650,62 +588,6 @@
             .sopt span {
                 color: #fff;
                 font-size: 14px
-            }
-
-            .radio {
-                width: 18px;
-                height: 18px;
-                border-radius: 50%;
-                border: 2px solid rgba(255,255,255,.3);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                flex-shrink: 0
-            }
-
-            .sopt.active .radio {
-                border-color: var(--accent);
-                background: var(--accent)
-            }
-
-            .rdot {
-                width: 6px;
-                height: 6px;
-                border-radius: 50%;
-                background: #fff;
-                display: none
-            }
-
-            .sopt.active .rdot {
-                display: block
-            }
-
-            @keyframes sk-l {
-                0%,100% {
-                    transform: rotate(0)
-                }
-
-                50% {
-                    transform: rotate(-35deg)
-                }
-            }
-
-            @keyframes sk-r {
-                0%,100% {
-                    transform: rotate(0)
-                }
-
-                50% {
-                    transform: rotate(35deg)
-                }
-            }
-
-            .anim-l svg {
-                animation: sk-l .32s ease
-            }
-
-            .anim-r svg {
-                animation: sk-r .32s ease
             }
 
             #side-panel {
@@ -716,7 +598,7 @@
                 border-left: 1px solid var(--border);
                 display: none;
                 flex-direction: column;
-                transition: width .3s cubic-bezier(.4,0,.2,1)
+                transition: width .3s ease
             }
 
             #side-panel.open {
@@ -731,7 +613,7 @@
                 flex-direction: column;
                 height: 0;
                 overflow: hidden;
-                transition: height .35s cubic-bezier(.4,0,.2,1)
+                transition: height .35s ease
             }
 
             #bottom-panel.open {
@@ -744,10 +626,6 @@
 
             #shell.layout-desktop #bottom-panel {
                 display: none!important
-            }
-
-            #shell.layout-desktop #main-row {
-                flex: 1
             }
 
             #shell.layout-mobile #bottom-panel {
@@ -818,15 +696,7 @@
                 cursor: pointer;
                 border: none;
                 background: transparent;
-                border-bottom: 2px solid transparent;
-                transition: color .15s,border-color .15s;
-                white-space: nowrap
-            }
-
-            .ptab svg {
-                width: 14px;
-                height: 14px;
-                flex-shrink: 0
+                border-bottom: 2px solid transparent
             }
 
             .ptab.active {
@@ -836,20 +706,7 @@
 
             .panel-body {
                 flex: 1;
-                overflow-y: auto;
-                -webkit-overflow-scrolling: touch;
-                overscroll-behavior: contain;
-                scrollbar-width: thin;
-                scrollbar-color: rgba(255,255,255,.12) transparent
-            }
-
-            .panel-body::-webkit-scrollbar {
-                width: 3px
-            }
-
-            .panel-body::-webkit-scrollbar-thumb {
-                background: rgba(255,255,255,.12);
-                border-radius: 2px
+                overflow-y: auto
             }
 
             .ptab-panel {
@@ -873,12 +730,7 @@
                 overflow: hidden;
                 cursor: pointer;
                 border: 2px solid transparent;
-                transition: border-color .15s;
                 background: #000
-            }
-
-            .tl-card:hover {
-                border-color: rgba(90,75,218,.5)
             }
 
             .tl-card.cur {
@@ -902,19 +754,13 @@
                 padding: 20px 10px 8px;
                 display: flex;
                 align-items: flex-end;
-                justify-content: space-between;
-                gap: 6px
+                justify-content: space-between
             }
 
             .tl-name {
                 font-size: 12px;
                 font-weight: 700;
-                color: #fff;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                flex: 1;
-                min-width: 0
+                color: #fff
             }
 
             .tl-ts {
@@ -923,35 +769,15 @@
                 font-family: monospace;
                 font-size: 10px;
                 padding: 2px 5px;
-                border-radius: 4px;
-                white-space: nowrap;
-                flex-shrink: 0
-            }
-
-            .tl-cur-badge {
-                position: absolute;
-                top: 6px;
-                left: 6px;
-                background: var(--accent);
-                color: #fff;
-                font-size: 9px;
-                font-weight: 700;
-                padding: 2px 7px;
-                border-radius: 20px;
-                display: none;
-                letter-spacing: .3px
-            }
-
-            .tl-card.cur .tl-cur-badge {
-                display: block
+                border-radius: 4px
             }
 
             .acc {
                 background: var(--surface2);
                 border: 1px solid var(--border);
                 border-radius: 10px;
-                overflow: hidden;
-                margin-bottom: 10px
+                margin-bottom: 10px;
+                overflow: hidden
             }
 
             .acc-hdr {
@@ -959,156 +785,28 @@
                 align-items: center;
                 justify-content: space-between;
                 padding: 12px 14px;
-                cursor: pointer;
-                gap: 8px
-            }
-
-            .acc-hdr:active {
-                background: rgba(255,255,255,.04)
-            }
-
-            .acc-hl {
-                display: flex;
-                align-items: center;
-                gap: 8px
-            }
-
-            .acc-ic {
-                width: 24px;
-                height: 24px;
-                border-radius: 6px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                flex-shrink: 0
-            }
-
-            .acc-ic svg {
-                width: 12px;
-                height: 12px
-            }
-
-            .ni {
-                background: rgba(62,207,207,.15)
-            }
-
-            .ni svg {
-                fill: var(--note)
-            }
-
-            .di {
-                background: rgba(255,159,67,.15)
-            }
-
-            .di svg {
-                fill: var(--dpp)
+                cursor: pointer
             }
 
             .acc-title {
                 font-size: 13px;
-                font-weight: 700;
-                letter-spacing: .6px;
-                text-transform: uppercase
-            }
-
-            .nt {
-                color: var(--note)
-            }
-
-            .dt {
-                color: var(--dpp)
-            }
-
-            .acc-cnt {
-                font-size: 10px;
-                padding: 1px 6px;
-                border-radius: 20px
-            }
-
-            .nc {
-                background: rgba(62,207,207,.12);
-                color: var(--note)
-            }
-
-            .dc {
-                background: rgba(255,159,67,.12);
-                color: var(--dpp)
-            }
-
-            .acc-chev {
-                width: 16px;
-                height: 16px;
-                color: var(--muted);
-                transition: transform .25s;
-                flex-shrink: 0
-            }
-
-            .acc-chev svg {
-                width: 16px;
-                height: 16px;
-                stroke: currentColor;
-                fill: none
-            }
-
-            .acc.open .acc-chev {
-                transform: rotate(180deg)
+                font-weight: 700
             }
 
             .acc-body {
-                max-height: 0;
-                overflow: hidden;
-                transition: max-height .3s cubic-bezier(.4,0,.2,1)
+                display: none
             }
 
             .acc.open .acc-body {
-                max-height: 2000px
-            }
-
-            .acc-inner {
-                border-top: 1px solid var(--border)
+                display: block
             }
 
             .att-item {
                 display: flex;
                 align-items: center;
-                gap: 10px;
+                justify-content: space-between;
                 padding: 12px 14px;
                 border-bottom: 1px solid rgba(255,255,255,.05)
-            }
-
-            .att-item:last-child {
-                border-bottom: none
-            }
-
-            .att-dot {
-                width: 7px;
-                height: 7px;
-                border-radius: 50%;
-                flex-shrink: 0
-            }
-
-            .nd {
-                background: var(--note)
-            }
-
-            .dd {
-                background: var(--dpp)
-            }
-
-            .att-name {
-                flex: 1;
-                font-size: 13px;
-                color: var(--text);
-                line-height: 1.4;
-                word-break: break-word;
-                min-width: 0
-            }
-
-            .att-actions {
-                display: flex;
-                align-items: center;
-                gap: 5px;
-                flex-shrink: 0
             }
 
             .att-btn {
@@ -1117,19 +815,12 @@
                 border-radius: 7px;
                 border: 1px solid rgba(255,255,255,.12);
                 background: rgba(255,255,255,.06);
-                color: rgba(255,255,255,.75);
+                color: #fff;
                 cursor: pointer;
-                display: flex;
+                display: inline-flex;
                 align-items: center;
                 justify-content: center;
-                transition: background .12s,border-color .12s,color .12s;
-                flex-shrink: 0
-            }
-
-            .att-btn:active {
-                background: var(--accent);
-                border-color: var(--accent);
-                color: #fff
+                margin-left: 4px
             }
 
             .att-btn svg {
@@ -1137,147 +828,17 @@
                 height: 15px;
                 stroke: currentColor;
                 fill: none;
-                stroke-width: 1.8;
-                stroke-linecap: round;
-                stroke-linejoin: round;
-                pointer-events: none
-            }
-
-            .att-btn.preview:hover {
-                background: rgba(62,207,207,.15);
-                border-color: var(--note);
-                color: var(--note)
-            }
-
-            .att-btn.open-tab:hover {
-                background: rgba(90,75,218,.18);
-                border-color: var(--accent);
-                color: #a89dff
-            }
-
-            .att-btn.download:hover {
-                background: rgba(255,159,67,.15);
-                border-color: var(--dpp);
-                color: var(--dpp)
-            }
-
-            .pdf-preview-wrap {
-                display: flex;
-                flex-direction: column;
-                height: 100%
-            }
-
-            .pdf-preview-topbar {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                padding: 10px 14px;
-                border-bottom: 1px solid var(--border);
-                flex-shrink: 0
-            }
-
-            .pdf-back-btn {
-                background: none;
-                border: none;
-                cursor: pointer;
-                padding: 4px;
-                display: flex;
-                align-items: center;
-                gap: 6px;
-                font-size: 13px;
-                font-weight: 600;
-                color: #fff;
-                border-radius: 6px
-            }
-
-            .pdf-back-btn svg {
-                width: 16px;
-                height: 16px;
-                stroke: currentColor;
-                fill: none;
-                stroke-width: 2.5
-            }
-
-            .pdf-preview-title {
-                flex: 1;
-                min-width: 0;
-                font-size: 13px;
-                font-weight: 600;
-                color: var(--text);
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis
+                stroke-width: 1.8
             }
 
             .pdf-frame-container {
                 flex: 1;
                 overflow: auto;
-                background: #1a1a28;
-                -webkit-overflow-scrolling: touch
-            }
-
-            .pdf-canvas-wrap {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 6px;
-                padding: 8px
-            }
-
-            .pdf-page-canvas {
-                display: block;
-                box-shadow: 0 2px 12px rgba(0,0,0,.5)
-            }
-
-            .pdf-loading,.pdf-err {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                height: 200px;
-                gap: 12px;
-                padding: 20px;
-                text-align: center
-            }
-
-            .pdf-loading .spinner {
-                border-top-color: var(--note)
-            }
-
-            .pdf-loading p,.pdf-err p {
-                font-size: 13px;
-                color: var(--muted);
-                line-height: 1.5
-            }
-
-            .pdf-err a {
-                color: var(--note);
-                font-size: 13px;
-                font-weight: 600;
-                text-decoration: none
-            }
-
-            .no-items {
-                text-align: center;
-                padding: 36px 16px;
-                color: var(--muted);
-                font-size: 14px
+                background: #1a1a28
             }
 
             @keyframes spin {
-                to {
-                    transform: rotate(360deg)
-                }
-            }
-
-            @keyframes blink {
-                0%,50% {
-                    opacity: 1
-                }
-
-                51%,100% {
-                    opacity: .2
-                }
+                to { transform: rotate(360deg); }
             }
         </style>
     </head>
@@ -1302,31 +863,14 @@
                     <div id="ctrl-overlay" class="visible">
                         <div id="player-header">
                             <button class="hdr-back" onclick="history.back()">
-                                <svg viewBox="0 0 24 24">
-                                    <path d="M19 12H5"/>
-                                    <path d="M12 19l-7-7 7-7"/>
-                                </svg>
+                                <svg viewBox="0 0 24 24"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
                             </button>
                             <div id="player-title"></div>
                             <div id="tdBtn">
-                                <svg viewBox="0 0 24 24">
-                                    <path fill-rule="evenodd" d="M10.5 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" clip-rule="evenodd"/>
-                                </svg>
+                                <svg viewBox="0 0 24 24"><path fill-rule="evenodd" d="M10.5 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" clip-rule="evenodd"/></svg>
                                 <div id="tdMenu">
-                                    <div class="tdm-row" id="tdTimeline">
-                                        <svg viewBox="0 0 24 24" stroke-width="1.5">
-                                            <path d="M3.167 5.583a.083.083 0 01.166 0v12.834a.083.083 0 01-.167 0V5.583zM5.667 17.333a1 1 0 001 1h10.666a1 1 0 001-1V6.667a1 1 0 00-1-1H6.667a1 1 0 00-1 1v10.666zm4.888-3.3V9.966L13.945 12l-3.39 2.034zM20.666 5.583a.083.083 0 11.167 0v12.834a.083.083 0 01-.166 0V5.583z"/>
-                                        </svg>
-                                        Timeline
-              
-                                    </div>
-                                    <div class="tdm-row" id="tdAttach">
-                                        <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/>
-                                        </svg>
-                                        Attachments
-              
-                                    </div>
+                                    <div class="tdm-row" id="tdTimeline">Timeline</div>
+                                    <div class="tdm-row" id="tdAttach">Attachments</div>
                                 </div>
                             </div>
                         </div>
@@ -1337,10 +881,6 @@
                                     <div class="t-left">
                                         <span class="t-time" id="curTime">0:00</span>
                                         <span class="spd-badge" id="spdBadge">1x</span>
-                                        <div class="live-badge" id="liveBadge">
-                                            <div class="live-dot"></div>
-                                            LIVE
-                                        </div>
                                     </div>
                                     <span class="t-time" id="durTime">0:00</span>
                                 </div>
@@ -1356,57 +896,19 @@
                             <div class="btn-row">
                                 <div class="btn-l">
                                     <button class="cbtn" id="playBtn">
-                                        <svg id="iPlay" width="34" height="34" viewBox="0 0 24 24" fill="white">
-                                            <path d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z"/>
-                                        </svg>
-                                        <svg id="iPause" width="34" height="34" viewBox="0 0 24 24" fill="white" style="display:none">
-                                            <path fill-rule="evenodd" d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7.5 0A.75.75 0 0115 4.5h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H15a.75.75 0 01-.75-.75V5.25z" clip-rule="evenodd"/>
-                                        </svg>
+                                        <svg id="iPlay" width="34" height="34" viewBox="0 0 24 24" fill="white"><path d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z"/></svg>
+                                        <svg id="iPause" width="34" height="34" viewBox="0 0 24 24" fill="white" style="display:none"><path fill-rule="evenodd" d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7.5 0A.75.75 0 0115 4.5h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H15a.75.75 0 01-.75-.75V5.25z" clip-rule="evenodd"/></svg>
                                     </button>
-                                    <button class="cbtn" id="rwBtn">
-                                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-                                            <path fill="white" d="M9.015 13.232a1.109 1.109 0 0 1 1.475-.125 1.001 1.001 0 0 1 .21 1.407A10.97 10.97 0 0 0 8.153 21.56c0 2.192.66 4.336 1.9 6.176a11.723 11.723 0 0 0 5.09 4.195c2.083.898 4.391 1.2 6.648.868a12.065 12.065 0 0 0 6.072-2.738 11.314 11.314 0 0 0 3.55-5.465c.609-2.112.569-4.348-.115-6.44a11.357 11.357 0 0 0-3.74-5.346 12.1 12.1 0 0 0-6.165-2.538l1.454 1.2a1.006 1.006 0 0 1 .118 1.457 1.098 1.098 0 0 1-.735.358 1.106 1.106 0 0 1-.783-.245L17.68 9.94a1.04 1.04 0 0 1-.278-.354 1 1 0 0 1 .278-1.217l3.768-3.101a1.09 1.09 0 0 1 1.66.571 1.04 1.04 0 0 1-.26.317l-1.622 1.337a14.335 14.335 0 0 1 7.422 2.818 13.46 13.46 0 0 1 4.611 6.253c.873 2.47.978 5.13.303 7.655a13.348 13.348 0 0 1-4.106 6.57 14.243 14.243 0 0 1-7.178 3.35c-2.68.423-5.432.09-7.919-.961a13.867 13.867 0 0 1-6.084-4.958A13.051 13.051 0 0 1 6 21.559c-.01-3.024 1.053-5.961 3.015-8.328Z"/>
-                                            <path fill="white" d="M16.02 12.927a1.128 1.128 0 0 1-1.536.112l-3.812-3.101a1.032 1.032 0 0 1-.28-.352.991.991 0 0 1 0-.866c.065-.136.16-.256.28-.352l3.813-3.102a1.141 1.141 0 0 1 1.555.093.991.991 0 0 1-.14 1.477l-2.845 2.318 2.847 2.316a.996.996 0 0 1-.144 1.14.883.883 0 0 1-.738.316Z"/>
-                                            <text x="20.5" y="27" text-anchor="middle" fill="white" font-size="9" font-weight="bold" font-family="sans-serif">10</text>
-                                        </svg>
-                                    </button>
-                                    <button class="cbtn" id="fwBtn">
-                                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-                                            <path fill="white" d="M30.99 13.236a1.11 1.11 0 0 0-1.496-.15 1.003 1.003 0 0 0-.195 1.43 10.965 10.965 0 0 1 2.548 7.045c.001 2.192-.659 4.337-1.899 6.177a11.726 11.726 0 0 1-5.091 4.196 12.303 12.303 0 0 1-6.65.868 12.071 12.071 0 0 1-6.076-2.737 11.313 11.313 0 0 1-3.55-5.465c-.61-2.112-.57-4.348.114-6.44a11.356 11.356 0 0 1 3.74-5.346 12.107 12.107 0 0 1 6.169-2.538l-1.459 1.2a1.008 1.008 0 0 0-.09 1.433 1.11 1.11 0 0 0 1.49.137l3.77-3.101a1.04 1.04 0 0 0 .278-.353 1 1 0 0 0-.277-1.217l-3.77-3.1a1.12 1.12 0 0 0-1.677.405.995.995 0 0 0 .424.989l1.623 1.337a14.34 14.34 0 0 0-7.421 2.82 13.457 13.457 0 0 0-4.61 6.253 12.916 12.916 0 0 0-.299 7.653 13.345 13.345 0 0 0 4.107 6.567 14.248 14.248 0 0 0 7.18 3.346c2.68.424 5.432.09 7.919-.96 2.486-1.051 4.6-2.774 6.085-4.957a13.045 13.045 0 0 0 2.273-7.342c.012-3.023-1.05-5.96-3.012-8.326Z"/>
-                                            <path fill="white" d="M24.029 12.931a1.107 1.107 0 0 0 1.52.112l3.77-3.1a1.04 1.04 0 0 0 .277-.353 1 1 0 0 0-.278-1.217l-3.77-3.1a1.12 1.12 0 0 0-1.677.405.993.993 0 0 0 .424.989l2.814 2.316-2.815 2.316a1.007 1.007 0 0 0-.118 1.457Z"/>
-                                            <text x="20.5" y="27" text-anchor="middle" fill="white" font-size="9" font-weight="bold" font-family="sans-serif">10</text>
-                                        </svg>
-                                    </button>
+                                    <button class="cbtn" id="rwBtn">10s ⏪</button>
+                                    <button class="cbtn" id="fwBtn">⏩ 10s</button>
                                     <div class="vol-grp">
-                                        <button class="cbtn" id="muteBtn">
-                                            <svg id="volIcon" width="28" height="28" viewBox="0 0 24 24" fill="white">
-                                                <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 0 0 1.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06ZM18.584 5.106a.75.75 0 0 1 1.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 0 1-1.06-1.06 8.25 8.25 0 0 0 0-11.668.75.75 0 0 1 0-1.06Z"/>
-                                                <path d="M15.932 7.757a.75.75 0 0 1 1.061 0 6 6 0 0 1 0 8.486.75.75 0 0 1-1.06-1.061 4.5 4.5 0 0 0 0-6.364.75.75 0 0 1 0-1.06Z"/>
-                                            </svg>
-                                        </button>
+                                        <button class="cbtn" id="muteBtn">🔊</button>
                                         <input type="range" class="vol-range" id="volBar" min="0" max="100" value="100" step="1">
                                     </div>
                                 </div>
                                 <div class="btn-r">
-                                    <button class="cbtn tl-btn" id="tlBtn">
-                                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-                                            <path d="M5.1 10a.5.5 0 0 1 .5-.5h.2a.5.5 0 0 1 .5.5v20a.5.5 0 0 1-.5.5h-.2a.5.5 0 0 1-.5-.5V10Z" fill="white"/>
-                                            <rect x="10.3" y="10.3" width="19.4" height="19.4" rx="1.2" stroke="white" stroke-width="1.8" fill="none"/>
-                                            <path d="M17.2 17l5.2 3-5.2 3V17Z" fill="white"/>
-                                            <path d="M33.7 10a.5.5 0 0 1 .5-.5h.2a.5.5 0 0 1 .5.5v20a.5.5 0 0 1-.5.5h-.2a.5.5 0 0 1-.5-.5V10Z" fill="white"/>
-                                        </svg>
-                                    </button>
-                                    <button class="cbtn" id="settBtn">
-                                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                                            <path d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                            <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                        </svg>
-                                    </button>
-                                    <button class="cbtn" id="fsBtn">
-                                        <svg id="iFs" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
-                                            <path d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4"/>
-                                        </svg>
-                                    </button>
+                                    <button class="cbtn" id="settBtn">⚙️</button>
+                                    <button class="cbtn" id="fsBtn">⛶</button>
                                 </div>
                             </div>
                         </div>
@@ -1414,1672 +916,229 @@
                         <div id="settPanel">
                             <div class="sc">
                                 <div class="s-main" id="sMain">
-                                    <div class="s-row" id="sSpeedRow">
-                                        <span class="s-lbl">Speed</span>
-                                        <div class="s-val">
-                                            <span id="sSpeedVal">Normal</span>
-                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="2.5">
-                                                <path d="M9 18l6-6-6-6"/>
-                                            </svg>
-                                        </div>
-                                    </div>
-                                    <div class="s-row" id="sQualRow">
-                                        <span class="s-lbl">Quality</span>
-                                        <div class="s-val">
-                                            <span id="sQualVal">Auto</span>
-                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="2.5">
-                                                <path d="M9 18l6-6-6-6"/>
-                                            </svg>
-                                        </div>
-                                    </div>
+                                    <div class="s-row" id="sSpeedRow"><span class="s-lbl">Speed</span><span id="sSpeedVal">Normal</span></div>
+                                    <div class="s-row" id="sQualRow"><span class="s-lbl">Quality</span><span id="sQualVal">Auto</span></div>
                                 </div>
                                 <div class="s-sub" id="sSpeedSub">
-                                    <div class="s-back" id="sSpeedBack">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
-                                            <path d="M15 18l-6-6 6-6"/>
-                                        </svg>
-                                        <span>Speed</span>
-                                    </div>
+                                    <div class="s-back" id="sSpeedBack">← Speed</div>
                                     <div class="s-scroll" id="sSpeedOpts"></div>
                                 </div>
                                 <div class="s-sub" id="sQualSub">
-                                    <div class="s-back" id="sQualBack">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
-                                            <path d="M15 18l-6-6 6-6"/>
-                                        </svg>
-                                        <span>Quality</span>
-                                    </div>
+                                    <div class="s-back" id="sQualBack">← Quality</div>
                                     <div class="s-scroll" id="sQualOpts"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div id="side-panel">
-                    <div class="panel-inner" id="panelInner"></div>
-                </div>
+                <div id="side-panel"><div class="panel-inner" id="panelInner"></div></div>
             </div>
-            <div id="bottom-panel">
-                <div class="panel-inner" id="panelInnerMob"></div>
-            </div>
+            <div id="bottom-panel"><div class="panel-inner" id="panelInnerMob"></div></div>
         </div>
-        <script>
-            const MEDIA_TOKEN = "8Sbf0Y2UObtsy34z3TA4p1T3sRpXqNVMULMMrc2zr0E5ZGv-2NHp1cplKWGbvE2V0br8JD3Ia7oCafGCnpTlpVeyob2s3Mztlz9MHoy_Pkvx65tYh_HgOre7Jvxzj3g_NGC5EpCxqUGJ3Fz8rJ6Q2eL6irmU4WGBFUWMPmBTD3OAKTOb3JOGQ6DKfxDm5Q45nkBoVeeTl9DPq13nRUiOvJwL9uF3nvVuREl3urYhVinJUZ9J5i3DTejaYXnNTKGn7Xl89xUJ6Hb4zHDODAxsqpIiOHIVfocsRqVHsBkQKpeegxgWZZQVBVOKptOIwYGL7Tmr1beCMeZPVheV31YAH7axgJSgtAVksh4qS4FWOlz7km8Kikc0YVU4qQAOlHE9ptghbwIX4jYCKiCIab6mgH-Lu0bSbiP6g5sCPPHYhiMtYhyBxjz3xFszh1x1L1HTPwQNiFPIB_pbN3jnAd3bZ0H1KaVrdR-HW2H0yn4zChLOM8iKtgX-VUIXWXW4lieCdhet3FTNAFnUqZ5atk0gblRKKocZV3Vhuvav2BwAzys";
-            const SLIDES = [{
-                "image": "https://static.pw.live/5eb393ee95fab7468a79d189/6604fe1e-68e2-421f-8789-139f2837091d.png",
-                "name": "Slide No. 1",
-                "timestamp": 8
-            }, {
-                "image": "https://static.pw.live/5eb393ee95fab7468a79d189/d96f6037-e917-4842-a69d-484e7036eb37.png",
-                "name": "Slide No. 2",
-                "timestamp": 68
-            }, {
-                "image": "https://static.pw.live/5eb393ee95fab7468a79d189/33f1d6f1-41ee-4d78-91ed-b1e8a2d5f5d2.png",
-                "name": "Slide No. 3",
-                "timestamp": 488
-            }, {
-                "image": "https://static.pw.live/5eb393ee95fab7468a79d189/a94346f9-9578-4796-84f4-1ec5db7d71ed.png",
-                "name": "Slide No. 4",
-                "timestamp": 968
-            }, {
-                "image": "https://static.pw.live/5eb393ee95fab7468a79d189/6cd1d687-b18c-4ea0-8903-f25b98102744.png",
-                "name": "Slide No. 5",
-                "timestamp": 1389
-            }, {
-                "image": "https://static.pw.live/5eb393ee95fab7468a79d189/f5dbbd7e-6c96-40b8-b90f-85c552a803ae.png",
-                "name": "Slide No. 6",
-                "timestamp": 1748
-            }, {
-                "image": "https://static.pw.live/5eb393ee95fab7468a79d189/27cfd4ac-709e-4017-b25e-ad4b63f10649.png",
-                "name": "Slide No. 7",
-                "timestamp": 2048
-            }, {
-                "image": "https://static.pw.live/5eb393ee95fab7468a79d189/4730629a-6afe-43f6-91b9-a094285801d5.png",
-                "name": "Slide No. 8",
-                "timestamp": 2168
-            }, {
-                "image": "https://static.pw.live/5eb393ee95fab7468a79d189/0358461e-ab4f-4531-8a26-fa489b4db2e5.png",
-                "name": "Slide No. 9",
-                "timestamp": 2288
-            }, {
-                "image": "https://static.pw.live/5eb393ee95fab7468a79d189/36dd2004-2edc-449b-8c5b-90e78898313b.png",
-                "name": "Slide No. 10",
-                "timestamp": 2348
-            }, {
-                "image": "https://static.pw.live/5eb393ee95fab7468a79d189/e72563d7-4ec0-45cb-97f5-3d845b863dcd.png",
-                "name": "Slide No. 11",
-                "timestamp": 3908
-            }, {
-                "image": "https://static.pw.live/5eb393ee95fab7468a79d189/ef7d8efb-aeea-4e50-b1a9-10cdd3f369a3.png",
-                "name": "Slide No. 12",
-                "timestamp": 4448
-            }, {
-                "image": "https://static.pw.live/5eb393ee95fab7468a79d189/8f822b06-3371-495a-8dd3-fdbcedd740de.png",
-                "name": "Slide No. 13",
-                "timestamp": 4689
-            }, {
-                "image": "https://static.pw.live/5eb393ee95fab7468a79d189/cf76af87-e48b-4ab1-a5c7-f2986e1c4dc1.png",
-                "name": "Slide No. 14",
-                "timestamp": 5168
-            }, {
-                "image": "https://static.pw.live/5eb393ee95fab7468a79d189/99058b24-43b2-47be-8e54-842cb980e52a.png",
-                "name": "Slide No. 15",
-                "timestamp": 5529
-            }, {
-                "image": "https://static.pw.live/5eb393ee95fab7468a79d189/ccef3eae-20a2-41ce-b8f5-f0e22fea98ec.png",
-                "name": "Slide No. 16",
-                "timestamp": 5648
-            }, {
-                "image": "https://static.pw.live/5eb393ee95fab7468a79d189/3a6e2020-6dd9-43d8-acb9-c27263462827.png",
-                "name": "Slide No. 17",
-                "timestamp": 5828
-            }, {
-                "image": "https://static.pw.live/5eb393ee95fab7468a79d189/72fae62a-1b03-49f0-8986-c9ccf0b18cdf.png",
-                "name": "Slide No. 18",
-                "timestamp": 6248
-            }, {
-                "image": "https://static.pw.live/5eb393ee95fab7468a79d189/15ec30aa-2ae0-4549-8419-3338e50ab1c3.png",
-                "name": "Slide No. 19",
-                "timestamp": 6368
-            }];
-            const NOTES = [{
-                "name": "Motion In a Straight Line 05 : Class Notes || Physics By Rajwant Sir",
-                "url": "https://static.pw.live/5eb393ee95fab7468a79d189/ADMIN/dd09f868-7767-4044-8653-46c61196a107.pdf"
-            }];
-            const DPP_NOTES = [{
-                "name": "Motion In a Straight Line : DPP 03 (of lec 05) || Physics By Rajwant Sir",
-                "url": "https://static.pw.live/5eb393ee95fab7468a79d189/ADMIN/eddf9db1-a63f-433d-a9eb-11fbad3d70be.pdf"
-            }];
-            const TOPIC_NAME = "Motion in a Straight Line 05 : Homework Questions || Questions on Distance and Displacement || Speed and Velocity || Questions on Speed and Velocity";
-            const PW_HEADERS = {
-                "Accept-Encoding": "gzip",
-                "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 11; SM-A707F Build/RP1A.200720.012)",
-                "authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3ODI4ODA3NzUuMTU1LCJkYXRhIjp7Il9pZCI6IjYxMzlkZGI2ZDljZmEzMDAxODEzOGJmZiIsInVzZXJuYW1lIjoiODExNTcwNzY1OSIsImZpcnN0TmFtZSI6Ik1vaGl0IiwibGFzdE5hbWUiOiJLdW1hciBHdXB0YSIsIm9yZ2FuaXphdGlvbiI6eyJfaWQiOiI1ZWIzOTNlZTk1ZmFiNzQ2OGE3OWQxODkiLCJ3ZWJzaXRlIjoicGh5c2ljc3dhbGxhaC5jb20iLCJuYW1lIjoiUGh5c2ljc3dhbGxhaCJ9LCJlbWFpbCI6bnVsbCwicm9sZXMiOlsiNWIyN2JkOTY1ODQyZjk1MGE3NzhjNmVmIl0sImNvdW50cnlHcm91cCI6IklOIiwidHlwZSI6IlVTRVIifSwianRpIjoickQwdHVHTmhUektuSzJELXJSdVEtZ182MTM5ZGRiNmQ5Y2ZhMzAwMTgxMzhiZmYiLCJpYXQiOjE3ODIyNzU5NzV9.8W3qjF4tHz7qnbf2L-hydaLAgdZ3WZcIGugLqGkzt6U",
-                "client-id": "ADMIN",
-                "client-type": "MOBILE",
-                "client-version": "538",
-                "content-type": "application/json",
-                "device-meta": "{\"APP_VERSION\":\"538\",\"APP_VERSION_NAME\":\"15.32.0\",\"DEVICE_MAKE\":\"Samsung\",\"DEVICE_MODEL\":\"SM-A707F\",\"OS_VERSION\":\"11\",\"PACKAGE_NAME\":\"xyz.penpencil.physicswala\",\"network\":\"wifi_data\",\"carrier\":\"UNDEFINED\"}",
-                "randomid": "3d3b49f068728fa3",
-                "referer": "https://android.pw.live"
-            };
 
-            /* ── Utilities ── */
+        <script>
+            const SLIDES = [
+                {"image": "https://static.pw.live/5eb393ee95fab7468a79d189/6604fe1e-68e2-421f-8789-139f2837091d.png", "name": "Slide No. 1", "timestamp": 8},
+                {"image": "https://static.pw.live/5eb393ee95fab7468a79d189/d96f6037-e917-4842-a69d-484e7036eb37.png", "name": "Slide No. 2", "timestamp": 68}
+            ];
+            const NOTES = [{ "name": "Motion In a Straight Line 05 : Class Notes", "url": "https://static.pw.live/5eb393ee95fab7468a79d189/ADMIN/dd09f868-7767-4044-8653-46c61196a107.pdf" }];
+            const DPP_NOTES = [{ "name": "Motion In a Straight Line : DPP 03", "url": "https://static.pw.live/5eb393ee95fab7468a79d189/ADMIN/eddf9db1-a63f-433d-a9eb-11fbad3d70be.pdf" }];
+            const TOPIC_NAME = "Motion in a Straight Line 05";
+
+            const vid = document.getElementById('vid');
+            const playBtn = document.getElementById('playBtn');
+            const iPlay = document.getElementById('iPlay');
+            const iPause = document.getElementById('iPause');
+            const curTime = document.getElementById('curTime');
+            const durTime = document.getElementById('durTime');
+            const seekBar = document.getElementById('seekBar');
+            const barFill = document.getElementById('barFill');
+            const barThumb = document.getElementById('barThumb');
+            const ovLoad = document.getElementById('ovLoad');
+            const titleEl = document.getElementById('player-title');
+            
+            let panelOpen = false, curTab = 'tl';
+
+            titleEl.textContent = TOPIC_NAME;
+
             function fmt(s) {
                 s = Math.floor(s || 0);
-                const h = Math.floor(s / 3600)
-                  , m = Math.floor((s % 3600) / 60)
-                  , sc = s % 60;
+                const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sc = s % 60;
                 return h > 0 ? `${h}:${String(m).padStart(2, '0')}:${String(sc).padStart(2, '0')}` : `${m}:${String(sc).padStart(2, '0')}`;
             }
 
-            /* ── Layout ── */
-            let panelOpen = false
-              , curTab = 'tl'
-              , tdOpen = false;
-            function isDesktop() {
-                return !!(document.fullscreenElement || document.webkitFullscreenElement) || window.screen.width > window.screen.height || window.screen.width >= 768;
-            }
+            function isDesktop() { return window.innerWidth >= 768; }
+
             function applyLayout() {
                 const s = document.getElementById('shell');
                 if (isDesktop()) {
-                    s.classList.remove('layout-mobile');
-                    s.classList.add('layout-desktop');
+                    s.classList.remove('layout-mobile'); s.classList.add('layout-desktop');
                 } else {
-                    s.classList.remove('layout-desktop');
-                    s.classList.add('layout-mobile');
+                    s.classList.remove('layout-desktop'); s.classList.add('layout-mobile');
                 }
-                if (panelOpen)
-                    openPanel(curTab);
+                if (panelOpen) openPanel(curTab);
             }
             window.addEventListener('resize', applyLayout);
-            window.addEventListener('orientationchange', () => setTimeout(applyLayout, 100));
-            if (screen.orientation)
-                screen.orientation.addEventListener('change', () => setTimeout(applyLayout, 100));
-            document.addEventListener('fullscreenchange', () => setTimeout(applyLayout, 50));
-            document.addEventListener('webkitfullscreenchange', () => setTimeout(applyLayout, 50));
-            applyLayout();
 
-            /* ── PDF Preview ── */
-            function previewPDF(url, name) {
-                if (!url) {
-                    alert('No file URL available.');
-                    return;
-                }
-                const pi = document.getElementById(isDesktop() ? 'panelInner' : 'panelInnerMob');
-                pi.querySelector('#mainPanelBody').style.display = 'none';
-                pi.querySelector('#panelTabsArea').style.display = 'none';
-                pi.querySelector('.panel-hdr-title').textContent = 'Preview';
-                pi.querySelector('#pdfPreviewWrap').style.cssText = 'display:flex;flex-direction:column;flex:1;min-height:0';
-                pi.querySelector('#pdfPreviewTitle').textContent = name;
-                const fc = pi.querySelector('#pdfFrameContainer');
-                fc.innerHTML = '<div class="pdf-loading"><div class="spinner"></div><p>Loading PDF…</p></div>';
-                function render() {
-                    const lib = window['pdfjs-dist/build/pdf'];
-                    lib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-                    lib.getDocument({
-                        url,
-                        cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/cmaps/',
-                        cMapPacked: true
-                    }).promise.then(doc => {
-                        fc.innerHTML = '';
-                        const wrap = document.createElement('div');
-                        wrap.className = 'pdf-canvas-wrap';
-                        fc.appendChild(wrap);
-                        const dpr = window.devicePixelRatio || 1
-                          , w = fc.clientWidth || 360;
-                        function rp(n) {
-                            if (n > doc.numPages)
-                                return;
-                            doc.getPage(n).then(page => {
-                                const vp = page.getViewport({
-                                    scale: (w - 16) / page.getViewport({
-                                        scale: 1
-                                    }).width * dpr
-                                });
-                                const c = document.createElement('canvas');
-                                c.className = 'pdf-page-canvas';
-                                c.width = vp.width;
-                                c.height = vp.height;
-                                c.style.width = (vp.width / dpr) + 'px';
-                                c.style.height = (vp.height / dpr) + 'px';
-                                wrap.appendChild(c);
-                                page.render({
-                                    canvasContext: c.getContext('2d'),
-                                    viewport: vp
-                                }).promise.then( () => rp(n + 1));
-                            }
-                            );
-                        }
-                        rp(1);
-                    }
-                    ).catch( () => {
-                        fc.innerHTML = `<div class="pdf-err"><p>Could not load PDF.</p><a href="${url}" target="_blank" rel="noopener">Open PDF ↗</a></div>`;
-                    }
-                    );
-                }
-                if (window['pdfjs-dist/build/pdf']) {
-                    render();
-                    return;
-                }
-                const s = document.createElement('script');
-                s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
-                s.onload = render;
-                s.onerror = () => {
-                    fc.innerHTML = `<div class="pdf-err"><p>PDF viewer failed.</p><a href="${url}" target="_blank" rel="noopener">Open PDF ↗</a></div>`;
-                }
-                ;
-                document.head.appendChild(s);
-            }
-            function closePDFPreview(pi) {
-                pi.querySelector('#mainPanelBody').style.display = '';
-                pi.querySelector('#panelTabsArea').style.display = '';
-                pi.querySelector('#pdfPreviewWrap').style.display = 'none';
-                pi.querySelector('#pdfFrameContainer').innerHTML = '';
-                const t = pi.querySelector('.ptab.active');
-                if (t)
-                    pi.querySelector('.panel-hdr-title').textContent = t.dataset.tab === 'tl' ? 'Timeline' : 'Attachments';
-            }
-            function downloadPDF(url, name) {
-                if (!url) {
-                    alert('No file URL available.');
-                    return;
-                }
-                const fn = (name.trim().toLowerCase().endsWith('.pdf') ? name.trim() : name.trim() + '.pdf').replace(/:/g, ' -').replace(/[/\\?%*|"<>]/g, '-').replace(/ {2,}/g, ' ').trim();
-                const a = Object.assign(document.createElement('a'), {
-                    href: url,
-                    download: fn,
-                    target: '_blank',
-                    rel: 'noopener'
-                });
-                document.body.appendChild(a);
-                a.click();
-                setTimeout( () => document.body.removeChild(a), 100);
-            }
-
-            /* ── Panel HTML ── */
             function buildPanelHTML() {
-                let tlH = '<div class="tl-list">';
-                if (SLIDES && SLIDES.length) {
-                    SLIDES.forEach( (s, i) => {
-                        tlH += `<div class="tl-card" data-idx="${i}" onclick="seekSlide(${s.timestamp})">${s.image ? `<img class="tl-img" src="${s.image}" alt="" loading="lazy" onerror="this.style.background='#1c1c27'">` : '<div class="tl-img"></div>'}<span class="tl-cur-badge">&#9654; Current</span><div class="tl-ov"><span class="tl-name">${s.name || ''}</span><span class="tl-ts">${fmt(s.timestamp)}</span></div></div>`;
-                    }
-                    );
-                } else {
-                    tlH += '<div class="no-items">No slides available</div>';
-                }
-                tlH += '</div>';
-                function grp(items, dc, ic, tc, cc, svg, lbl, pfx) {
-                    if (!items || !items.length)
-                        return '';
-                    let h = `<div class="acc open" id="acc-${pfx}"><div class="acc-hdr" onclick="this.closest('.acc').classList.toggle('open')"><div class="acc-hl"><div class="acc-ic ${ic}">${svg}</div><span class="acc-title ${tc}">${lbl}</span><span class="acc-cnt ${cc}">${items.length}</span></div><div class="acc-chev"><svg viewBox="0 0 24 24" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div></div><div class="acc-body"><div class="acc-inner">`;
-                    items.forEach( (it, i) => {
-                        const nm = (it.name || lbl + ' ' + (i + 1)).replace(/'/g, "\\'");
-                        const su = (it.url || '').replace(/'/g, "\\'");
-                        h += `<div class="att-item"><div class="att-dot ${dc}"></div><span class="att-name">${it.name || lbl + ' ' + (i + 1)}</span><div class="att-actions"><button class="att-btn preview" onclick="previewPDF('${su}','${nm}')"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="att-btn open-tab" onclick="window.open('${su}','_blank','noopener')"><svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></button><button class="att-btn download" onclick="downloadPDF('${su}','${nm}')"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button></div></div>`;
-                    }
-                    );
-                    h += '</div></div></div>';
-                    return h;
-                }
-                const nSvg = '<svg viewBox="0 0 24 24"><path d="M9 12h6M9 16h6M9 8h6M5 4h14a1 1 0 011 1v14a1 1 0 01-1 1H5a1 1 0 01-1-1V5a1 1 0 011-1z"/></svg>';
-                const dSvg = '<svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>';
-                let attH = grp(NOTES, 'nd', 'ni', 'nt', 'nc', nSvg, 'Notes', 'note') + grp(DPP_NOTES, 'dd', 'di', 'dt', 'dc', dSvg, 'DPP', 'dpp');
-                if (!attH)
-                    attH = '<div class="no-items">No attachments available</div>';
-                return `<div class="panel-hdr"><span class="panel-hdr-title">Timeline</span><button class="panel-close" onclick="closePanel()"><svg viewBox="0 0 24 24" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div><div class="panel-tabs" id="panelTabsArea"><button class="ptab active" data-tab="tl" onclick="swTab(this,'tl')"><svg viewBox="0 0 24 24" fill="none"><path stroke="currentColor" stroke-width="1.5" d="M3.167 5.583a.083.083 0 01.166 0v12.834a.083.083 0 01-.167 0V5.583zM5.667 17.333a1 1 0 001 1h10.666a1 1 0 001-1V6.667a1 1 0 00-1-1H6.667a1 1 0 00-1 1v10.666zm4.888-3.3V9.966L13.945 12l-3.39 2.034zM20.666 5.583a.083.083 0 11.167 0v12.834a.083.083 0 01-.166 0V5.583z"/></svg>Timeline</button><button class="ptab" data-tab="att" onclick="swTab(this,'att')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>Attachments</button></div><div class="panel-body" id="mainPanelBody"><div class="ptab-panel active" data-p="tl">${tlH}</div><div class="ptab-panel" data-p="att">${attH}</div></div><div class="pdf-preview-wrap" id="pdfPreviewWrap" style="display:none;flex:1;min-height:0"><div class="pdf-preview-topbar"><button class="pdf-back-btn" onclick="closePDFPreview(this.closest('.panel-inner'))"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>Back</button><span class="pdf-preview-title" id="pdfPreviewTitle"></span></div><div class="pdf-frame-container" id="pdfFrameContainer"><div class="pdf-loading"><div class="spinner"></div><p>Loading PDF…</p></div></div></div>`;
-            }
-            const PANEL_HTML = buildPanelHTML();
-            document.getElementById('panelInner').innerHTML = PANEL_HTML;
-            document.getElementById('panelInnerMob').innerHTML = PANEL_HTML;
+                let html = `
+                    <div class="panel-hdr">
+                        <span class="panel-hdr-title">${curTab === 'tl' ? 'Timeline' : 'Attachments'}</span>
+                        <button class="panel-close" onclick="closePanel()">✕</button>
+                    </div>
+                    <div class="panel-tabs" id="panelTabsArea">
+                        <button class="ptab ${curTab==='tl'?'active':''}" onclick="openPanel('tl')">Timeline</button>
+                        <button class="ptab ${curTab==='att'?'active':''}" onclick="openPanel('att')">Attachments</button>
+                    </div>
+                    <div class="panel-body" id="mainPanelBody">
+                `;
 
-            /* ── Panel Controls ── */
-            function swTab(btn, tab) {
-                const pi = btn.closest('.panel-inner');
-                pi.querySelectorAll('.ptab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
-                pi.querySelectorAll('.ptab-panel').forEach(p => p.classList.toggle('active', p.dataset.p === tab));
-                pi.querySelector('.panel-hdr-title').textContent = tab === 'tl' ? 'Timeline' : 'Attachments';
-                if (tab === 'tl')
-                    syncSlide(true);
-            }
-            function activateTab(pi, tab) {
-                pi.querySelectorAll('.ptab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
-                pi.querySelectorAll('.ptab-panel').forEach(p => p.classList.toggle('active', p.dataset.p === tab));
-                pi.querySelector('.panel-hdr-title').textContent = tab === 'tl' ? 'Timeline' : 'Attachments';
-            }
-            function getActivePanelInner() {
-                return document.getElementById(isDesktop() ? 'panelInner' : 'panelInnerMob');
-            }
-            function openPanel(tab) {
-                curTab = tab || 'tl';
-                panelOpen = true;
-                if (isDesktop()) {
-                    document.getElementById('bottom-panel').classList.remove('open');
-                    const pi = document.getElementById('panelInner');
-                    const pw = pi.querySelector('#pdfPreviewWrap');
-                    if (pw && pw.style.display !== 'none')
-                        closePDFPreview(pi);
-                    activateTab(pi, curTab);
-                    document.getElementById('side-panel').classList.add('open');
+                if (curTab === 'tl') {
+                    html += '<div class="tl-list">';
+                    SLIDES.forEach((s) => {
+                        html += `
+                            <div class="tl-card" onclick="seekSlide(${s.timestamp})">
+                                <img class="tl-img" src="${s.image}">
+                                <div class="tl-ov">
+                                    <span class="tl-name">${s.name}</span>
+                                    <span class="tl-ts">${fmt(s.timestamp)}</span>
+                                </div>
+                            </div>`;
+                    });
+                    html += '</div>';
                 } else {
-                    document.getElementById('side-panel').classList.remove('open');
-                    const pi = document.getElementById('panelInnerMob');
-                    const pw = pi.querySelector('#pdfPreviewWrap');
-                    if (pw && pw.style.display !== 'none')
-                        closePDFPreview(pi);
-                    activateTab(pi, curTab);
-                    document.getElementById('bottom-panel').classList.add('open');
+                    html += '<div style="padding:10px">';
+                    [...NOTES, ...DPP_NOTES].forEach(n => {
+                        html += `
+                            <div class="att-item">
+                                <span>${n.name}</span>
+                                <div>
+                                    <button class="att-btn" onclick="previewPDF('${n.url}','${n.name}')">👁️</button>
+                                    <a class="att-btn" href="${n.url}" target="_blank" download>💾</a>
+                                </div>
+                            </div>`;
+                    });
+                    html += '</div>';
                 }
-                if (curTab === 'tl')
-                    setTimeout( () => syncSlide(true), 80);
+                html += `</div>
+                <div id="pdfPreviewWrap" style="display:none;flex-direction:column;flex:1">
+                    <div class="panel-hdr"><button class="panel-close" onclick="closePDFPreview()">← Back</button><span class="panel-hdr-title" id="pdfPreviewTitle">PDF</span></div>
+                    <div class="pdf-frame-container" id="pdfFrameContainer"></div>
+                </div>`;
+                return html;
             }
+
+            function openPanel(tab) {
+                curTab = tab; panelOpen = true;
+                const container = isDesktop() ? document.getElementById('panelInner') : document.getElementById('panelInnerMob');
+                container.innerHTML = buildPanelHTML();
+                if (isDesktop()) document.getElementById('side-panel').classList.add('open');
+                else document.getElementById('bottom-panel').classList.add('open');
+            }
+
             function closePanel() {
                 panelOpen = false;
-                document.getElementById('bottom-panel').classList.remove('open');
                 document.getElementById('side-panel').classList.remove('open');
+                document.getElementById('bottom-panel').classList.remove('open');
             }
 
-            /* ── Three-dot menu ── */
-            document.getElementById('tdBtn').addEventListener('click', e => {
-                e.stopPropagation();
-                tdOpen = !tdOpen;
-                document.getElementById('tdMenu').classList.toggle('on', tdOpen);
-            }
-            );
-            document.addEventListener('click', () => {
-                tdOpen = false;
-                document.getElementById('tdMenu').classList.remove('on');
-            }
-            );
-            document.getElementById('tdTimeline').addEventListener('click', e => {
-                e.stopPropagation();
-                openPanel('tl');
-                tdOpen = false;
-                document.getElementById('tdMenu').classList.remove('on');
-            }
-            );
-            document.getElementById('tdAttach').addEventListener('click', e => {
-                e.stopPropagation();
-                openPanel('att');
-                tdOpen = false;
-                document.getElementById('tdMenu').classList.remove('on');
-            }
-            );
-            document.getElementById('tlBtn').addEventListener('click', e => {
-                e.stopPropagation();
-                (panelOpen && isDesktop()) ? closePanel() : openPanel('tl');
-            }
-            );
-
-            /* ── Timeline Sync ── */
             function seekSlide(ts) {
-                const v = window.V;
-                if (!v || !isFinite(v.duration) || v.duration <= 0)
-                    return;
-                v.currentTime = ts;
-                v.play().catch( () => {}
-                );
-                syncSlide(false);
-                if (!isDesktop())
-                    closePanel();
-            }
-            function syncSlide(doScroll) {
-                if (!SLIDES || !SLIDES.length || !window.V)
-                    return;
-                const ct = window.V.currentTime;
-                let idx = 0;
-                for (let i = 0; i < SLIDES.length; i++) {
-                    if (ct >= SLIDES[i].timestamp)
-                        idx = i;
-                    else
-                        break;
-                }
-                document.querySelectorAll('.tl-card').forEach(el => el.classList.toggle('cur', +el.dataset.idx === idx));
-                if (doScroll) {
-                    const pi = getActivePanelInner();
-                    const cur = pi ? pi.querySelector('.tl-card.cur') : null;
-                    if (cur)
-                        cur.scrollIntoView({
-                            block: 'nearest',
-                            behavior: 'smooth'
-                        });
-                }
+                vid.currentTime = ts;
+                vid.play();
             }
 
-            ['contextmenu', 'selectstart', 'dragstart', 'copy'].forEach(ev => document.addEventListener(ev, e => e.preventDefault()));
-
-            /* ════════════════════════════════════════════════
-   PLAYER ENGINE
-════════════════════════════════════════════════ */
-            (function() {
-                'use strict';
-
-                const vid = document.getElementById('vid');
-                window.V = vid;
-                const overlay = document.getElementById('ctrl-overlay');
-                const tapShield = document.getElementById('tap-shield');
-                const playBtn = document.getElementById('playBtn');
-                const iPlay = document.getElementById('iPlay');
-                const iPause = document.getElementById('iPause');
-                const rwBtn = document.getElementById('rwBtn');
-                const fwBtn = document.getElementById('fwBtn');
-                const muteBtn = document.getElementById('muteBtn');
-                const volIcon = document.getElementById('volIcon');
-                const volBar = document.getElementById('volBar');
-                const seekBar = document.getElementById('seekBar');
-                const barFill = document.getElementById('barFill');
-                const barBuf = document.getElementById('barBuf');
-                const barThumb = document.getElementById('barThumb');
-                const curTime = document.getElementById('curTime');
-                const durTime = document.getElementById('durTime');
-                const spdBadge = document.getElementById('spdBadge');
-                const liveBadge = document.getElementById('liveBadge');
-                const settBtn = document.getElementById('settBtn');
-                const settPanel = document.getElementById('settPanel');
-                const settBd = document.getElementById('settBd');
-                const sMain = document.getElementById('sMain');
-                const sSpeedSub = document.getElementById('sSpeedSub');
-                const sQualSub = document.getElementById('sQualSub');
-                const fsBtn = document.getElementById('fsBtn');
-                const iFs = document.getElementById('iFs');
-                const ovLoad = document.getElementById('ovLoad');
-                const loadMsg = document.getElementById('loadMsg');
-                const ovErr = document.getElementById('ovErr');
-                const errMsg = document.getElementById('errMsg');
-                const retryBtn = document.getElementById('retryBtn');
-                const bufSpin = document.getElementById('bufSpin');
-
-                let hlsInst = null
-                  , shakaInst = null
-                  , lastData = null
-                  , initialized = false;
-                let isSeeking = false
-                  , wasPlaying = false
-                  , isLive = false
-                  , settOpen = false;
-
-                if (TOPIC_NAME)
-                    document.getElementById('player-title').textContent = TOPIC_NAME;
-                vid.volume = 1;
-                vid.muted = false;
-                volBar.value = 100;
-
-                /* ── Volume icon ── */
-                function updMuteIcon() {
-                    const m = vid.muted || vid.volume === 0;
-                    if (m) {
-                        volIcon.setAttribute('fill', 'none');
-                        volIcon.innerHTML = `<path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 0 0 1.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06ZM17.25 9.75l4.5 4.5m0-4.5-4.5 4.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`;
-                    } else if (vid.volume < 0.5) {
-                        volIcon.setAttribute('fill', 'white');
-                        volIcon.innerHTML = `<path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 0 0 1.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06ZM15.932 7.757a.75.75 0 0 1 1.061 0 6 6 0 0 1 0 8.486.75.75 0 0 1-1.06-1.061 4.5 4.5 0 0 0 0-6.364.75.75 0 0 1 0-1.06Z" fill="white"/>`;
-                    } else {
-                        volIcon.setAttribute('fill', 'white');
-                        volIcon.innerHTML = `<path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 0 0 1.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06ZM18.584 5.106a.75.75 0 0 1 1.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 0 1-1.06-1.06 8.25 8.25 0 0 0 0-11.668.75.75 0 0 1 0-1.06Z"/><path d="M15.932 7.757a.75.75 0 0 1 1.061 0 6 6 0 0 1 0 8.486.75.75 0 0 1-1.06-1.061 4.5 4.5 0 0 0 0-6.364.75.75 0 0 1 0-1.06Z" fill="white"/>`;
-                    }
-                }
-
-                /* ── Controls visibility ── */
-                let hideTimer = null;
-                function scheduleHide() {
-                    clearTimeout(hideTimer);
-                    hideTimer = setTimeout(hideControls, 4000);
-                }
-                function showControls() {
-                    overlay.classList.remove('hidden');
-                    overlay.classList.add('visible');
-                    tapShield.classList.remove('on');
-                }
-                function hideControls() {
-                    if (settOpen || tdOpen)
-                        return;
-                    overlay.classList.remove('visible');
-                    overlay.classList.add('hidden');
-                    tapShield.classList.add('on');
-                }
-                function onInteraction() {
-                    showControls();
-                    scheduleHide();
-                }
-                tapShield.addEventListener('click', e => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    onInteraction();
-                }
-                );
-                document.getElementById('ctrl-mid').addEventListener('click', e => {
-                    e.stopPropagation();
-                    onInteraction();
-                }
-                );
-                document.getElementById('video-col').addEventListener('mousemove', onInteraction);
-
-                /* ── Playback ── */
-                function setPlaying(p) {
-                    iPlay.style.display = p ? 'none' : 'block';
-                    iPause.style.display = p ? 'block' : 'none';
-                    showControls();
-                    scheduleHide();
-                }
-                function doToggle() {
-                    vid.paused ? vid.play().catch( () => {}
-                    ) : vid.pause();
-                }
-                playBtn.addEventListener('click', e => {
-                    e.stopPropagation();
-                    doToggle();
-                    onInteraction();
-                }
-                );
-                vid.addEventListener('playing', () => {
-                    bufSpin.classList.remove('on');
-                    setPlaying(true);
-                }
-                );
-                vid.addEventListener('pause', () => setPlaying(false));
-                vid.addEventListener('ended', () => setPlaying(false));
-                vid.addEventListener('waiting', () => bufSpin.classList.add('on'));
-                vid.addEventListener('canplay', () => bufSpin.classList.remove('on'));
-
-                /* ── Skip ± 10s ── */
-                function seekBy(s) {
-                    if (isLive) {
-                        const r = getLiveRange();
-                        if (r)
-                            vid.currentTime = Math.max(r.start, Math.min(r.end, vid.currentTime + s));
-                    } else {
-                        vid.currentTime = Math.max(0, Math.min(vid.duration || 0, vid.currentTime + s));
-                    }
-                    onInteraction();
-                }
-                function skAnim(b, c) {
-                    b.classList.remove('anim-l', 'anim-r');
-                    void b.offsetWidth;
-                    b.classList.add(c);
-                    setTimeout( () => b.classList.remove(c), 360);
-                }
-                rwBtn.addEventListener('click', e => {
-                    e.stopPropagation();
-                    seekBy(-10);
-                    skAnim(rwBtn, 'anim-l');
-                }
-                );
-                fwBtn.addEventListener('click', e => {
-                    e.stopPropagation();
-                    seekBy(10);
-                    skAnim(fwBtn, 'anim-r');
-                }
-                );
-
-                /* ── Live seek range ── */
-                function getLiveRange() {
-                    if (vid.seekable && vid.seekable.length > 0)
-                        return {
-                            start: vid.seekable.start(0),
-                            end: vid.seekable.end(0)
-                        };
-                    return null;
-                }
-
-                /* ── Progress bar ──
-   FIX: live seek no longer auto-jumps to live edge.
-   We track the seekable window and map bar position within it. ── */
-                function updBar() {
-                    curTime.textContent = fmt(vid.currentTime);
-                    if (isLive) {
-                        const r = getLiveRange();
-                        if (!r || r.end <= r.start) {
-                            barFill.style.width = '100%';
-                            barThumb.style.left = '100%';
-                            seekBar.value = 1000;
-                            durTime.textContent = fmt(vid.currentTime);
-                            return;
-                        }
-                        const total = r.end - r.start;
-                        const pos = Math.max(0, vid.currentTime - r.start);
-                        const p = Math.min(100, pos / total * 100);
-                        barFill.style.width = p + '%';
-                        barThumb.style.left = p + '%';
-                        seekBar.value = Math.round(p * 10);
-                        durTime.textContent = '';
-                    } else {
-                        if (!vid.duration || !isFinite(vid.duration))
-                            return;
-                        const p = vid.currentTime / vid.duration * 100;
-                        barFill.style.width = p + '%';
-                        barThumb.style.left = p + '%';
-                        seekBar.value = Math.round(vid.currentTime / vid.duration * 1000);
-                        durTime.textContent = fmt(vid.duration);
-                    }
-                }
-
-                seekBar.addEventListener('mousedown', () => {
-                    wasPlaying = !vid.paused;
-                }
-                );
-                seekBar.addEventListener('touchstart', () => {
-                    wasPlaying = !vid.paused;
-                }
-                , {
-                    passive: true
-                });
-                seekBar.addEventListener('input', () => {
-                    isSeeking = true;
-                    onInteraction();
-                    if (isLive) {
-                        const r = getLiveRange();
-                        if (r && r.end > r.start) {
-                            const target = r.start + (seekBar.value / 1000) * (r.end - r.start);
-                            vid.currentTime = Math.max(r.start, Math.min(r.end, target));
-                            const p = (vid.currentTime - r.start) / (r.end - r.start) * 100;
-                            barFill.style.width = p + '%';
-                            barThumb.style.left = p + '%';
-                            curTime.textContent = fmt(vid.currentTime);
-                        }
-                    } else {
-                        if (vid.duration && isFinite(vid.duration)) {
-                            const p = seekBar.value / 1000;
-                            vid.currentTime = p * vid.duration;
-                            barFill.style.width = (p * 100) + '%';
-                            barThumb.style.left = (p * 100) + '%';
-                            curTime.textContent = fmt(vid.currentTime);
-                        }
-                    }
-                }
-                );
-                seekBar.addEventListener('change', () => {
-                    isSeeking = false;
-                    if (wasPlaying && vid.paused)
-                        vid.play().catch( () => {}
-                        );
-                }
-                );
-                vid.addEventListener('timeupdate', () => {
-                    if (isSeeking)
-                        return;
-                    updBar();
-                    syncSlide(false);
-                }
-                );
-                vid.addEventListener('loadedmetadata', () => {
-                    if (!isLive && isFinite(vid.duration) && vid.duration > 0)
-                        durTime.textContent = fmt(vid.duration);
-                    else if (isLive)
-                        durTime.textContent = '';
-                }
-                );
-                vid.addEventListener('progress', () => {
-                    if (isLive) {
-                        if (vid.buffered.length) {
-                            const r = getLiveRange();
-                            if (r && r.end > r.start) {
-                                const be = vid.buffered.end(vid.buffered.length - 1);
-                                barBuf.style.width = Math.min(100, (be - r.start) / (r.end - r.start) * 100) + '%';
-                            }
-                        }
-                    } else {
-                        if (vid.buffered.length && vid.duration && isFinite(vid.duration))
-                            barBuf.style.width = (vid.buffered.end(vid.buffered.length - 1) / vid.duration * 100) + '%';
-                    }
-                }
-                );
-                function markLive() {
-                    isLive = true;
-                    liveBadge.classList.add('on');
-                }
-
-                /* ── Volume ── */
-                function updVol() {
-                    const v = volBar.value;
-                    volBar.style.background = `linear-gradient(to right,#fff ${v}%,rgba(255,255,255,.25) ${v}%)`;
-                }
-                volBar.addEventListener('input', () => {
-                    vid.volume = volBar.value / 100;
-                    vid.muted = false;
-                    updVol();
-                    updMuteIcon();
-                    onInteraction();
-                }
-                );
-                muteBtn.addEventListener('click', e => {
-                    e.stopPropagation();
-                    if (vid.muted || vid.volume === 0) {
-                        vid.muted = false;
-                        vid.volume = 1;
-                        volBar.value = 100;
-                    } else {
-                        vid.muted = true;
-                        volBar.value = 0;
-                    }
-                    updVol();
-                    updMuteIcon();
-                    onInteraction();
-                }
-                );
-                vid.addEventListener('volumechange', updMuteIcon);
-                updVol();
-                updMuteIcon();
-
-                /* ── Settings ── */
-                function showSub(v) {
-                    sMain.classList.toggle('off', v !== 'main');
-                    sSpeedSub.classList.toggle('on', v === 'speed');
-                    sQualSub.classList.toggle('on', v === 'quality');
-                }
-                function openSett() {
-                    settOpen = true;
-                    showSub('main');
-                    settPanel.classList.add('on');
-                    settBd.classList.add('on');
-                    clearTimeout(hideTimer);
-                }
-                function closeSett() {
-                    settOpen = false;
-                    settPanel.classList.remove('on');
-                    settBd.classList.remove('on');
-                    showSub('main');
-                    scheduleHide();
-                }
-                settBtn.addEventListener('click', e => {
-                    e.stopPropagation();
-                    settOpen ? closeSett() : openSett();
-                }
-                );
-                settBd.addEventListener('click', e => {
-                    e.stopPropagation();
-                    closeSett();
-                }
-                );
-                settPanel.addEventListener('click', e => e.stopPropagation());
-                document.getElementById('sSpeedRow').addEventListener('click', e => {
-                    e.stopPropagation();
-                    showSub('speed');
-                }
-                );
-                document.getElementById('sQualRow').addEventListener('click', e => {
-                    e.stopPropagation();
-                    showSub('quality');
-                }
-                );
-                document.getElementById('sSpeedBack').addEventListener('click', e => {
-                    e.stopPropagation();
-                    showSub('main');
-                }
-                );
-                document.getElementById('sQualBack').addEventListener('click', e => {
-                    e.stopPropagation();
-                    showSub('main');
-                }
-                );
-
-                function buildSpeed() {
-                    const c = document.getElementById('sSpeedOpts');
-                    c.innerHTML = '';
-                    [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3, 3.5, 4, 5, 6].forEach(sp => {
-                        const lbl = sp === 1 ? 'Normal' : sp + 'x';
-                        const d = document.createElement('div');
-                        d.className = 'sopt' + (sp === 1 ? ' active' : '');
-                        d.innerHTML = `<span>${lbl}</span><div class="radio"><div class="rdot"></div></div>`;
-                        d.onclick = e => {
-                            e.stopPropagation();
-                            vid.playbackRate = sp;
-                            spdBadge.textContent = sp + 'x';
-                            document.getElementById('sSpeedVal').textContent = lbl;
-                            c.querySelectorAll('.sopt').forEach(o => o.classList.remove('active'));
-                            d.classList.add('active');
-                            closeSett();
-                        }
-                        ;
-                        c.appendChild(d);
-                    }
-                    );
-                }
-                function buildQual(levels) {
-                    const c = document.getElementById('sQualOpts');
-                    c.innerHTML = '';
-                    [{
-                        label: 'Auto',
-                        value: -1
-                    }, ...levels].forEach(lv => {
-                        const d = document.createElement('div');
-                        d.className = 'sopt' + (lv.value === -1 ? ' active' : '');
-                        d.innerHTML = `<span>${lv.label}</span><div class="radio"><div class="rdot"></div></div>`;
-                        d.onclick = e => {
-                            e.stopPropagation();
-                            document.getElementById('sQualVal').textContent = lv.label;
-                            c.querySelectorAll('.sopt').forEach(o => o.classList.remove('active'));
-                            d.classList.add('active');
-                            if (hlsInst) {
-                                if (lv.value === -1) {
-                                    hlsInst.autoLevelCapping = -1;
-                                    hlsInst.nextLevel = -1;
-                                } else {
-                                    hlsInst.autoLevelCapping = lv.value;
-                                    hlsInst.nextLevel = lv.value;
-                                }
-                            }
-                            if (shakaInst) {
-                                try {
-                                    if (lv.value === -1) {
-                                        shakaInst.configure({
-                                            abr: {
-                                                enabled: true
-                                            }
-                                        });
-                                    } else {
-                                        const t = shakaInst.getVariantTracks().find(t => t.id === lv.value);
-                                        if (t) {
-                                            shakaInst.configure({
-                                                abr: {
-                                                    enabled: false
-                                                }
-                                            });
-                                            shakaInst.selectVariantTrack(t, true);
-                                        }
-                                    }
-                                } catch {}
-                            }
-                            closeSett();
-                        }
-                        ;
-                        c.appendChild(d);
-                    }
-                    );
-                }
-                buildSpeed();
-                buildQual([]);
-
-                /* ── Fullscreen ── */
-                fsBtn.addEventListener('click', e => {
-                    e.stopPropagation();
-                    const fs = !!(document.fullscreenElement || document.webkitFullscreenElement);
-                    if (fs)
-                        (document.exitFullscreen || document.webkitExitFullscreen).call(document);
-                    else {
-                        const el = document.getElementById('shell');
-                        (el.requestFullscreen || el.webkitRequestFullscreen).call(el);
-                    }
-                }
-                );
-                function onFs() {
-                    const fs = !!(document.fullscreenElement || document.webkitFullscreenElement);
-                    if (fs) {
-                        iFs.setAttribute('viewBox', '0 0 24 24');
-                        iFs.setAttribute('fill', 'white');
-                        iFs.removeAttribute('stroke');
-                        iFs.removeAttribute('stroke-width');
-                        iFs.removeAttribute('stroke-linecap');
-                        iFs.innerHTML = '<path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>';
-                        screen.orientation?.lock('landscape').catch( () => {}
-                        );
-                    } else {
-                        iFs.setAttribute('viewBox', '0 0 24 24');
-                        iFs.setAttribute('fill', 'none');
-                        iFs.setAttribute('stroke', 'white');
-                        iFs.setAttribute('stroke-width', '2');
-                        iFs.setAttribute('stroke-linecap', 'round');
-                        iFs.innerHTML = '<path d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4"/>';
-                    }
-                    setTimeout(applyLayout, 50);
-                }
-                document.addEventListener('fullscreenchange', onFs);
-                document.addEventListener('webkitfullscreenchange', onFs);
-
-                /* ── Keyboard ── */
-                document.addEventListener('keydown', e => {
-                    if (['INPUT', 'TEXTAREA'].includes(e.target.tagName))
-                        return;
-                    if (e.code === 'Space') {
-                        e.preventDefault();
-                        doToggle();
-                    } else if (e.code === 'ArrowLeft')
-                        seekBy(-10);
-                    else if (e.code === 'ArrowRight')
-                        seekBy(10);
-                    else if (e.code === 'ArrowUp') {
-                        vid.volume = Math.min(1, vid.volume + .1);
-                        volBar.value = Math.round(vid.volume * 100);
-                        vid.muted = false;
-                        updVol();
-                        updMuteIcon();
-                    } else if (e.code === 'ArrowDown') {
-                        vid.volume = Math.max(0, vid.volume - .1);
-                        volBar.value = Math.round(vid.volume * 100);
-                        if (!vid.volume)
-                            vid.muted = true;
-                        updVol();
-                        updMuteIcon();
-                    }
-                    onInteraction();
-                }
-                );
-
-                /* ── UI helpers ── */
-                function showLoading(msg) {
-                    ovLoad.classList.remove('off');
-                    loadMsg.textContent = msg;
-                    ovErr.classList.remove('on');
-                }
-                function hideLoading() {
-                    ovLoad.classList.add('off');
-                }
-                function showError(msg) {
-                    hideLoading();
-                    errMsg.textContent = msg;
-                    ovErr.classList.add('on');
-                }
-
-                /* ── URL helpers ── */
-                function sigParams(url) {
-                    try {
-                        const u = new URL(url)
-                          , p = new URLSearchParams();
-                        u.searchParams.forEach( (v, k) => {
-                            if (k.toLowerCase() !== 'start')
-                                p.append(k, v);
-                        }
-                        );
-                        return p.toString() ? '?' + p : '';
-                    } catch {
-                        return '';
-                    }
-                }
-                function appendSig(target, sig) {
-                    if (!sig)
-                        return target;
-                    try {
-                        const u = new URL(target);
-                        new URLSearchParams(sig.slice(1)).forEach( (v, k) => {
-                            if (!u.searchParams.has(k))
-                                u.searchParams.set(k, v);
-                        }
-                        );
-                        return u.toString();
-                    } catch {
-                        return target;
-                    }
-                }
-                function parseKeys(keys) {
-                    const norm = s => String(s).replace(/-/g, '').toLowerCase().trim();
-                    const o = {};
-                    if (!keys)
-                        return o;
-                    const add = (k, v) => {
-                        k = norm(k);
-                        v = norm(v);
-                        if (k && v)
-                            o[k] = v;
-                    }
-                    ;
-                    if (typeof keys === 'object' && !Array.isArray(keys))
-                        Object.entries(keys).forEach( ([k,v]) => add(k, v));
-                    else {
-                        const lines = Array.isArray(keys) ? keys : String(keys).split(/[\n,]+/);
-                        lines.forEach(s => {
-                            s = String(s).trim();
-                            if (!s)
-                                return;
-                            const i = s.indexOf(':');
-                            if (i > 0)
-                                add(s.slice(0, i), s.slice(i + 1));
-                        }
-                        );
-                    }
-                    return o;
-                }
-                function isYT(u) {
-                    try {
-                        return ['youtube.com', 'youtube-nocookie.com', 'youtu.be'].includes(new URL(u).hostname.replace('www.', ''));
-                    } catch {
-                        return false;
-                    }
-                }
-                function ytId(u) {
-                    try {
-                        const x = new URL(u);
-                        if (x.hostname.includes('youtu.be'))
-                            return x.pathname.slice(1).split('?')[0];
-                        if (x.pathname.includes('/embed/'))
-                            return x.pathname.split('/embed/')[1].split(/[?/]/)[0];
-                        if (x.searchParams.get('v'))
-                            return x.searchParams.get('v');
-                    } catch {}
-                    return '';
-                }
-                function toHLS(url) {
-                    try {
-                        const u = new URL(url);
-                        u.pathname = u.pathname.replace(/master\.mpd$/i, 'master.m3u8');
-                        return u.toString();
-                    } catch {
-                        return url.replace(/master\.mpd(\?|$)/i, 'master.m3u8$1');
-                    }
-                }
-                function detectType(url) {
-                    if (isYT(url))
-                        return 'youtube';
-                    const lo = url.toLowerCase().split('?')[0];
-                    if (lo.endsWith('.m3u8') || lo.includes('/hls/') || lo.includes('m3u8'))
-                        return 'hls';
-                    if (lo.endsWith('.mpd') || lo.includes('.mpd'))
-                        return 'dash';
-                    if (/\.(mp4|webm|ogg)$/.test(lo))
-                        return 'progressive';
-                    return 'dash';
-                }
-
-                /* ── Destroy ── */
-                function destroyPlayers() {
-                    document.body.classList.remove('yt-mode');
-                    if (hlsInst) {
-                        hlsInst.destroy();
-                        hlsInst = null;
-                    }
-                    if (shakaInst) {
-                        try {
-                            shakaInst.destroy();
-                        } catch {}
-                        shakaInst = null;
-                    }
-                    vid.removeAttribute('src');
-                    vid.load();
-                    const ifr = document.getElementById('vid-box').querySelector('iframe');
-                    if (ifr)
-                        ifr.remove();
-                    vid.style.display = 'block';
-                    overlay.style.display = '';
-                    tapShield.style.display = '';
-                    isLive = false;
-                    liveBadge.classList.remove('on');
-                    barFill.style.width = '0%';
-                    barBuf.style.width = '0%';
-                    barThumb.style.left = '0%';
-                    seekBar.value = 0;
-                    curTime.textContent = '0:00';
-                    durTime.textContent = '0:00';
-                    vid.volume = 1;
-                    vid.muted = false;
-                    volBar.value = 100;
-                    updVol();
-                    updMuteIcon();
-                    setPlaying(false);
-                }
-
-                /* ── Autoplay ── */
-                async function startVideo() {
-                    hideLoading();
-                    vid.volume = 1;
-                    vid.muted = false;
-                    volBar.value = 100;
-                    updVol();
-                    updMuteIcon();
-                    try {
-                        await vid.play();
-                        setPlaying(true);
-                    } catch {
-                        try {
-                            vid.muted = true;
-                            await vid.play();
-                            vid.muted = false;
-                            vid.volume = 1;
-                            volBar.value = 100;
-                            updVol();
-                            updMuteIcon();
-                            setPlaying(true);
-                        } catch {
-                            updMuteIcon();
-                        }
-                    }
-                }
-
-                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-                const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-                const isNativeOnly = isIOS || isSafari;
-
-                /* ── YouTube ── */
-                function initYT(url) {
-                    showLoading('Loading YouTube…');
-                    document.body.classList.add('yt-mode');
-                    vid.style.display = 'none';
-                    overlay.style.display = 'none';
-                    tapShield.style.display = 'none';
-                    const id = url.includes('/embed/') ? null : ytId(url);
-                    const src = id ? `https://www.youtube.com/embed/${id}?autoplay=1&controls=1&rel=0&modestbranding=1&playsinline=1` : ( () => {
-                        try {
-                            const u = new URL(url);
-                            u.searchParams.set('autoplay', '1');
-                            u.searchParams.set('playsinline', '1');
-                            return u.toString();
-                        } catch {
-                            return url;
-                        }
-                    }
-                    )();
-                    const iframe = document.createElement('iframe');
-                    iframe.style.cssText = 'width:100%;height:100%;border:none;position:absolute;inset:0;z-index:5;';
-                    iframe.src = src;
-                    iframe.allow = 'accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture';
-                    iframe.allowFullscreen = true;
-                    document.getElementById('vid-box').appendChild(iframe);
-                    iframe.onload = hideLoading;
-                    setTimeout(hideLoading, 2000);
-                }
-
-                /* ── Progressive ── */
-                function initProgressive(url) {
-                    showLoading('Loading Video…');
-                    let done = false;
-                    vid.addEventListener('loadedmetadata', () => {
-                        if (!isFinite(vid.duration) || vid.duration === 0)
-                            markLive();
-                    }
-                    , {
-                        once: true
-                    });
-                    vid.addEventListener('canplay', () => {
-                        if (done)
-                            return;
-                        done = true;
-                        startVideo();
-                    }
-                    , {
-                        once: true
-                    });
-                    vid.addEventListener('error', () => {
-                        if (!done)
-                            showError(vid.error?.message || 'Playback failed');
-                    }
-                    , {
-                        once: true
-                    });
-                    vid.src = url;
-                    vid.load();
-                }
-
-                /* ── HLS ── */
-                function initHLS(url, data) {
-                    showLoading('Loading Stream…');
-
-                    if (Hls.isSupported()) {
-                        if (hlsInst) {
-                            hlsInst.destroy();
-                            hlsInst = null;
-                        }
-                        const sig = sigParams(url);
-                        let started = false
-                          , netErr = 0;
-                        function tryStart() {
-                            if (started)
-                                return;
-                            started = true;
-                            startVideo();
-                        }
-
-                        hlsInst = new Hls({
-                            enableWorker: true,
-                            maxBufferLength: 20,
-                            maxMaxBufferLength: 40,
-                            maxBufferHole: 0.5,
-                            startLevel: -1,
-                            abrEwmaDefaultEstimate: 300000,
-                            abrBandWidthFactor: 0.85,
-                            abrBandWidthUpFactor: 0.6,
-                            manifestLoadingMaxRetry: 6,
-                            manifestLoadingRetryDelay: 1000,
-                            levelLoadingMaxRetry: 6,
-                            levelLoadingRetryDelay: 1000,
-                            fragLoadingMaxRetry: 6,
-                            fragLoadingRetryDelay: 1000,
-                            xhrSetup(xhr, reqUrl) {
-                                xhr.open('GET', appendSig(reqUrl, sig), true);
-                                xhr.timeout = 20000;
-                                if (reqUrl.includes('.key') || reqUrl.includes('enc.key') || reqUrl.includes('get-hls-key'))
-                                    Object.entries(PW_HEADERS || {}).forEach( ([k,v]) => {
-                                        try {
-                                            xhr.setRequestHeader(k, v);
-                                        } catch {}
-                                    }
-                                    );
-                            }
-                        });
-                        hlsInst.on(Hls.Events.MANIFEST_PARSED, (_, d) => {
-                            if (d.levels?.some(l => l.details?.live))
-                                markLive();
-                            const seen = new Set();
-                            const levels = d.levels.map( (l, i) => ({
-                                label: (l.height || parseInt(l.attrs?.RESOLUTION?.split('x')[1]) || 0) + 'p',
-                                value: i,
-                                height: l.height || parseInt(l.attrs?.RESOLUTION?.split('x')[1]) || 0
-                            })).filter(l => {
-                                if (!l.height || seen.has(l.height))
-                                    return false;
-                                seen.add(l.height);
-                                return true;
-                            }
-                            ).sort( (a, b) => b.height - a.height);
-                            if (levels.length)
-                                buildQual(levels);
-                            tryStart();
-                        }
-                        );
-                        hlsInst.on(Hls.Events.LEVEL_LOADED, (_, d) => {
-                            if (d.details?.live)
-                                markLive();
-                        }
-                        );
-                        hlsInst.on(Hls.Events.ERROR, (_, d) => {
-                            if (!d.fatal)
-                                return;
-                            if (d.type === Hls.ErrorTypes.NETWORK_ERROR) {
-                                netErr++;
-                                if (netErr <= 5)
-                                    setTimeout( () => hlsInst && hlsInst.startLoad(), netErr * 1000);
-                                else
-                                    showError('Network error — check connection and retry.');
-                            } else if (d.type === Hls.ErrorTypes.MEDIA_ERROR)
-                                hlsInst.recoverMediaError();
-                            else
-                                showError('HLS playback failed.');
-                        }
-                        );
-                        vid.addEventListener('canplay', tryStart);
-                        vid.addEventListener('canplaythrough', tryStart);
-                        vid.addEventListener('playing', () => {
-                            netErr = 0;
-                        }
-                        );
-                        hlsInst.loadSource(url);
-                        hlsInst.attachMedia(vid);
-                        return;
-                    }
-
-                    if (!vid.canPlayType('application/vnd.apple.mpegurl')) {
-                        showError('HLS not supported in this browser.');
-                        return;
-                    }
-
-                    /* iOS/Safari native — check for FairPlay DRM */
-                    if (data && data.licenseUrl && data.licenseToken) {
-                        initFairPlay(url, data);
-                        return;
-                    }
-
-                    let done = false
-                      , t = null;
-                    function go() {
-                        if (done)
-                            return;
-                        done = true;
-                        clearTimeout(t);
-                        if (!isFinite(vid.duration) || vid.duration === 0)
-                            markLive();
-                        startVideo();
-                    }
-                    vid.addEventListener('loadedmetadata', go, {
-                        once: true
-                    });
-                    vid.addEventListener('canplay', go, {
-                        once: true
-                    });
-                    vid.addEventListener('canplaythrough', go, {
-                        once: true
-                    });
-                    vid.addEventListener('error', () => {
-                        if (done)
-                            return;
-                        clearTimeout(t);
-                        showError(vid.error?.message || 'HLS failed.');
-                    }
-                    );
-                    t = setTimeout( () => {
-                        if (!done)
-                            showError('Stream timeout. Check connection.');
-                    }
-                    , 20000);
-                    vid.src = url;
-                    vid.load();
-                }
-
-                /* ── FairPlay DRM (iOS Safari) ──
-   Flow: fetch certificate (no auth headers) → set src → browser fires webkitneedkey →
-   create session → receive keymessage with SPC data → POST spc + pallycon token to licenseUrl →
-   receive CKC → session.update(ckc)
-── */
-                function initFairPlay(url, data) {
-                    const KEY_SYSTEM = 'com.apple.fps.1_0';
-
-                    if (!window.WebKitMediaKeys) {
-                        showError('FairPlay DRM not supported in this browser.');
-                        return;
-                    }
-                    if (!data.certificateUrl) {
-                        showError('FairPlay certificate URL missing.');
-                        return;
-                    }
-
-                    let started = false
-                      , done = false
-                      , errTimer = null
-                      , needKeyTimer = null
-                      , session = null;
-
-                    function tryStart() {
-                        if (started)
-                            return;
-                        started = true;
-                        startVideo();
-                    }
-                    function go() {
-                        if (done)
-                            return;
-                        done = true;
-                        clearTimeout(errTimer);
-                        clearTimeout(needKeyTimer);
-                        if (!isFinite(vid.duration) || vid.duration === 0)
-                            markLive();
-                        tryStart();
-                    }
-
-                    function extractContentId(initData) {
-                        try {
-                            const bytes = new Uint8Array(initData instanceof ArrayBuffer ? initData : initData.buffer);
-                            const str = String.fromCharCode.apply(null, bytes);
-                            const skd = str.match(/skd:\/\/[^\x00]*/)?.[0] || str;
-                            return skd.replace('skd://', '').split('?')[0];
-                        } catch {
-                            return '';
-                        }
-                    }
-
-                    function onNeedKey(event) {
-                        clearTimeout(needKeyTimer);
-                        if (!vid.webkitKeys) {
-                            showError('FairPlay media keys not ready.');
-                            return;
-                        }
-                        const initData = event.initData;
-                        try {
-                            session = vid.webkitKeys.createSession('video/mp4', initData);
-                        } catch (err) {
-                            showError('FairPlay session failed: ' + err.message);
-                            return;
-                        }
-                        session.contentId = extractContentId(initData);
-
-                        session.addEventListener('webkitkeymessage', e => {
-                            /* e.message is the SPC (Server Playback Context) binary data */
-                            const spcBody = new Uint8Array(e.message.buffer || e.message);
-                            const headers = Object.assign({}, PW_HEADERS || {}, {
-                                'pallycon-customdata-v2': data.licenseToken,
-                                'content-type': 'application/octet-stream'
-                            });
-                            fetch(data.licenseUrl, {
-                                method: 'POST',
-                                headers,
-                                body: spcBody
-                            }).then(r => {
-                                if (!r.ok)
-                                    throw new Error('License request failed: ' + r.status);
-                                return r.arrayBuffer();
-                            }
-                            ).then(ckc => {
-                                session.update(new Uint8Array(ckc));
-                            }
-                            ).catch(err => showError('FairPlay license error: ' + err.message));
-                        }
-                        );
-                        session.addEventListener('webkitkeyadded', () => go());
-                        session.addEventListener('webkitkeyerror', () => showError('FairPlay key error. Please retry.'));
-                    }
-
-                    vid.addEventListener('webkitneedkey', onNeedKey);
-                    vid.addEventListener('error', () => {
-                        if (done)
-                            return;
-                        clearTimeout(errTimer);
-                        clearTimeout(needKeyTimer);
-                        showError(vid.error?.message || 'FairPlay playback failed.');
-                    }
-                    );
-
-                    errTimer = setTimeout( () => {
-                        if (!done)
-                            showError('Stream timeout. Check connection.');
-                    }
-                    , 25000);
-
-                    /* Fetch certificate WITHOUT auth headers (PallyCon CDN requires no auth for certificate) */
-                    showLoading('Loading Stream…');
-                    fetch(data.certificateUrl).then(r => {
-                        if (!r.ok)
-                            throw new Error('Certificate fetch failed: ' + r.status);
-                        return r.arrayBuffer();
-                    }
-                    ).then(certBuf => {
-                        const mk = new WebKitMediaKeys(KEY_SYSTEM);
-                        vid.webkitSetMediaKeys(mk);
-                        vid._fpCert = new Uint8Array(certBuf);
-                        needKeyTimer = setTimeout( () => {
-                            if (!done)
-                                showError('FairPlay did not initialize. Please retry.');
-                        }
-                        , 8000);
-                        vid.src = url;
-                        vid.load();
-                    }
-                    ).catch(err => showError('FairPlay setup failed: ' + err.message));
-                }
-
-                /* ── DASH (Shaka) ── */
-                async function initDASH(data) {
-                    if (!shaka.Player.isBrowserSupported())
-                        throw new Error('DASH not supported in this browser.');
-                    showLoading('Loading Stream…');
-                    shaka.polyfill.installAll();
-                    if (shakaInst) {
-                        try {
-                            await shakaInst.destroy();
-                        } catch {}
-                        shakaInst = null;
-                    }
-                    shakaInst = new shaka.Player();
-                    await shakaInst.attach(vid);
-
-                    shakaInst.configure({
-                        streaming: {
-                            bufferingGoal: 30,
-                            rebufferingGoal: 2,
-                            bufferBehind: 30,
-                            retryParameters: {
-                                maxAttempts: 5,
-                                baseDelay: 1000,
-                                backoffFactor: 2,
-                                fuzzFactor: 0.5
-                            }
-                        },
-                        abr: {
-                            enabled: true,
-                            defaultBandwidthEstimate: 500000,
-                            switchInterval: 8,
-                            bandwidthUpgradeTarget: 0.75,
-                            bandwidthDowngradeTarget: 0.95
-                        }
-                    });
-
-                    shakaInst.addEventListener('error', e => {
-                        if (e.detail?.severity === shaka.util.Error.Severity.RECOVERABLE)
-                            shakaInst.retryStreaming().catch( () => {}
-                            );
-                    }
-                    );
-
-                    if (data.keys) {
-                        const ck = parseKeys(data.keys);
-                        if (Object.keys(ck).length)
-                            shakaInst.configure({
-                                drm: {
-                                    clearKeys: ck
-                                }
-                            });
-                    } else if (data.licenseUrl && data.licenseToken) {
-                        shakaInst.configure({
-                            drm: {
-                                servers: {
-                                    'com.widevine.alpha': data.licenseUrl
-                                }
-                            }
-                        });
-                        shakaInst.getNetworkingEngine().registerRequestFilter( (type, req) => {
-                            if (type === shaka.net.NetworkingEngine.RequestType.LICENSE) {
-                                Object.entries(PW_HEADERS || {}).forEach( ([k,v]) => {
-                                    req.headers[k] = v;
-                                }
-                                );
-                                req.headers['pallycon-customdata-v2'] = data.licenseToken;
-                                req.headers['content-type'] = 'application/octet-stream';
-                            }
-                        }
-                        );
-                    }
-
-                    const sig = sigParams(data.url);
-                    if (sig) {
-                        shakaInst.getNetworkingEngine().registerRequestFilter( (type, req) => {
-                            const T = shaka.net.NetworkingEngine.RequestType;
-                            if (type === T.SEGMENT || type === T.MANIFEST)
-                                req.uris = req.uris.map(u => appendSig(u, sig));
-                        }
-                        );
-                    }
-
-                    await shakaInst.load(data.url);
-                    if (shakaInst.isLive())
-                        markLive();
-
-                    try {
-                        const seen = new Set();
-                        const levels = shakaInst.getVariantTracks().filter(t => {
-                            if (!t.height || seen.has(t.height))
-                                return false;
-                            seen.add(t.height);
-                            return true;
-                        }
-                        ).sort( (a, b) => b.height - a.height).map(t => ({
-                            label: t.height + 'p',
-                            value: t.id
-                        }));
-                        if (levels.length)
-                            buildQual(levels);
-                    } catch {}
-
-                    let done = false;
-                    vid.addEventListener('canplay', () => {
-                        if (done)
-                            return;
-                        done = true;
-                        startVideo();
-                    }
-                    , {
-                        once: true
-                    });
-                    if (vid.readyState >= 3) {
-                        done = true;
-                        startVideo();
-                    }
-                }
-
-                /* ── Master init ── */
-                async function initPlayer(data) {
-                    if (initialized) {
-                        destroyPlayers();
-                        initialized = false;
-                    }
-                    initialized = true;
-                    lastData = data;
-                    showLoading('Initializing…');
-                    try {
-                        if (isNativeOnly) {
-                            if (isYT(data.url)) {
-                                initYT(data.url);
-                                return;
-                            }
-                            const lo = data.url.toLowerCase().split('?')[0];
-                            initHLS((lo.endsWith('.m3u8') || lo.includes('m3u8')) ? data.url : toHLS(data.url), data);
-                            return;
-                        }
-                        const type = detectType(data.url);
-                        if (type === 'youtube')
-                            initYT(data.url);
-                        else if (type === 'hls')
-                            initHLS(data.url, data);
-                        else if (type === 'progressive')
-                            initProgressive(data.url);
-                        else {
-                            try {
-                                await initDASH(data);
-                            } catch {
-                                if (shakaInst) {
-                                    try {
-                                        await shakaInst.destroy();
-                                    } catch {}
-                                    shakaInst = null;
-                                }
-                                vid.removeAttribute('src');
-                                vid.load();
-                                initHLS(toHLS(data.url), data);
-                            }
-                        }
-                    } catch (err) {
-                        initialized = false;
-                        showError(err.message || 'Failed to load video.');
-                    }
-                }
-
-                /* ── Boot: fetch video URL then play ── */
-                async function boot() {
-                    showLoading('Loading…');
-                    try {
-                        if (!MEDIA_TOKEN)
-                            throw new Error('Media token not available.');
-                        const container = isNativeOnly ? 'HLS' : 'DASH';
-                        const res = await fetch('https://alparsalan005.github.io/rarestudyapp/v1/videos/video-url-details?' + new URLSearchParams({
-                            mediaToken: MEDIA_TOKEN,
-                            videoContainerType: container
-                        }));
-                        if (!res.ok)
-                            throw new Error('Failed to resolve video (' + res.status + ').');
-                        const json = await res.json();
-                        if (!json.success || !json.data?.url)
-                            throw new Error(json.message || 'Video not available.');
-                        const data = json.data;
-                        if (isYT(data.url))
-                            document.body.classList.add('yt-mode');
-                        await initPlayer(data);
-                    } catch (err) {
-                        showError(err.message || 'Video not available.');
-                    }
-                }
-
-                retryBtn.addEventListener('click', () => boot());
-                window.addEventListener('beforeunload', () => {
-                    if (shakaInst) {
-                        try {
-                            shakaInst.destroy();
-                        } catch {}
-                    }
-                    if (hlsInst)
-                        hlsInst.destroy();
-                }
-                );
-
-                showLoading('Loading…');
-                showControls();
-                scheduleHide();
-                boot();
-
+            function previewPDF(url, name) {
+                const fc = document.getElementById('pdfFrameContainer');
+                document.getElementById('mainPanelBody').style.display = 'none';
+                document.getElementById('panelTabsArea').style.display = 'none';
+                document.getElementById('pdfPreviewWrap').style.display = 'flex';
+                document.getElementById('pdfPreviewTitle').textContent = name;
+                fc.innerHTML = `<iframe src="${url}" style="width:100%;height:100%;border:none;"></iframe>`;
             }
-            )();
+
+            function closePDFPreview() {
+                document.getElementById('mainPanelBody').style.display = 'block';
+                document.getElementById('panelTabsArea').style.display = 'flex';
+                document.getElementById('pdfPreviewWrap').style.display = 'none';
+                document.getElementById('pdfFrameContainer').innerHTML = '';
+            }
+
+            // Controls & Event Handlers
+            document.getElementById('tdBtn').onclick = () => {
+                const m = document.getElementById('tdMenu');
+                m.classList.toggle('on');
+            };
+            document.getElementById('tdTimeline').onclick = () => { openPanel('tl'); document.getElementById('tdMenu').classList.remove('on'); };
+            document.getElementById('tdAttach').onclick = () => { openPanel('att'); document.getElementById('tdMenu').classList.remove('on'); };
+
+            playBtn.onclick = () => {
+                if (vid.paused) vid.play();
+                else vid.pause();
+            };
+
+            vid.onplay = () => { iPlay.style.display = 'none'; iPause.style.display = 'block'; };
+            vid.onpause = () => { iPlay.style.display = 'block'; iPause.style.display = 'none'; };
+            vid.ontimeupdate = () => {
+                curTime.textContent = fmt(vid.currentTime);
+                durTime.textContent = fmt(vid.duration);
+                if (vid.duration) {
+                    const pct = (vid.currentTime / vid.duration) * 100;
+                    barFill.style.width = pct + '%';
+                    barThumb.style.left = pct + '%';
+                    seekBar.value = (vid.currentTime / vid.duration) * 1000;
+                }
+            };
+
+            seekBar.oninput = () => {
+                if (vid.duration) {
+                    vid.currentTime = (seekBar.value / 1000) * vid.duration;
+                }
+            };
+
+            document.getElementById('rwBtn').onclick = () => vid.currentTime -= 10;
+            document.getElementById('fwBtn').onclick = () => vid.currentTime += 10;
+            document.getElementById('fsBtn').onclick = () => {
+                if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+                else document.exitFullscreen();
+            };
+
+            document.getElementById('settBtn').onclick = () => {
+                document.getElementById('settPanel').classList.toggle('on');
+                document.getElementById('settBd').classList.toggle('on');
+            };
+            document.getElementById('settBd').onclick = () => {
+                document.getElementById('settPanel').classList.remove('on');
+                document.getElementById('settBd').classList.remove('on');
+            };
+
+            // Quality & Speed Logic Options
+            const spdOpts = [0.5, 0.75, 1, 1.25, 1.5, 2];
+            const spdScroll = document.getElementById('sSpeedOpts');
+            spdOpts.forEach(s => {
+                const div = document.createElement('div');
+                div.className = 'sopt';
+                div.innerHTML = `<span>${s === 1 ? 'Normal' : s + 'x'}</span>`;
+                div.onclick = () => {
+                    vid.playbackRate = s;
+                    document.getElementById('spdBadge').textContent = s + 'x';
+                    document.getElementById('sSpeedVal').textContent = s === 1 ? 'Normal' : s + 'x';
+                    document.getElementById('sSpeedSub').classList.remove('on');
+                    document.getElementById('sMain').classList.remove('off');
+                };
+                spdScroll.appendChild(div);
+            });
+
+            document.getElementById('sSpeedRow').onclick = () => {
+                document.getElementById('sMain').classList.add('off');
+                document.getElementById('sSpeedSub').classList.add('on');
+            };
+            document.getElementById('sSpeedBack').onclick = () => {
+                document.getElementById('sSpeedSub').classList.remove('on');
+                document.getElementById('sMain').classList.remove('off');
+            };
+
+            applyLayout();
+            ovLoad.classList.add('off'); // Ready
         </script>
-        <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"a870477babf4472d87cfe5347ff3f376","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
     </body>
 </html>
