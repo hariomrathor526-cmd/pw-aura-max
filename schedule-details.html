@@ -74,18 +74,6 @@
                 justify-content: center
             }
 
-            video {
-                position: absolute;
-                inset: 0;
-                width: 100%;
-                height: 100%;
-                object-fit: contain;
-                background: #000;
-                display: block;
-                outline: none;
-                pointer-events: none
-            }
-
             .ov {
                 position: absolute;
                 inset: 0;
@@ -99,10 +87,6 @@
 
             #ovLoad {
                 background: rgba(0,0,0,.82)
-            }
-
-            #ovLoad.off {
-                display: none
             }
 
             .spinner {
@@ -134,7 +118,7 @@
                         <video id="vid" playsinline preload="auto"></video>
                         <div class="ov" id="ovLoad">
                             <div class="spinner"></div>
-                            <p id="loadMsg">Redirecting to Player...</p>
+                            <p id="loadMsg">Opening Player...</p>
                         </div>
                     </div>
                 </div>
@@ -142,60 +126,61 @@
         </div>
 
         <script>
-            // Helper to build URL according to Live / Recorded requirement
-            function buildPlayerUrl(paramsObj) {
+            // Target Studyaura Player URL Constructor
+            function buildPlayerUrl(p) {
                 const baseUrl = "https://studyaura.online/player";
-                const params = new URLSearchParams();
+                const query = new URLSearchParams();
 
-                if (paramsObj.isLive) {
-                    // LIVE URL Structure
-                    // Example: ?rc=...&pro=...&title=...&subject=...&topic=...&live=true&type=live
-                    if (paramsObj.rc) params.set('rc', paramsObj.rc);
-                    if (paramsObj.pro) params.set('pro', paramsObj.pro);
-                    if (paramsObj.title) params.set('title', paramsObj.title);
-                    if (paramsObj.subject) params.set('subject', paramsObj.subject);
-                    if (paramsObj.topic) params.set('topic', paramsObj.topic);
-                    params.set('live', 'true');
-                    params.set('type', 'live');
+                if (p.isLive) {
+                    // LIVE LECTURE URL FORMAT
+                    if (p.rc) query.set('rc', p.rc);
+                    if (p.pro) query.set('pro', p.pro);
+                    if (p.title) query.set('title', p.title);
+                    if (p.subject) query.set('subject', p.subject);
+                    if (p.topic) query.set('topic', p.topic);
+                    query.set('live', 'true');
+                    query.set('type', 'live');
                 } else {
-                    // RECORDED URL Structure
-                    // Example: ?rc=...&subject=...&pro=...&title=...
-                    if (paramsObj.rc) params.set('rc', paramsObj.rc);
-                    if (paramsObj.subject) params.set('subject', paramsObj.subject);
-                    if (paramsObj.pro) params.set('pro', paramsObj.pro);
-                    if (paramsObj.title) params.set('title', paramsObj.title);
+                    // RECORDED LECTURE URL FORMAT
+                    if (p.rc) query.set('rc', p.rc);
+                    if (p.subject) query.set('subject', p.subject);
+                    if (p.pro) query.set('pro', p.pro);
+                    query.set('title', p.title || 'StudyAura Video Player');
                 }
 
-                return `${baseUrl}?${params.toString()}`;
+                return `${baseUrl}?${query.toString()}`;
             }
 
-            // Automatic URL conversion & redirection
-            (function redirectToNewPlayer() {
-                const currentParams = new URLSearchParams(window.location.search);
+            // Processing and Redirecting Logic
+            (function handleRedirect() {
+                const urlParams = new URLSearchParams(window.location.search);
 
-                const rc = currentParams.get('rc') || currentParams.get('batchId');
-                const subject = currentParams.get('subject') || currentParams.get('subjectId');
-                const pro = currentParams.get('pro') || currentParams.get('scheduleId');
-                const title = currentParams.get('title') || document.title;
-                const topic = currentParams.get('topic') || '';
+                const rc = urlParams.get('rc') || urlParams.get('batchId');
+                const pro = urlParams.get('pro') || urlParams.get('scheduleId');
+                const subject = urlParams.get('subject') || urlParams.get('subjectId');
+                const title = urlParams.get('title');
+                const topic = urlParams.get('topic') || '';
 
-                // Live Detection Logic:
-                // Agar URL me 'live=true' / 'type=live' / 'isLive=true' pass ho raha ho
-                const isLive = currentParams.get('live') === 'true' || 
-                               currentParams.get('type') === 'live' || 
-                               currentParams.get('isLive') === 'true';
+                // LIVE DETECTION CRITERIA:
+                // Checks if URL explicitly has live/type parameters OR if it comes from stream.html
+                const isLiveExplicit = urlParams.get('live') === 'true' || 
+                                       urlParams.get('type') === 'live' || 
+                                       urlParams.get('isLive') === 'true';
+                
+                const isStreamSource = document.referrer.includes('stream.html');
+                const isLive = isLiveExplicit || isStreamSource;
 
                 if (rc && pro) {
-                    const targetUrl = buildPlayerUrl({
+                    const finalUrl = buildPlayerUrl({
                         rc: rc,
-                        subject: subject,
                         pro: pro,
+                        subject: subject,
                         title: title,
                         topic: topic,
                         isLive: isLive
                     });
 
-                    window.location.replace(targetUrl);
+                    window.location.replace(finalUrl);
                 }
             })();
         </script>
