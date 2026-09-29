@@ -41,39 +41,47 @@
 <body>
 
     <div class="card">
-        <h2>Redirecting to New Player...</h2>
-        <p>Agar aap auto-redirect nahi ho rahe hain, toh niche diye gaye button par click karein.</p>
+        <h2>Redirecting to Player...</h2>
+        <p>Agar auto-redirect na ho, toh niche click karein:</p>
         <a id="playerBtn" href="#" class="btn">Play Video</a>
     </div>
 
     <script>
-        // URL se parameters nikalne ka logic
         function getRedirectUrl() {
             const urlParams = new URLSearchParams(window.location.search);
 
-            // Existing Parameters
+            // Extract IDs
             const batchId = urlParams.get('batchId') || '';
             const subjectId = urlParams.get('subjectId') || '';
             const scheduleId = urlParams.get('scheduleId') || '';
             
-            // Topic Name (agar URL me ho, ya default)
-            let topicName = urlParams.get('title') || 'Lecture';
+            // Extract Title (Checks 'title', 'topic', 'topicName', or JavaScript global variables)
+            let lectureTitle = urlParams.get('title') || 
+                               urlParams.get('topic') || 
+                               urlParams.get('topicName') || 
+                               (typeof TOPIC_NAME !== 'undefined' ? TOPIC_NAME : '') || 
+                               (typeof LECTURE_TITLE !== 'undefined' ? LECTURE_TITLE : '');
 
-            // New Player URL Structure
+            // Convert Title automatically if empty
+            if (!lectureTitle) {
+                lectureTitle = "Lecture Details";
+            }
+
+            // New Player Base URL
             const baseUrl = 'https://studyaura.online/player';
-            const newUrl = `${baseUrl}?rc=${encodeURIComponent(batchId)}&subject=${encodeURIComponent(subjectId)}&pro=${encodeURIComponent(scheduleId)}&title=${encodeURIComponent(topicName)}`;
+            
+            // Construct Final URL with properly encoded Title
+            const finalUrl = `${baseUrl}?rc=${encodeURIComponent(batchId)}&subject=${encodeURIComponent(subjectId)}&pro=${encodeURIComponent(scheduleId)}&title=${encodeURIComponent(lectureTitle)}`;
 
-            return newUrl;
+            return finalUrl;
         }
 
-        // Script Execution
         window.onload = function() {
             const targetUrl = getRedirectUrl();
             
-            // Button ka URL set karna
             document.getElementById('playerBtn').href = targetUrl;
 
-            // Automatically redirect karna
+            // Auto Redirect
             window.location.href = targetUrl;
         };
     </script>
