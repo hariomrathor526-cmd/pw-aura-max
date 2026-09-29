@@ -1,75 +1,334 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Class Player Loading...</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f4f4f9;
-        }
-        .card {
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            text-align: center;
-            max-width: 400px;
-            width: 100%;
-        }
-        .btn {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 12px 24px;
-            background-color: #007bff;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: bold;
-        }
-        .btn:hover {
-            background-color: #0056b3;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Motion in a Straight Line — rarestudy</title>
+<link rel="icon" type="image/png" href="https://rarestudy.in/static/site_logo.png">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;outline:none;-webkit-tap-highlight-color:transparent;user-select:none}
+body,html{min-height:100%;font-family:Inter,sans-serif;background:#0f172a;color:#e2e8f0}
+.back-section{position:fixed;top:0;left:0;right:0;height:50px;background:rgba(15,23,42,0.97);display:flex;align-items:center;z-index:1300;border-bottom:1px solid rgba(30,41,59,0.5);padding:0 8px}
+.back-section::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(99,102,241,0.5),transparent)}
+.back-link{display:inline-flex;align-items:center;gap:8px;font-weight:700;color:#fff;border:none;background:transparent;cursor:pointer;padding:8px 10px;border-radius:8px;transition:transform 0.1s;text-decoration:none}
+.back-link:active{transform:scale(0.95)}
+.nav-icon{display:flex;align-items:center;justify-content:center;flex-shrink:0;width:clamp(18px,4.5vw,22px);height:clamp(18px,4.5vw,22px)}
+.nav-icon svg{width:clamp(18px,4.5vw,22px);height:clamp(18px,4.5vw,22px);stroke:#6366f1;stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round;display:block}
+.back-label{font-size:clamp(14px,3.8vw,16px);font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(100vw - 80px)}
+.nav-section{position:fixed;top:50px;left:0;right:0;height:52px;background:rgba(15,23,42,0.97);display:flex;align-items:center;z-index:1200;border-bottom:1px solid rgba(30,41,59,0.5)}
+.nav-section::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(99,102,241,0.5),transparent)}
+.nav-tabs{display:flex;width:100%}
+.nav-tab{flex:1;text-align:center;padding:0 2px;height:52px;line-height:52px;font-size:clamp(9px,2.5vw,13px);font-weight:bold;color:#94a3b8;background:transparent;border:none;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-bottom:3px solid transparent;transition:color 0.15s}
+.nav-tab:not(:last-child){border-right:1px solid rgba(30,41,59,0.5)}
+.nav-tab.active{color:#fff;border-bottom:3px solid #6366f1}
+.nav-tab:active{opacity:0.7}
+.container{max-width:900px;margin:102px auto 0;padding:14px 12px 30px}
+.panel{display:none}.panel.active{display:block}
+.skel{background:linear-gradient(90deg,#1e293b 25%,#334155 50%,#1e293b 75%);background-size:200% 100%;animation:sk 1.4s infinite;border-radius:14px}
+@keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.sk-v{height:88px;margin-bottom:12px}
+.content-list{list-style:none;padding:0;display:grid;gap:12px}
+.content-item{background:#1e293b;border-radius:14px;border:2px solid rgba(99,102,241,0.2);overflow:hidden;transition:transform 0.12s;display:flex;min-height:88px}
+.content-item:active{transform:scale(0.97)}
+.content-link{display:flex;align-items:stretch;text-decoration:none;color:#e2e8f0;width:100%}
+.thumb-box{width:clamp(120px,38vw,160px);min-width:clamp(120px,38vw,160px);flex-shrink:0;background:#1e293b;overflow:hidden;display:flex;align-items:stretch}
+.thumb-box img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+.pdf-box{width:clamp(120px,38vw,160px);min-width:clamp(120px,38vw,160px);flex-shrink:0;background:#1e3a5f;display:flex;align-items:center;justify-content:center;font-size:38px;color:#ef4444}
+.content-details{flex:1;min-width:0;padding:12px 14px;display:flex;flex-direction:column;justify-content:center;gap:7px;position:relative}
+.content-name{font-size:clamp(12px,3.2vw,15px);font-weight:700;color:#fff;line-height:1.45;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.content-meta{display:flex;align-items:center;gap:5px;font-size:clamp(10px,2.5vw,12px);color:#94a3b8;flex-wrap:wrap}
+.meta-dot{width:3px;height:3px;border-radius:50%;background:#64748b;flex-shrink:0}
+.complete-btn{position:absolute;bottom:10px;right:10px;width:26px;height:26px;border-radius:50%;border:2px solid #475569;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color 0.2s,background 0.2s;z-index:2}
+.complete-btn svg{width:14px;height:14px;stroke:#475569;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;transition:stroke 0.2s}
+.complete-btn.done{border-color:#22c55e;background:#22c55e}
+.complete-btn.done svg{stroke:#fff}
+.dpp-item{background:#1e293b;border-radius:14px;border:2px solid rgba(99,102,241,0.2);overflow:hidden;transition:transform 0.1s}
+.dpp-item:active{transform:scale(0.98)}
+.dpp-link{display:flex;align-items:center;text-decoration:none;color:#e2e8f0;width:100%;padding:16px;gap:14px}
+.dpp-content{flex:1;min-width:0}
+.dpp-name{font-size:clamp(12px,3.2vw,15px);font-weight:700;color:#fff;margin-bottom:8px;line-height:1.4}
+.dpp-meta{display:flex;align-items:center;gap:6px;font-size:clamp(10px,2.5vw,12px);color:#94a3b8;flex-wrap:wrap}
+.dpp-play{display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0}
+.play-btn{width:46px;height:46px;border-radius:50%;background:#6366f1;border:none;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(99,102,241,0.4);cursor:pointer}
+.play-icon{width:0;height:0;border-top:9px solid transparent;border-bottom:9px solid transparent;border-left:14px solid #fff;margin-left:3px}
+.dpp-tag{font-size:12px;font-weight:bold;color:#6366f1}
+.coming-soon{text-align:center;padding:60px 20px}
+.cs-icon{font-size:52px;margin-bottom:16px;opacity:0.6}
+.cs-text{font-size:clamp(16px,4.5vw,22px);font-weight:bold;color:#6366f1;margin-bottom:8px}
+.cs-sub{font-size:clamp(13px,3vw,15px);color:#94a3b8}
+.popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#1e293b;color:#fff;padding:14px 22px;border-radius:12px;font-size:14px;font-weight:bold;z-index:9999;opacity:0;transition:opacity 0.3s;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,0.5);border:1px solid rgba(99,102,241,0.3);max-width:min(300px,85vw);pointer-events:none;white-space:pre-line}
+.popup.show{opacity:1}
+</style>
 </head>
 <body>
-    
-    <script>
-        // URL se parameters nikalne ka logic
-        function getRedirectUrl() {
-            const urlParams = new URLSearchParams(window.location.search);
 
-            // Existing Parameters
-            const batchId = urlParams.get('batchId') || '';
-            const subjectId = urlParams.get('subjectId') || '';
-            const scheduleId = urlParams.get('scheduleId') || '';
-            
-            // Topic Name (agar URL me ho, ya default)
-            let topicName = urlParams.get('title') || 'Lecture';
+<div class="back-section">
+    <button class="back-link" onclick="history.back()">
+        <span class="nav-icon"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></span>
+        <span class="back-label" id="back-label">Chapters</span>
+    </button>
+</div>
 
-            // New Player URL Structure
-            const baseUrl = 'https://studyaura.online/player';
-            const newUrl = `${baseUrl}?rc=${encodeURIComponent(batchId)}&subject=${encodeURIComponent(subjectId)}&pro=${encodeURIComponent(scheduleId)}&title=${encodeURIComponent(topicName)}`;
+<div class="nav-section">
+    <div class="nav-tabs">
+        <button class="nav-tab" data-sec="videos"    onclick="switchTab('videos',this)">Lectures</button>
+        <button class="nav-tab" data-sec="notes"     onclick="switchTab('notes',this)">Notes</button>
+        <button class="nav-tab" data-sec="dpp"       onclick="switchTab('dpp',this)">DPP</button>
+        <button class="nav-tab" data-sec="DppNotes"  onclick="switchTab('DppNotes',this)">DPP PDF</button>
+        <button class="nav-tab" data-sec="DppVideos" onclick="switchTab('DppVideos',this)">DPP Videos</button>
+    </div>
+</div>
 
-            return newUrl;
+<div class="container">
+    <div id="panel-videos"    class="panel"></div>
+    <div id="panel-notes"     class="panel"></div>
+    <div id="panel-dpp"       class="panel"></div>
+    <div id="panel-DppNotes"  class="panel"></div>
+    <div id="panel-DppVideos" class="panel"></div>
+</div>
+
+<div class="popup" id="popup"></div>
+
+<script>
+const QS           = new URLSearchParams(location.search);
+const BATCH_ID     = QS.get('batchId')    ||'';
+const SUBJECT_ID   = QS.get('subjectId')  ||'';
+const CHAPTER_ID   = QS.get('chapterId')  ||'';
+const BATCH_NAME   = QS.get('batchName')  ||'';
+const SUBJECT_NAME = QS.get('subjectName')||'';
+const CHAPTER_NAME = QS.get('chapterName')||'';
+const INIT_SEC     = QS.get('section')    ||'videos';
+
+if(!BATCH_ID||!SUBJECT_ID||!CHAPTER_ID) location.href='https://alparsalan005.github.io/rarestudyapp/batches';
+document.getElementById('back-label').textContent = CHAPTER_NAME||'Chapters';
+const SITE_NAME='rarestudy';
+document.title = (CHAPTER_NAME||'Content')+' — '+SITE_NAME;
+
+const PW_HDR={
+    "Accept-Encoding": "gzip",
+    "User-Agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Mobile Safari/537.36",
+    "authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3OTA1MTg1MTIsImV4cCI6MTc5MTEyMzMxMi4xMDUsImRhdGEiOnsiX2lkIjoiNjhiODA3MjgyYzQxMTYxNTI5N2ZjMWM1IiwidXNlcm5hbWUiOiI5OTc3NDY3MjA1IiwiZmlyc3ROYW1lIjoiSGFyaW9tIiwibGFzdE5hbWUiOiIiLCJvcmdhbml6YXRpb24iOnsiX2lkIjoiNWViMzkzZWU5NWZhYjc0NjhhNzlkMTg5Iiwid2Vic2l0ZSI6InBoeXNpY3N3YWxsYWguY29tIiwibmFtZSI6IlBoeXNpY3N3YWxsYWgifSwicm9sZXMiOlsiNWIyN2JkOTY1ODQyZjk1MGE3NzhjNmVmIl0sImNvdW50cnlHcm91cCI6IklOIiwib25lUm9sZXMiOltdLCJ0eXBlIjoiVVNFUiJ9LCJqdGkiOiJiaXFEeWZLZ1FHbXMxVHMzbmNZZXNnXzY4YjgwNzI4MmM0MTE2MTUyOTdmYzFjNSJ9.MVM08HaT5dEukedD_QyuclHh4_v7V8X8jg7lBhGq5Fk",
+    "client-id": "5eb393ee95fab7468a79d189",
+    "client-type": "WEB",
+    "content-type": "application/json",
+    "X-SDK-Version": "0.0.28",
+    "randomId": "fcd07e90-daf8-421b-82df-10eecc799f7c",
+    "referer": "https://www.pw.live/study-v2/profile"
+};
+
+async function pw(url){return fetch(url,{headers:PW_HDR}).then(r=>r.json());}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function ep(v){return encodeURIComponent(v||'')}
+function fmtDate(iso){if(!iso)return'';try{const d=new Date(iso),M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return`${d.getUTCDate()} ${M[d.getUTCMonth()]}, ${d.getUTCFullYear()}`;}catch{return'';}}
+function showMsg(t){const p=document.getElementById('popup');p.textContent=t;p.classList.add('show');setTimeout(()=>p.classList.remove('show'),3000);}
+
+const CK='rarestudy_completed';
+function getC(){try{return JSON.parse(localStorage.getItem(CK)||'{}')}catch{return{}}}
+function saveC(d){localStorage.setItem(CK,JSON.stringify(d))}
+function toggleC(ev,id,name){
+    ev.preventDefault();ev.stopPropagation();if(!id)return;
+    const c=getC(),btn=ev.currentTarget;
+    if(c[id]){delete c[id];btn.classList.remove('done');}else{c[id]=true;btn.classList.add('done');showMsg('🎉 Congratulations!\n'+name);}
+    saveC(c);
+}
+function initComplete(panel){
+    const c=getC();
+    panel.querySelectorAll('.complete-btn').forEach(btn=>{if(c[btn.dataset.id])btn.classList.add('done');});
+}
+
+const TABS = ['videos','notes','dpp','DppNotes','DppVideos'];
+const tabState = {};
+TABS.forEach(t=>tabState[t]={page:1,loading:false,done:false,loaded:false});
+
+let activeTab = INIT_SEC;
+
+function skelCount(h){return Math.max(3,Math.floor((window.innerHeight-152)/(h+12)));}
+function skels(panel, h){
+    panel.innerHTML = Array(skelCount(h)).fill(`<div class="skel" style="height:${h}px;border-radius:14px;margin-bottom:12px"></div>`).join('');
+}
+function bottomSkels(panel, h){
+    const d=document.createElement('div');
+    d.className='bskels';
+    d.innerHTML=Array(Math.max(2,Math.floor(skelCount(h)/2))).fill(`<div class="skel" style="height:${h}px;border-radius:14px;margin-bottom:12px"></div>`).join('');
+    panel.appendChild(d);
+}
+function removeBottomSkels(panel){
+    panel.querySelectorAll('.bskels').forEach(e=>e.remove());
+}
+
+function showComingSoon(panel){
+    panel.innerHTML=`<div class="coming-soon"><div class="cs-icon">🚀</div><div class="cs-text">Coming Soon</div><div class="cs-sub">Content will be available soon!</div></div>`;
+}
+
+function buildVideoItem(item){
+    const vd=item.videoDetails||{};
+    const thumb=vd.image||'';
+    const dur=vd.duration||'';
+    const date=fmtDate(item.date||item.startTime||'');
+    const id_=item._id||'';
+    const name=item.topic||vd.name||'';
+    const done=getC()[id_]?'done':'';
+    const href=`https://alparsalan005.github.io/rarestudyapp/schedule-details.html?batchId=${ep(BATCH_ID)}&subjectId=${ep(SUBJECT_ID)}&scheduleId=${ep(id_)}&tap=video`;
+    const li=document.createElement('li');
+    li.className='content-item';
+    li.innerHTML=`<a class="content-link" href="${esc(href)}">
+        <div class="thumb-box"><img data-src="${esc(thumb)||'/static/site_thumbnail.png'}" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E" alt="" class="lazy-img" onerror="this.src='/static/site_thumbnail.png'"></div>
+        <div class="content-details">
+            <div class="content-name">${esc(name)}</div>
+            <div class="content-meta">${dur?`<span>${esc(dur)}</span>`:''} ${dur&&date?'<div class="meta-dot"></div>':''} ${date?`<span>${esc(date)}</span>`:''}</div>
+            <button class="complete-btn ${done}" onclick="toggleC(event,'${esc(id_)}','${esc(name)}')" data-id="${esc(id_)}"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></button>
+        </div>
+    </a>`;
+    return li;
+}
+
+function buildNoteItems(item, isDpp){
+    const frags=[];
+    const date=fmtDate(item.date||item.startTime||'');
+    (item.homeworkIds||[]).forEach((hw,hwIdx)=>{
+        (hw.attachmentIds||[]).forEach((att,attIdx)=>{
+            const name=hw.topic||att.name||'Note';
+            let gIdx=0;
+            for(let i=0;i<hwIdx;i++) gIdx+=(item.homeworkIds[i].attachmentIds||[]).length;
+            gIdx+=attIdx;
+            const href=`https://alparsalan005.github.io/rarestudyapp/schedule-details.html?batchId=${ep(BATCH_ID)}&subjectId=${ep(SUBJECT_ID)}&scheduleId=${ep(item._id)}&tap=note&noteIndex=${gIdx}&isDpp=${isDpp?'true':'false'}`;
+            const li=document.createElement('li');
+            li.className='content-item';
+            li.innerHTML=`<a class="content-link" href="${esc(href)}">
+                <div class="pdf-box">📄</div>
+                <div class="content-details">
+                    <div class="content-name">${esc(name)}</div>
+                    <div class="content-meta">${date?`<span>${esc(date)}</span>`:''}</div>
+                </div>
+            </a>`;
+            frags.push(li);
+        });
+    });
+    return frags;
+}
+
+function buildDppItem(item){
+    const test=item.test||{};
+    const isFree=item.isFree===true;
+    const href=`https://alparsalan005.github.io/rarestudyapp/get-dpp-quiz?batchId=${ep(BATCH_ID)}&scheduleId=${ep(item.scheduleId||'')}&testId=${ep(test._id||'')}&tag=${ep(item.tag||'Start')}&isFreeTest=${isFree}`;
+    const li=document.createElement('li');
+    li.className='dpp-item';
+    li.innerHTML=`<a class="dpp-link" href="${esc(href)}">
+        <div class="dpp-content">
+            <div class="dpp-name">${esc(test.name||'DPP Quiz')}</div>
+            <div class="dpp-meta"><span>📋 ${test.totalQuestions||0} questions</span><span style="margin:0 2px">•</span><span>${test.totalMarks||0} Marks</span>${test.maxDuration?`<span style="margin:0 2px">•</span><span>${test.maxDuration} Mins</span>`:''}</div>
+        </div>
+        <div class="dpp-play"><div class="play-btn"><div class="play-icon"></div></div><span class="dpp-tag">${esc(item.tag||'Start')}</span></div>
+    </a>`;
+    return li;
+}
+
+async function loadContent(tab, page){
+    const st=tabState[tab];
+    if(st.loading||st.done) return;
+    st.loading=true;
+    const panel=document.getElementById('panel-'+tab);
+    const isVid=(tab==='videos'||tab==='DppVideos');
+    const isDppNotes=(tab==='DppNotes');
+    const isDpp=(tab==='dpp');
+    const cardH=isDpp?82:88;
+
+    if(page===1) skels(panel, cardH);
+    else bottomSkels(panel, cardH);
+
+    try{
+        let data;
+        if(isDpp){
+            data=await pw(`https://api.penpencil.co/v3/test-service/tests/dpp?batchId=${BATCH_ID}&batchSubjectId=${SUBJECT_ID}&chapterId=${CHAPTER_ID}&isSubjective=false&page=${page}`);
+        } else {
+            data=await pw(`https://api.penpencil.co/v2/batches/${BATCH_ID}/subject/${SUBJECT_ID}/contents?page=${page}&contentType=${tab}&tag=${CHAPTER_ID}`);
         }
 
-        // Script Execution
-        window.onload = function() {
-            const targetUrl = getRedirectUrl();
-            
-            // Button ka URL set karna
-            document.getElementById('playerBtn').href = targetUrl;
+        removeBottomSkels(panel);
+        if(page===1) panel.innerHTML='';
 
-            // Automatically redirect karna
-            window.location.href = targetUrl;
-        };
-    </script>
+        if(!data.success||!data.data?.length){
+            st.done=true;
+            if(page===1) showComingSoon(panel);
+            return;
+        }
+
+        let ul=panel.querySelector('.content-list');
+        if(!ul){ul=document.createElement('ul');ul.className='content-list';panel.appendChild(ul);}
+
+        if(isDpp){
+            data.data.forEach(item=>ul.appendChild(buildDppItem(item)));
+            const total=data.paginate?.totalCount||0;
+            const limit=data.paginate?.limit||50;
+            if(data.data.length<limit||(total>0&&page*limit>=total)) st.done=true;
+            else st.page=page+1;
+        } else if(isVid){
+            data.data.forEach(item=>ul.appendChild(buildVideoItem(item)));
+            if(data.data.length<20) st.done=true;
+            else st.page=page+1;
+        } else {
+            data.data.forEach(item=>buildNoteItems(item,isDppNotes).forEach(f=>ul.appendChild(f)));
+            if(data.data.length<20) st.done=true;
+            else st.page=page+1;
+        }
+
+        initComplete(panel);
+        initLazyImages(panel);
+    }catch{
+        removeBottomSkels(panel);
+        if(page===1) showComingSoon(panel);
+    }finally{
+        st.loading=false;
+    }
+}
+
+function switchTab(tab, btn){
+    document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    document.getElementById('panel-'+tab).classList.add('active');
+    activeTab=tab;
+    window.scrollTo({top:0,behavior:'smooth'});
+    const st=tabState[tab];
+    if(!st.loaded){st.loaded=true;loadContent(tab,1);}
+}
+
+window.addEventListener('scroll',()=>{
+    if(window.scrollY+window.innerHeight>=document.documentElement.scrollHeight-180){
+        const st=tabState[activeTab];
+        if(st.loaded&&!st.loading&&!st.done) loadContent(activeTab,st.page);
+    }
+});
+
+(function(){
+    const btn=document.querySelector(`.nav-tab[data-sec="${INIT_SEC}"]`)||document.querySelector('.nav-tab');
+    if(btn){btn.classList.add('active');activeTab=btn.dataset.sec||INIT_SEC;}
+    document.getElementById('panel-'+activeTab).classList.add('active');
+    tabState[activeTab].loaded=true;
+    loadContent(activeTab,1);
+    ['contextmenu','selectstart','dragstart','copy'].forEach(e=>document.addEventListener(e,ev=>ev.preventDefault()));
+    document.addEventListener('keydown',e=>{if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['I','J','C'].includes(e.key))||(e.ctrlKey&&['U','S'].includes(e.key))){e.preventDefault();return false;}});
+})();
+
+function initLazyImages(root){
+    if(!('IntersectionObserver' in window)){
+        root.querySelectorAll('img.lazy-img[data-src]').forEach(img=>{img.src=img.dataset.src;img.classList.remove('lazy-img');});
+        return;
+    }
+    const io=new IntersectionObserver((entries,obs)=>{
+        entries.forEach(e=>{
+            if(e.isIntersecting){
+                const img=e.target;
+                img.src=img.dataset.src;
+                img.removeAttribute('data-src');
+                img.classList.remove('lazy-img');
+                obs.unobserve(img);
+            }
+        });
+    },{rootMargin:'200px 0px'});
+    root.querySelectorAll('img.lazy-img[data-src]').forEach(img=>io.observe(img));
+}
+</script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"a870477babf4472d87cfe5347ff3f376","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
