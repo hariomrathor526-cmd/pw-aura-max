@@ -118,7 +118,7 @@
                         <video id="vid" playsinline preload="auto"></video>
                         <div class="ov" id="ovLoad">
                             <div class="spinner"></div>
-                            <p id="loadMsg">Detecting Stream Type...</p>
+                            <p id="loadMsg">Fetching Lecture Details...</p>
                         </div>
                     </div>
                 </div>
@@ -126,12 +126,13 @@
         </div>
 
         <script>
+            // Helper function to build final target player link
             function buildPlayerUrl(data) {
                 const baseUrl = "https://studyaura.online/player";
                 const params = new URLSearchParams();
 
                 if (data.isLive) {
-                    // LIVE URL FORMAT
+                    // Live Format Link
                     if (data.rc) params.set('rc', data.rc);
                     if (data.pro) params.set('pro', data.pro);
                     if (data.title) params.set('title', data.title);
@@ -140,7 +141,7 @@
                     params.set('live', 'true');
                     params.set('type', 'live');
                 } else {
-                    // RECORDED URL FORMAT
+                    // Recorded Format Link
                     if (data.rc) params.set('rc', data.rc);
                     if (data.subject) params.set('subject', data.subject);
                     if (data.pro) params.set('pro', data.pro);
@@ -150,41 +151,62 @@
                 return `${baseUrl}?${params.toString()}`;
             }
 
-            (function processAndRedirect() {
+            // Fetch schedule details from API and redirect accordingly
+            async function fetchAndRedirect() {
                 const urlParams = new URLSearchParams(window.location.search);
 
                 const rc = urlParams.get('rc') || urlParams.get('batchId');
-                const pro = urlParams.get('pro') || urlParams.get('scheduleId');
                 const subject = urlParams.get('subject') || urlParams.get('subjectId');
-                const title = urlParams.get('title');
-                const topic = urlParams.get('topic') || '';
+                const pro = urlParams.get('pro') || urlParams.get('scheduleId');
 
-                // Automatic Live Detection:
-                // 1. Agar URL me explicitly live/type pass kiya ho
-                // 2. Ya referrer page stream.html ho
-                // 3. Ya title/topic pass kiya gaya ho
-                const hasLiveParam = urlParams.get('live') === 'true' || 
-                                     urlParams.get('type') === 'live' || 
-                                     urlParams.get('isLive') === 'true';
-                
-                const isFromStreamPage = document.referrer.includes('stream.html');
-                const hasLiveTitle = title && title !== 'StudyAura Video Player';
+                if (!rc || !pro || !subject) {
+                    document.getElementById('loadMsg').innerText = "Missing required parameters!";
+                    return;
+                }
 
-                const isLive = hasLiveParam || isFromStreamPage || (hasLiveTitle && topic !== '');
+                const apiEndpoint = `https://api.studyaura.online/api/penpencil/v1/batches/${rc}/subject/${subject}/schedule/${pro}/schedule-details`;
 
-                if (rc && pro) {
+                try {
+                    const response = await fetch(apiEndpoint);
+                    const result = await response.json();
+                    const scheduleData = result.data || {};
+
+                    // API Based Identification
+                    const isLiveStream = scheduleData.status === 'LIVE' || 
+                                         scheduleData.isLive === true || 
+                                         scheduleData.isLiveStream === true ||
+                                         scheduleData.type === 'live';
+
+                    const lectureTitle = scheduleData.topic || scheduleData.title || urlParams.get('title') || 'StudyAura Video Player';
+                    const topicSlug = scheduleData.topicSlug || scheduleData.topic || 'lecture';
+                    const subjectSlug = scheduleData.subjectSlug || subject;
+
                     const finalUrl = buildPlayerUrl({
                         rc: rc,
                         pro: pro,
-                        subject: subject,
-                        title: title || 'StudyAura Video Player',
-                        topic: topic,
-                        isLive: isLive
+                        subject: subjectSlug,
+                        title: lectureTitle,
+                        topic: topicSlug,
+                        isLive: isLiveStream
                     });
 
                     window.location.replace(finalUrl);
+                } catch (error) {
+                    console.error("API Error:", error);
+                    // Fallback to recorded if API call fails
+                    const fallbackUrl = buildPlayerUrl({
+                        rc: rc,
+                        subject: subject,
+                        pro: pro,
+                        title: urlParams.get('title') || 'StudyAura Video Player',
+                        isLive: false
+                    });
+                    window.location.replace(fallbackUrl);
                 }
-            })();
+            }
+
+            // Run processing on load
+            fetchAndRedirect();
         </script>
     </body>
 </html>
