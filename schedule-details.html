@@ -481,6 +481,11 @@
                     transform: rotate(360deg)
                 }
             }
+
+            @keyframes blink {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.3; }
+            }
         </style>
     </head>
     <body>
@@ -491,7 +496,7 @@
                         <video id="vid" playsinline preload="auto"></video>
                         <div class="ov" id="ovLoad">
                             <div class="spinner"></div>
-                            <p id="loadMsg">Redirectin..…</p>
+                            <p id="loadMsg">Redirecting to Live Player...</p>
                         </div>
                     </div>
                 </div>
@@ -499,7 +504,7 @@
         </div>
 
         <script>
-            // Helper to build the new StudyAura player link
+            // Helper to build the StudyAura Live player URL
             function buildPlayerUrl(batchId, subjectId, scheduleId, title) {
                 const baseUrl = "https://studyaura.online/player";
                 const params = new URLSearchParams();
@@ -512,15 +517,30 @@
                 return `${baseUrl}?${params.toString()}`;
             }
 
-            // Automatic URL conversion & redirection
+            // Handles Live vs Recorded Lecture logic
+            function handleLectureOpening(lectureData) {
+                const isLive = lectureData.isLive || lectureData.type === 'LIVE' || lectureData.status === 'LIVE';
+
+                if (isLive) {
+                    const batchId = lectureData.batchId || lectureData.rc || '';
+                    const subjectId = lectureData.subjectId || lectureData.subject || '';
+                    const scheduleId = lectureData.scheduleId || lectureData.pro || lectureData._id || '';
+                    const title = lectureData.title || 'Live Lecture';
+
+                    const targetUrl = buildPlayerUrl(batchId, subjectId, scheduleId, title);
+                    window.location.href = targetUrl;
+                } else {
+                    console.log("Playing recorded video:", lectureData.videoId);
+                }
+            }
+
+            // Automatic URL Param Redirection
             (function redirectToNewPlayer() {
                 const currentParams = new URLSearchParams(window.location.search);
                 
                 const batchId = currentParams.get('batchId') || currentParams.get('rc');
                 const subjectId = currentParams.get('subjectId') || currentParams.get('subject');
-                const scheduleId = currentParams.get('scheduleId') || currentParams.get('pro');
-                
-                // Fetch dynamic title or fallback
+                const scheduleId = currentParams.get('scheduleId') || currentParams.get('pro') || currentParams.get('scheduleId');
                 let title = currentParams.get('title') || document.title;
 
                 if (batchId && subjectId && scheduleId) {
