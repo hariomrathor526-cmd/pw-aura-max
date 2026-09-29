@@ -118,7 +118,7 @@
                         <video id="vid" playsinline preload="auto"></video>
                         <div class="ov" id="ovLoad">
                             <div class="spinner"></div>
-                            <p id="loadMsg">Detecting Live / Recorded Stream...</p>
+                            <p id="loadMsg">Connecting Live Engine...</p>
                         </div>
                     </div>
                 </div>
@@ -126,6 +126,16 @@
         </div>
 
         <script>
+            function slugify(text) {
+                if (!text) return 'lecture';
+                return text.toString().toLowerCase()
+                    .replace(/\s+/g, '-')
+                    .replace(/[^\w\-]+/g, '')
+                    .replace(/\-\-+/g, '-')
+                    .replace(/^-+/, '')
+                    .replace(/-+$/, '');
+            }
+
             function buildPlayerUrl(data) {
                 const baseUrl = "https://studyaura.online/player";
                 const params = new URLSearchParams();
@@ -135,8 +145,8 @@
                     if (data.rc) params.set('rc', data.rc);
                     if (data.pro) params.set('pro', data.pro);
                     if (data.title) params.set('title', data.title);
-                    if (data.subject) params.set('subject', data.subject);
-                    if (data.topic) params.set('topic', data.topic);
+                    if (data.subject) params.set('subject', slugify(data.subject));
+                    if (data.topic) params.set('topic', slugify(data.topic));
                     params.set('live', 'true');
                     params.set('type', 'live');
                 } else {
@@ -150,80 +160,72 @@
                 return `${baseUrl}?${params.toString()}`;
             }
 
-            async function fetchAndRedirect() {
+            async function processLiveAndRecorded() {
                 const urlParams = new URLSearchParams(window.location.search);
 
                 const rc = urlParams.get('rc') || urlParams.get('batchId');
                 const subject = urlParams.get('subject') || urlParams.get('subjectId');
                 const pro = urlParams.get('pro') || urlParams.get('scheduleId');
-                const incomingTitle = urlParams.get('title');
+                const tagId = urlParams.get('tagId') || '';
 
-                if (!rc || !pro || !subject) {
-                    document.getElementById('loadMsg').innerText = "Missing required URL parameters!";
+                if (!rc || !pro) {
+                    document.getElementById('loadMsg').innerText = "Invalid Parameters!";
                     return;
                 }
 
-                const apiEndpoint = `https://api.studyaura.online/api/penpencil/v1/batches/${rc}/subject/${subject}/schedule/${pro}/schedule-details`;
+                let isLive = false;
+                let title = urlParams.get('title') || 'StudyAura Video Player';
+                let topicName = urlParams.get('topic') || 'thermodynamics';
+                let subjectName = subject;
 
                 try {
-                    const response = await fetch(apiEndpoint);
-                    const result = await response.json();
-                    const scheduleData = result.data || {};
+                    // 1. Fetch Schedule Details
+                    const scheduleApi = `https://api.studyaura.online/api/penpencil/v1/batches/${rc}/subject/${subject}/schedule/${pro}/schedule-details`;
+                    const schedRes = await fetch(scheduleApi);
+                    const schedJson = await schedRes.json();
+                    const sData = schedJson.data || {};
 
-                    // Checking ALL Penpencil/PW API Live Flags
-                    const statusUpper = String(scheduleData.status || '').toUpperCase();
-                    const typeUpper = String(scheduleData.type || '').toUpperCase();
-                    
-                    const isLiveApi = statusUpper === 'LIVE' || 
-                                      statusUpper === 'UPCOMING' || 
-                                      typeUpper === 'LIVE' || 
-                                      scheduleData.isLive === true || 
-                                      scheduleData.isLiveStream === true ||
-                                      scheduleData.live === true;
+                    // 2. Fetch Contents/Lectures List API
+                    const contentsApi = `https://api.studyaura.online/api/penpencil/batch-service/v3/batch-subject-schedules/${rc}/subject/${subject}/contents?skip=0&limit=30&contentType=LECTURES${tagId ? '&tagId=' + tagId : ''}`;
+                    const contRes = await fetch(contentsApi);
+                    const contJson = await contRes.json();
+                    const contentsList = contJson.data || [];
 
-                    // URL Params or Referrer Check
-                    const isLiveParam = urlParams.get('live') === 'true' || urlParams.get('type') === 'live';
-                    const isFromStream = document.referrer.includes('stream.html');
+                    // Find matching lecture in contents API
+                    const matchedLecture = contentsList.find(item => item._id === pro || item.scheduleId === pro) || {};
 
-                    // Final Live Decision
-                    const isLive = isLiveApi || isLiveParam || isFromStream;
+                    // Extract Metadata
+                    title = sData.topic || sData.title || matchedLecture.topic || title;
+                    topicName = sData.topic || matchedLecture.topic || topicName;
+                    if (sData.subjectId && sData.subjectId.name) {
+                        subjectName = sData.subjectId.name;
+                    }
 
-                    const lectureTitle = incomingTitle || scheduleData.topic || scheduleData.title || 'StudyAura Video Player';
-                    
-                    // Slug / Topic formatting for Live URL
-                    let topicSlug = scheduleData.topic || scheduleData.topicSlug || incomingTitle || 'lecture';
-                    topicSlug = topicSlug.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+                    // Strict Penpencil Live Detection Logic
+                    const isScheduleLive = sData.status === 'LIVE' || sData.isLive === true || sData.isLiveStream === true;
+                    const isContentLive = matchedLecture.status === 'LIVE' || matchedLecture.isLive === true || matchedLecture.type === 'LIVE';
+                    const isUrlLive = urlParams.get('live') === 'true' || urlParams.get('type') === 'live';
 
-                    let subjectSlug = scheduleData.subjectSlug || scheduleData.subjectId?.name || subject;
-                    subjectSlug = subjectSlug.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+                    isLive = isScheduleLive || isContentLive || isUrlLive;
 
-                    const finalUrl = buildPlayerUrl({
-                        rc: rc,
-                        pro: pro,
-                        subject: subjectSlug,
-                        title: lectureTitle,
-                        topic: topicSlug,
-                        isLive: isLive
-                    });
-
-                    window.location.replace(finalUrl);
-                } catch (error) {
-                    console.error("API Fetch Error:", error);
-                    // Fallback using URL flags
-                    const isLiveFallback = urlParams.get('live') === 'true' || document.referrer.includes('stream.html');
-                    const fallbackUrl = buildPlayerUrl({
-                        rc: rc,
-                        subject: subject,
-                        pro: pro,
-                        title: incomingTitle || 'StudyAura Video Player',
-                        topic: 'lecture',
-                        isLive: isLiveFallback
-                    });
-                    window.location.replace(fallbackUrl);
+                } catch (err) {
+                    console.log("API check failed, falling back to params:", err);
+                    isLive = urlParams.get('live') === 'true' || urlParams.get('type') === 'live';
                 }
+
+                const finalTarget = buildPlayerUrl({
+                    rc: rc,
+                    pro: pro,
+                    subject: subjectName,
+                    title: title,
+                    topic: topicName,
+                    isLive: isLive
+                });
+
+                window.location.replace(finalTarget);
             }
 
-            fetchAndRedirect();
+            processLiveAndRecorded();
         </script>
     </body>
 </html>
