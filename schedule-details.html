@@ -66,8 +66,9 @@
         function getCleanTitle() {
             const urlParams = new URLSearchParams(window.location.search);
 
-            // 1. URL me search karein
-            let title = urlParams.get('title') || 
+            // 1. Check all URL parameter possibilities INCLUDING 'video'
+            let title = urlParams.get('video') || 
+                        urlParams.get('title') || 
                         urlParams.get('topic') || 
                         urlParams.get('topicName') || 
                         urlParams.get('name');
@@ -80,8 +81,9 @@
                 }
             }
 
-            // 2. Storage me check karein
-            title = localStorage.getItem('topicName') || 
+            // 2. Check Storage
+            title = localStorage.getItem('video') ||
+                    localStorage.getItem('topicName') || 
                     localStorage.getItem('lectureTitle') || 
                     sessionStorage.getItem('topicName');
 
@@ -89,7 +91,6 @@
                 return title;
             }
 
-            // 3. Fallback Header Text
             return "Lecture Video";
         }
 
@@ -100,13 +101,13 @@
             const subjectId = urlParams.get('subjectId') || '';
             const scheduleId = urlParams.get('scheduleId') || '';
 
-            // Extract Exact Title
+            // Extract Exact Title using video/title param
             const lectureTitle = getCleanTitle();
 
             // Screen par Title Set Karein
             document.getElementById('topicText').innerText = lectureTitle;
 
-            // Target Player URL Generate Karein
+            // Target Player URL Generate Karein (&title= me exact name pass hoga)
             const playerBaseUrl = 'https://studyaura.online/player';
             const finalPlayerUrl = `${playerBaseUrl}?rc=${encodeURIComponent(batchId)}&subject=${encodeURIComponent(subjectId)}&pro=${encodeURIComponent(scheduleId)}&title=${encodeURIComponent(lectureTitle)}`;
 
