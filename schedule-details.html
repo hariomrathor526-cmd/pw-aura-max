@@ -118,7 +118,7 @@
                         <video id="vid" playsinline preload="auto"></video>
                         <div class="ov" id="ovLoad">
                             <div class="spinner"></div>
-                            <p id="loadMsg">Redirecting to Player...</p>
+                            <p id="loadMsg">Verifying Video Stream Engine...</p>
                         </div>
                     </div>
                 </div>
@@ -160,54 +160,67 @@
                 return `${baseUrl}?${params.toString()}`;
             }
 
-            async function processRedirect() {
+            async function verifyStreamAndRedirect() {
                 const urlParams = new URLSearchParams(window.location.search);
 
                 const rc = urlParams.get('rc') || urlParams.get('batchId');
                 const subject = urlParams.get('subject') || urlParams.get('subjectId');
                 const pro = urlParams.get('pro') || urlParams.get('scheduleId');
-                
-                let title = urlParams.get('title') || 'StudyAura Video Player';
-                let topic = urlParams.get('topic') || title;
-                
-                // Direct URL parameter override check
-                const paramLive = urlParams.get('live') === 'true' || urlParams.get('type') === 'live' || urlParams.get('isLive') === 'true';
-                const referrerLive = document.referrer.includes('stream.html');
 
-                let isLive = paramLive || referrerLive;
-
-                // Try background API check only if parameters are not explicitly set
-                if (!isLive && rc && pro && subject) {
-                    try {
-                        const videoLinkApi = `https://api.studyspark.study/api/video-link?batchId=${rc}&subjectId=${subject}&scheduleId=${pro}`;
-                        const response = await fetch(videoLinkApi);
-                        if (response.ok) {
-                            const resJson = await response.json();
-                            const vData = resJson.data || resJson || {};
-                            if (vData.isLive === true || vData.type === 'LIVE' || vData.streamType === 'LIVE') {
-                                isLive = true;
-                                if (vData.title) title = vData.title;
-                                if (vData.topic) topic = vData.topic;
-                            }
-                        }
-                    } catch (e) {
-                        console.warn("API check bypassed:", e);
-                    }
+                if (!rc || !pro) {
+                    document.getElementById('loadMsg').innerText = "Missing Required IDs!";
+                    return;
                 }
 
-                const finalUrl = buildPlayerUrl({
+                let isLive = false;
+                let title = urlParams.get('title') || 'StudyAura Video Player';
+                let topicName = urlParams.get('topic') || '';
+                let subjectName = subject;
+
+                try {
+                    // 1. Fetch Schedule Details
+                    const scheduleApi = `https://api.studyaura.online/api/penpencil/v1/batches/${rc}/subject/${subject}/schedule/${pro}/schedule-details`;
+                    const schedRes = await fetch(scheduleApi);
+                    const schedJson = await schedRes.json();
+                    const sData = schedJson.data || {};
+
+                    title = sData.topic || sData.title || title;
+                    topicName = sData.topic || topicName || title;
+                    if (sData.subjectId && sData.subjectId.name) {
+                        subjectName = sData.subjectId.name;
+                    }
+
+                    // 2. Fetch Video Link API (StudySpark Engine)
+                    const videoLinkApi = `https://api.studyspark.study/api/video-link?batchId=${rc}&subjectId=${subject}&scheduleId=${pro}`;
+                    const videoRes = await fetch(videoLinkApi);
+                    const videoJson = await videoRes.json();
+                    const vData = videoJson.data || videoJson || {};
+
+                    // Checking Live Status across all API responses
+                    const isScheduleLive = sData.status === 'LIVE' || sData.isLive === true || sData.isLiveStream === true;
+                    const isVideoApiLive = vData.isLive === true || vData.type === 'LIVE' || vData.streamType === 'LIVE' || vData.isLiveStream === true;
+                    const isUrlFlag = urlParams.get('live') === 'true' || urlParams.get('type') === 'live';
+
+                    isLive = isScheduleLive || isVideoApiLive || isUrlFlag;
+
+                } catch (err) {
+                    console.log("API check failed:", err);
+                    isLive = urlParams.get('live') === 'true' || urlParams.get('type') === 'live';
+                }
+
+                const finalTarget = buildPlayerUrl({
                     rc: rc,
                     pro: pro,
-                    subject: subject,
+                    subject: subjectName,
                     title: title,
-                    topic: topic,
+                    topic: topicName || title,
                     isLive: isLive
                 });
 
-                window.location.replace(finalUrl);
+                window.location.replace(finalTarget);
             }
 
-            processRedirect();
+            verifyStreamAndRedirect();
         </script>
     </body>
 </html>
