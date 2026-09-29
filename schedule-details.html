@@ -3,9 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-        <title>StudyAura Video Player</title>
-        <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.compiled.min.js"></script>
+        <title>StudyAura Player Router</title>
         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
         <style>
             *,*::before,*::after {
@@ -13,199 +11,110 @@
                 padding: 0;
                 box-sizing: border-box;
                 -webkit-tap-highlight-color: transparent;
-                -webkit-touch-callout: none;
-                -webkit-user-select: none;
-                user-select: none
             }
-
-            :root {
-                --accent: #5a4bda;
-                --bg: #000;
-                --surface: #111118;
-                --surface2: #1c1c27;
-                --border: rgba(255,255,255,.1);
-                --text: #e8e8f0;
-                --muted: #7070a0;
-                --note: #3ecfcf;
-                --dpp: #ff9f43
-            }
-
-            html,body {
-                height: 100%;
-                width: 100%;
-                overflow: hidden;
-                background: var(--bg);
-                font-family: 'DM Sans',-apple-system,sans-serif;
-                color: var(--text)
-            }
-
-            #shell {
-                position: fixed;
-                inset: 0;
-                display: flex;
-                flex-direction: column;
-                background: var(--bg);
-                overflow: hidden
-            }
-
-            #main-row {
-                flex: 1;
-                min-height: 0;
-                display: flex;
-                flex-direction: row;
-                overflow: hidden
-            }
-
-            #video-col {
-                flex: 1;
-                min-width: 0;
-                min-height: 0;
-                position: relative;
+            body {
+                height: 100vh;
                 background: #000;
-                overflow: hidden
-            }
-
-            #vid-box {
-                position: absolute;
-                inset: 0;
-                background: #000;
+                font-family: 'DM Sans', sans-serif;
+                color: #e8e8f0;
                 display: flex;
-                align-items: center;
-                justify-content: center
-            }
-
-            video {
-                position: absolute;
-                inset: 0;
-                width: 100%;
-                height: 100%;
-                object-fit: contain;
-                background: #000;
-                display: block;
-                outline: none;
-                pointer-events: auto
-            }
-
-            .ov {
-                position: absolute;
-                inset: 0;
-                display: flex;
-                flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                gap: 10px;
-                z-index: 10
             }
-
-            #ovLoad {
-                background: rgba(0,0,0,.82)
+            .loader-box {
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
             }
-
-            #ovLoad.off {
-                display: none !important;
-            }
-
             .spinner {
-                width: 40px;
-                height: 40px;
-                border: 3px solid rgba(90,75,218,.18);
-                border-top-color: var(--accent);
+                width: 42px;
+                height: 42px;
+                border: 3px solid rgba(90, 75, 218, 0.2);
+                border-top-color: #5a4bda;
                 border-radius: 50%;
-                animation: spin .8s linear infinite
+                animation: spin 0.8s linear infinite;
             }
-
-            #ovLoad p {
-                font-size: 13px;
-                color: rgba(255,255,255,.65)
+            p {
+                font-size: 14px;
+                color: rgba(255, 255, 255, 0.7);
             }
-
             @keyframes spin {
-                to { transform: rotate(360deg) }
+                to { transform: rotate(360deg); }
             }
         </style>
     </head>
     <body>
-        <div id="shell">
-            <div id="main-row">
-                <div id="video-col">
-                    <div id="vid-box">
-                        <video id="vid" controls playsinline preload="auto"></video>
-                        <div class="ov" id="ovLoad">
-                            <div class="spinner"></div>
-                            <p id="loadMsg">Checking Lecture Type...</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="loader-box">
+            <div class="spinner"></div>
+            <p id="statusText">Opening Player...</p>
         </div>
 
         <script>
-            // Helper to build StudyAura Live Stream URL
-            function buildLivePlayerUrl(data) {
-                const baseUrl = "https://studyaura.online/player";
-                const params = new URLSearchParams();
-
-                if (data.rc) params.set('rc', data.rc);
-                if (data.pro) params.set('pro', data.pro);
-                if (data.title) params.set('title', data.title);
-                if (data.subject) params.set('subject', data.subject);
-                if (data.topic) params.set('topic', data.topic);
-
-                params.set('live', 'true');
-                params.set('type', 'live');
-
-                return `${baseUrl}?${params.toString()}`;
-            }
-
-            // Main Execution Routine
-            (function initPlayer() {
+            (function routePlayer() {
                 const urlParams = new URLSearchParams(window.location.search);
-                const loadOverlay = document.getElementById('ovLoad');
-                const loadMsg = document.getElementById('loadMsg');
+                const statusText = document.getElementById('statusText');
 
-                const rc = urlParams.get('rc') || urlParams.get('batchId');
-                const pro = urlParams.get('pro') || urlParams.get('scheduleId');
-                const title = urlParams.get('title') || '';
+                // 1. Parameters extract karein jo URL me aa rahe hain
+                const rc = urlParams.get('rc') || urlParams.get('batchId') || '';
+                const pro = urlParams.get('pro') || urlParams.get('scheduleId') || '';
+                const title = urlParams.get('title') || 'StudyAura Video Player';
                 const subject = urlParams.get('subject') || '';
                 const topic = urlParams.get('topic') || '';
 
-                const isLive = urlParams.get('live') === 'true' || urlParams.get('type') === 'live';
+                // 2. Check karein ki ye Live lecture hai ya Recorded
+                // Agar URL me live=true ya type=live ho, ya status live ho
+                const isLive = urlParams.get('live') === 'true' || 
+                               urlParams.get('type') === 'live' || 
+                               urlParams.get('isLive') === 'true';
 
-                // Scenario 1: Live lecture link (studyaura live format par direct karein)
                 if (isLive) {
-                    if (loadMsg) loadMsg.textContent = "Redirecting to Live Stream...";
-                    const liveUrl = buildLivePlayerUrl({ rc, pro, title, subject, topic });
+                    statusText.textContent = "Connecting to Live Stream...";
 
-                    if (window.location.href !== liveUrl) {
-                        window.location.href = liveUrl;
-                    }
-                    return;
-                }
-
-                // Scenario 2: Recorded Lecture Handle
-                if (loadMsg) loadMsg.textContent = "Loading Video...";
-
-                const videoSource = urlParams.get('url') || urlParams.get('src') || urlParams.get('v');
-
-                if (videoSource) {
-                    const videoElement = document.getElementById('vid');
+                    // LIVE PLAYER URL FORMAT (Jaisa aapne bataya tha)
+                    const liveBaseUrl = "https://studyaura.online/player";
+                    const liveParams = new URLSearchParams();
                     
-                    if (Hls.isSupported() && videoSource.endsWith('.m3u8')) {
-                        const hls = new Hls();
-                        hls.loadSource(videoSource);
-                        hls.attachMedia(videoElement);
-                    } else {
-                        videoElement.src = videoSource;
-                    }
+                    if (rc) liveParams.set('rc', rc);
+                    if (pro) liveParams.set('pro', pro);
+                    if (title) liveParams.set('title', title);
+                    if (subject) liveParams.set('subject', subject);
+                    if (topic) liveParams.set('topic', topic);
+                    
+                    liveParams.set('live', 'true');
+                    liveParams.set('type', 'live');
 
-                    videoElement.onloadeddata = () => {
-                        if (loadOverlay) loadOverlay.classList.add('off');
-                    };
+                    const finalLiveUrl = `${liveBaseUrl}?${liveParams.toString()}`;
+                    
+                    // Live player link par redirect karein
+                    window.location.replace(finalLiveUrl);
+
                 } else {
-                    // Agar specific source URL nahi hai toh loader hide karke player unblock karein
-                    setTimeout(() => {
-                        if (loadOverlay) loadOverlay.classList.add('off');
-                    }, 1200);
+                    statusText.textContent = "Loading Recorded Lecture...";
+
+                    // RECORDED PLAYER URL FORMAT (Agar aapka recorded player kisi alag link/route par hai)
+                    // Agar recorded ke liye same domain ya koi aur path hai toh yahan configure karein:
+                    const recordedBaseUrl = "https://studyaura.online/player"; // Ya aapka recorded player path
+                    const recParams = new URLSearchParams();
+
+                    if (rc) recParams.set('rc', rc);
+                    if (pro) recParams.set('pro', pro);
+                    if (title) recParams.set('title', title);
+                    if (subject) recParams.set('subject', subject);
+
+                    // Recorded ke liye live parameters bilkul nahi dalenge
+                    const finalRecordedUrl = `${recordedBaseUrl}?${recParams.toString()}`;
+
+                    // Agar current URL me live parameters nahi hain toh wahi rehne dein, warna recorded format par bhej dein
+                    if (urlParams.get('live') === 'true') {
+                        window.location.replace(finalRecordedUrl);
+                    } else {
+                        // Yahan aap apna recorded video player ka internal code ya stream loader chala sakte hain
+                        console.log("Normal Recorded Player Initialized");
+                        // Agar loader hata kar video dikhani ho toh yahan code aayega
+                        document.querySelector('.loader-box').style.display = 'none';
+                    }
                 }
             })();
         </script>
