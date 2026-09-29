@@ -1,1144 +1,543 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-        <title>Motion in a Straight Line 05 : Homework Questions || Questions on Distance and Displacement || Speed and Velocity || Questions on Speed and Velocity</title>
-        <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.compiled.min.js"></script>
-        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-        <style>
-            *,*::before,*::after {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-                -webkit-tap-highlight-color: transparent;
-                -webkit-touch-callout: none;
-                -webkit-user-select: none;
-                user-select: none
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Motion in a Straight Line 05 - Physics By Rajwant Sir</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+    
+    <!-- External Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.ui.debug.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/controls.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+    <style>
+        :root {
+            --bg-primary: #0f0f12;
+            --bg-secondary: #18181c;
+            --bg-tertiary: #222228;
+            --accent-color: #5a4bda;
+            --accent-hover: #4a3bc7;
+            --text-main: #ffffff;
+            --text-muted: #a0a0ab;
+            --border-color: #2e2e38;
+            --live-red: #ff3b30;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Top Header */
+        .header {
+            height: 56px;
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            z-index: 100;
+        }
+
+        .header-title {
+            font-size: 16px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 70%;
+        }
+
+        .live-badge {
+            background-color: rgba(255, 59, 48, 0.15);
+            color: var(--live-red);
+            border: 1px solid var(--live-red);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--live-red);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        /* Main Container */
+        .main-container {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 56px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Video Section */
+        .video-wrapper {
+            flex: 1;
+            background-color: #000;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Side Panel / Tabs Container */
+        .side-panel {
+            width: 400px;
+            background-color: var(--bg-secondary);
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+            z-index: 90;
+        }
+
+        /* Tab Navigation */
+        .tabs-header {
+            display: flex;
+            background-color: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 14px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            color: var(--text-main);
+            border-bottom-color: var(--accent-color);
+            background-color: var(--bg-secondary);
+        }
+
+        .tab-content {
+            flex: 1;
+            overflow-y: auto;
+            display: none;
+            padding: 16px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Timeline / Slides Content */
+        .timeline-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            background-color: var(--bg-tertiary);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .timeline-item:hover {
+            border-color: var(--accent-color);
+        }
+
+        .timeline-thumb {
+            width: 100px;
+            height: 56px;
+            object-fit: cover;
+            border-radius: 4px;
+            background-color: #000;
+        }
+
+        .timeline-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .timeline-time {
+            font-size: 12px;
+            color: var(--accent-color);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .timeline-title {
+            font-size: 14px;
+            color: var(--text-main);
+        }
+
+        /* Attachments Section */
+        .attachment-card {
+            background-color: var(--bg-tertiary);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .attachment-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .attachment-title {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .action-btn {
+            background-color: var(--accent-color);
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: background-color 0.2s;
+        }
+
+        .action-btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        /* PDF Preview Modal / Area */
+        .pdf-viewer-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            flex-direction: column;
+        }
+
+        .pdf-viewer-header {
+            height: 50px;
+            background-color: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+        }
+
+        .pdf-viewer-body {
+            flex: 1;
+            overflow: auto;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .close-pdf {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Custom Overlay Controls */
+        .custom-loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border-left-color: var(--accent-color);
+            animation: spin 1s linear infinite;
+            display: none;
+            z-index: 10;
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .main-container {
+                flex-direction: column;
             }
 
-            :root {
-                --accent: #5a4bda;
-                --bg: #000;
-                --surface: #111118;
-                --surface2: #1c1c27;
-                --border: rgba(255,255,255,.1);
-                --text: #e8e8f0;
-                --muted: #7070a0;
-                --note: #3ecfcf;
-                --dpp: #ff9f43
-            }
-
-            html,body {
-                height: 100%;
+            .side-panel {
                 width: 100%;
-                overflow: hidden;
-                background: var(--bg);
-                font-family: 'DM Sans',-apple-system,sans-serif;
-                color: var(--text)
-            }
-
-            #shell {
-                position: fixed;
-                inset: 0;
-                display: flex;
-                flex-direction: column;
-                background: var(--bg);
-                overflow: hidden
-            }
-
-            #main-row {
-                flex: 1;
-                min-height: 0;
-                display: flex;
-                flex-direction: row;
-                overflow: hidden
-            }
-
-            #video-col {
-                flex: 1;
-                min-width: 0;
-                min-height: 0;
-                position: relative;
-                background: #000;
-                overflow: hidden
-            }
-
-            #vid-box {
-                position: absolute;
-                inset: 0;
-                background: #000;
-                display: flex;
-                align-items: center;
-                justify-content: center
-            }
-
-            video {
-                position: absolute;
-                inset: 0;
-                width: 100%;
-                height: 100%;
-                object-fit: contain;
-                background: #000;
-                display: block;
-                outline: none
-            }
-
-            .ov {
-                position: absolute;
-                inset: 0;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                gap: 10px;
-                z-index: 10
-            }
-
-            #ovLoad {
-                background: rgba(0,0,0,.82)
-            }
-
-            #ovLoad.off {
-                display: none
-            }
-
-            .spinner {
-                width: 40px;
-                height: 40px;
-                border: 3px solid rgba(90,75,218,.18);
-                border-top-color: var(--accent);
-                border-radius: 50%;
-                animation: spin .8s linear infinite
-            }
-
-            #ovLoad p {
-                font-size: 13px;
-                color: rgba(255,255,255,.65)
-            }
-
-            #ovErr {
-                background: rgba(0,0,0,.88);
-                display: none;
-                padding: 20px;
-                text-align: center
-            }
-
-            #ovErr.on {
-                display: flex
-            }
-
-            #ovErr p {
-                font-size: 14px;
-                color: #ff6584;
-                max-width: 300px;
-                line-height: 1.5
-            }
-
-            #ovErr button {
-                padding: 8px 22px;
-                background: var(--accent);
-                color: #fff;
-                border: none;
-                border-radius: 8px;
-                font-size: 14px;
-                cursor: pointer;
-                font-family: inherit;
-                margin-top: 4px
-            }
-
-            #bufSpin {
-                position: absolute;
-                inset: 0;
-                display: none;
-                align-items: center;
-                justify-content: center;
-                z-index: 8;
-                pointer-events: none
-            }
-
-            #bufSpin.on {
-                display: flex
-            }
-
-            #bufSpin::after {
-                content: '';
-                width: 42px;
-                height: 42px;
-                border-radius: 50%;
-                border: 3px solid rgba(90,75,218,.18);
-                border-top-color: var(--accent);
-                animation: spin .75s linear infinite
-            }
-
-            #ctrl-overlay {
-                position: absolute;
-                inset: 0;
-                z-index: 20;
-                display: flex;
-                flex-direction: column;
-                transition: opacity .35s ease
-            }
-
-            #ctrl-overlay.visible {
-                opacity: 1;
-                pointer-events: auto
-            }
-
-            #ctrl-overlay.hidden {
-                opacity: 0;
-                pointer-events: none
-            }
-
-            #tap-shield {
-                position: absolute;
-                inset: 0;
-                z-index: 19;
-                background: transparent;
-                cursor: pointer
-            }
-
-            #player-header {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                padding: 10px 14px;
-                background: linear-gradient(rgba(0,0,0,.72) 0%,transparent 100%);
-                flex-shrink: 0
-            }
-
-            .hdr-back {
-                background: none;
-                border: none;
-                color: #fff;
-                cursor: pointer;
-                padding: 6px;
-                display: flex;
-                align-items: center;
-                border-radius: 8px;
-                flex-shrink: 0;
-                transition: transform .12s
-            }
-
-            .hdr-back:active {
-                transform: scale(.88)
-            }
-
-            .hdr-back svg {
-                width: 22px;
-                height: 22px;
-                stroke: #fff;
-                fill: none;
-                stroke-width: 2;
-                stroke-linecap: round;
-                stroke-linejoin: round
-            }
-
-            #player-title {
-                flex: 1;
-                min-width: 0;
-                font-size: 14px;
-                font-weight: 500;
-                color: #fff;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis
-            }
-
-            #tdBtn {
-                background: none;
-                border: none;
-                color: #fff;
-                cursor: pointer;
-                padding: 6px;
-                display: flex;
-                align-items: center;
-                border-radius: 8px;
-                flex-shrink: 0;
-                position: relative
-            }
-
-            #tdBtn>svg {
-                width: 22px;
-                height: 22px;
-                fill: #fff
-            }
-
-            #tdMenu {
-                position: absolute;
-                top: calc(100% + 2px);
-                right: 0;
-                background: rgba(12,12,20,.98);
-                border: 1px solid rgba(255,255,255,.12);
-                border-radius: 12px;
-                overflow: hidden;
-                min-width: 190px;
-                z-index: 200;
-                display: none;
-                box-shadow: 0 8px 32px rgba(0,0,0,.9)
-            }
-
-            #tdMenu.on {
-                display: block
-            }
-
-            .tdm-row {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                padding: 14px 16px;
-                color: #fff;
-                font-size: 14px;
-                cursor: pointer;
-                border-bottom: 1px solid rgba(255,255,255,.07)
-            }
-
-            .tdm-row:last-child {
-                border-bottom: none
-            }
-
-            .tdm-row:active {
-                background: rgba(255,255,255,.08)
-            }
-
-            .tdm-row svg {
-                width: 18px;
-                height: 18px;
-                flex-shrink: 0;
-                stroke: currentColor;
-                fill: none
-            }
-
-            #ctrl-mid {
-                flex: 1
-            }
-
-            #player-footer {
-                flex-shrink: 0;
-                background: linear-gradient(transparent 0%,rgba(0,0,0,.82) 100%);
-                padding: 6px 0 10px
-            }
-
-            .prog-wrap {
-                padding: 0 14px 6px
-            }
-
-            .time-row {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                margin-bottom: 6px
-            }
-
-            .t-left {
-                display: flex;
-                align-items: center;
-                gap: 6px
-            }
-
-            .t-time {
-                color: #fff;
-                font-size: 13px;
-                font-family: monospace;
-                font-weight: 500
-            }
-
-            .spd-badge {
-                background: rgba(255,255,255,.92);
-                color: #000;
-                font-size: 10px;
-                font-weight: 800;
-                padding: 1px 5px;
-                border-radius: 4px;
-                font-family: sans-serif
-            }
-
-            .bar-wrap {
-                position: relative;
-                height: 22px;
-                display: flex;
-                align-items: center;
-                cursor: pointer;
-                touch-action: none
-            }
-
-            .bar-bg {
-                position: absolute;
-                left: 0;
-                right: 0;
-                height: 4px;
-                background: rgba(255,255,255,.2);
-                border-radius: 2px;
-                overflow: hidden
-            }
-
-            .bar-buf {
-                height: 100%;
-                background: rgba(255,255,255,.3);
-                position: absolute;
-                left: 0;
-                border-radius: 2px
-            }
-
-            .bar-fill {
-                height: 100%;
-                background: var(--accent);
-                position: absolute;
-                left: 0;
-                border-radius: 2px
-            }
-
-            .bar-thumb {
-                position: absolute;
-                top: 50%;
-                transform: translate(-50%,-50%);
-                width: 14px;
-                height: 14px;
-                background: #fff;
-                border-radius: 50%;
-                pointer-events: none;
-                box-shadow: 0 0 5px rgba(0,0,0,.6)
-            }
-
-            .bar-input {
-                position: absolute;
-                inset: 0;
-                opacity: 0;
-                cursor: pointer;
-                width: 100%;
-                height: 100%
-            }
-
-            .btn-row {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 0 6px
-            }
-
-            .btn-l,.btn-r {
-                display: flex;
-                align-items: center
-            }
-
-            .cbtn {
-                background: none;
-                border: none;
-                color: #fff;
-                cursor: pointer;
-                min-width: 44px;
-                min-height: 44px;
-                padding: 4px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 8px;
-                flex-shrink: 0;
-                outline: none;
-                transition: transform .12s,opacity .12s
-            }
-
-            .cbtn:active {
-                transform: scale(.85);
-                opacity: .65
-            }
-
-            .vol-grp {
-                display: flex;
-                align-items: center
-            }
-
-            .vol-range {
-                -webkit-appearance: none;
-                width: 0;
-                height: 4px;
-                border-radius: 2px;
-                background: rgba(255,255,255,.25);
-                outline: none;
-                cursor: pointer;
-                opacity: 0;
-                transition: width .3s,opacity .3s
-            }
-
-            .vol-grp:hover .vol-range,.vol-grp:focus-within .vol-range {
-                width: 52px;
-                opacity: 1;
-                margin-left: 4px
-            }
-
-            .vol-range::-webkit-slider-thumb {
-                -webkit-appearance: none;
-                width: 13px;
-                height: 13px;
-                border-radius: 50%;
-                background: #fff
-            }
-
-            #settBd {
-                position: absolute;
-                inset: 0;
-                z-index: 25;
-                display: none
-            }
-
-            #settBd.on {
-                display: block
-            }
-
-            #settPanel {
-                position: absolute;
-                bottom: 80px;
-                right: 8px;
-                width: min(260px,calc(100% - 16px));
-                z-index: 100;
-                display: none
-            }
-
-            #settPanel.on {
-                display: block
-            }
-
-            .sc {
-                background: rgba(10,10,18,.98);
-                border-radius: 14px;
-                overflow: hidden;
-                border: 1px solid rgba(255,255,255,.12);
-                box-shadow: 0 4px 32px rgba(0,0,0,.9)
-            }
-
-            .s-main {
-                display: flex;
-                flex-direction: column
-            }
-
-            .s-main.off {
-                display: none
-            }
-
-            .s-sub {
-                display: none;
-                flex-direction: column
-            }
-
-            .s-sub.on {
-                display: flex
-            }
-
-            .s-row {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 14px 17px;
-                cursor: pointer;
-                border-bottom: 1px solid rgba(255,255,255,.07)
-            }
-
-            .s-row:last-child {
-                border-bottom: none
-            }
-
-            .s-lbl {
-                color: #fff;
-                font-size: 15px;
-                font-weight: 500
-            }
-
-            .s-val {
-                display: flex;
-                align-items: center;
-                gap: 4px;
-                color: rgba(255,255,255,.42);
-                font-size: 14px
-            }
-
-            .s-back {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                padding: 12px 17px;
-                border-bottom: 1px solid rgba(255,255,255,.08);
-                cursor: pointer
-            }
-
-            .s-back span {
-                color: #fff;
-                font-size: 15px;
-                font-weight: 700
-            }
-
-            .s-scroll {
-                overflow-y: auto;
-                max-height: 220px
-            }
-
-            .sopt {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 13px 17px;
-                cursor: pointer;
-                border-bottom: 1px solid rgba(255,255,255,.06)
-            }
-
-            .sopt.active {
-                background: rgba(90,75,218,.2)
-            }
-
-            .sopt span {
-                color: #fff;
-                font-size: 14px
-            }
-
-            #side-panel {
-                width: 0;
-                overflow: hidden;
-                flex-shrink: 0;
-                background: var(--surface);
-                border-left: 1px solid var(--border);
-                display: none;
-                flex-direction: column;
-                transition: width .3s ease
-            }
-
-            #side-panel.open {
-                width: 340px
-            }
-
-            #bottom-panel {
-                flex-shrink: 0;
-                background: var(--surface);
-                border-top: 1px solid var(--border);
-                display: none;
-                flex-direction: column;
-                height: 0;
-                overflow: hidden;
-                transition: height .35s ease
-            }
-
-            #bottom-panel.open {
-                height: 50vh
-            }
-
-            #shell.layout-desktop #side-panel {
-                display: flex
-            }
-
-            #shell.layout-desktop #bottom-panel {
-                display: none!important
-            }
-
-            #shell.layout-mobile #bottom-panel {
-                display: flex
-            }
-
-            #shell.layout-mobile #side-panel {
-                display: none!important
-            }
-
-            .panel-inner {
-                display: flex;
-                flex-direction: column;
-                height: 100%;
-                min-height: 0
-            }
-
-            .panel-hdr {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 12px 16px;
-                border-bottom: 1px solid var(--border);
-                flex-shrink: 0
-            }
-
-            .panel-hdr-title {
-                font-size: 16px;
-                font-weight: 700;
-                color: var(--text)
-            }
-
-            .panel-close {
-                background: none;
-                border: none;
-                cursor: pointer;
-                color: var(--muted);
-                padding: 4px;
-                display: flex;
-                align-items: center;
-                border-radius: 6px
-            }
-
-            .panel-close svg {
-                width: 20px;
-                height: 20px;
-                stroke: currentColor;
-                fill: none;
-                stroke-width: 2.5
-            }
-
-            .panel-tabs {
-                display: flex;
-                border-bottom: 1px solid var(--border);
-                flex-shrink: 0
-            }
-
-            .ptab {
-                flex: 1;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 5px;
-                padding: 10px 6px;
-                font-size: 13px;
-                font-weight: 600;
-                color: var(--muted);
-                cursor: pointer;
-                border: none;
-                background: transparent;
-                border-bottom: 2px solid transparent
-            }
-
-            .ptab.active {
-                color: #fff;
-                border-bottom-color: var(--accent)
-            }
-
-            .panel-body {
-                flex: 1;
-                overflow-y: auto
-            }
-
-            .ptab-panel {
-                display: none;
-                padding: 12px
-            }
-
-            .ptab-panel.active {
-                display: block
-            }
-
-            .tl-list {
-                display: flex;
-                flex-direction: column;
-                gap: 10px
-            }
-
-            .tl-card {
-                position: relative;
-                border-radius: 10px;
-                overflow: hidden;
-                cursor: pointer;
-                border: 2px solid transparent;
-                background: #000
-            }
-
-            .tl-card.cur {
-                border-color: var(--accent)
-            }
-
-            .tl-img {
-                width: 100%;
-                aspect-ratio: 16/9;
-                object-fit: cover;
-                display: block;
-                background: #1c1c27
-            }
-
-            .tl-ov {
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                background: linear-gradient(transparent,rgba(0,0,0,.9));
-                padding: 20px 10px 8px;
-                display: flex;
-                align-items: flex-end;
-                justify-content: space-between
-            }
-
-            .tl-name {
-                font-size: 12px;
-                font-weight: 700;
-                color: #fff
-            }
-
-            .tl-ts {
-                background: rgba(0,0,0,.5);
-                color: #fff;
-                font-family: monospace;
-                font-size: 10px;
-                padding: 2px 5px;
-                border-radius: 4px
-            }
-
-            .acc {
-                background: var(--surface2);
-                border: 1px solid var(--border);
-                border-radius: 10px;
-                margin-bottom: 10px;
-                overflow: hidden
-            }
-
-            .acc-hdr {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 12px 14px;
-                cursor: pointer
-            }
-
-            .acc-title {
-                font-size: 13px;
-                font-weight: 700
-            }
-
-            .acc-body {
-                display: none
-            }
-
-            .acc.open .acc-body {
-                display: block
-            }
-
-            .att-item {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 12px 14px;
-                border-bottom: 1px solid rgba(255,255,255,.05)
-            }
-
-            .att-btn {
-                width: 32px;
-                height: 32px;
-                border-radius: 7px;
-                border: 1px solid rgba(255,255,255,.12);
-                background: rgba(255,255,255,.06);
-                color: #fff;
-                cursor: pointer;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                margin-left: 4px
-            }
-
-            .att-btn svg {
-                width: 15px;
-                height: 15px;
-                stroke: currentColor;
-                fill: none;
-                stroke-width: 1.8
-            }
-
-            .pdf-frame-container {
-                flex: 1;
-                overflow: auto;
-                background: #1a1a28
-            }
-
-            @keyframes spin {
-                to { transform: rotate(360deg); }
-            }
-        </style>
-    </head>
-    <body>
-        <div id="shell">
-            <div id="main-row">
-                <div id="video-col">
-                    <div id="vid-box">
-                        <video id="vid" playsinline preload="auto"></video>
-                        <div class="ov" id="ovLoad">
-                            <div class="spinner"></div>
-                            <p id="loadMsg">Initializing…</p>
-                        </div>
-                        <div class="ov" id="ovErr">
-                            <span style="font-size:28px">⚠️</span>
-                            <p id="errMsg">Something went wrong.</p>
-                            <button id="retryBtn">Retry</button>
-                        </div>
-                        <div id="bufSpin"></div>
-                    </div>
-                    <div id="tap-shield"></div>
-                    <div id="ctrl-overlay" class="visible">
-                        <div id="player-header">
-                            <button class="hdr-back" onclick="history.back()">
-                                <svg viewBox="0 0 24 24"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
-                            </button>
-                            <div id="player-title"></div>
-                            <div id="tdBtn">
-                                <svg viewBox="0 0 24 24"><path fill-rule="evenodd" d="M10.5 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" clip-rule="evenodd"/></svg>
-                                <div id="tdMenu">
-                                    <div class="tdm-row" id="tdTimeline">Timeline</div>
-                                    <div class="tdm-row" id="tdAttach">Attachments</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="ctrl-mid"></div>
-                        <div id="player-footer">
-                            <div class="prog-wrap">
-                                <div class="time-row">
-                                    <div class="t-left">
-                                        <span class="t-time" id="curTime">0:00</span>
-                                        <span class="spd-badge" id="spdBadge">1x</span>
-                                    </div>
-                                    <span class="t-time" id="durTime">0:00</span>
-                                </div>
-                                <div class="bar-wrap">
-                                    <div class="bar-bg">
-                                        <div class="bar-buf" id="barBuf" style="width:0%"></div>
-                                        <div class="bar-fill" id="barFill" style="width:0%"></div>
-                                    </div>
-                                    <div class="bar-thumb" id="barThumb" style="left:0%"></div>
-                                    <input type="range" class="bar-input" id="seekBar" min="0" max="1000" step="1" value="0">
-                                </div>
-                            </div>
-                            <div class="btn-row">
-                                <div class="btn-l">
-                                    <button class="cbtn" id="playBtn">
-                                        <svg id="iPlay" width="34" height="34" viewBox="0 0 24 24" fill="white"><path d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z"/></svg>
-                                        <svg id="iPause" width="34" height="34" viewBox="0 0 24 24" fill="white" style="display:none"><path fill-rule="evenodd" d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7.5 0A.75.75 0 0115 4.5h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H15a.75.75 0 01-.75-.75V5.25z" clip-rule="evenodd"/></svg>
-                                    </button>
-                                    <button class="cbtn" id="rwBtn">10s ⏪</button>
-                                    <button class="cbtn" id="fwBtn">⏩ 10s</button>
-                                    <div class="vol-grp">
-                                        <button class="cbtn" id="muteBtn">🔊</button>
-                                        <input type="range" class="vol-range" id="volBar" min="0" max="100" value="100" step="1">
-                                    </div>
-                                </div>
-                                <div class="btn-r">
-                                    <button class="cbtn" id="settBtn">⚙️</button>
-                                    <button class="cbtn" id="fsBtn">⛶</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="settBd"></div>
-                        <div id="settPanel">
-                            <div class="sc">
-                                <div class="s-main" id="sMain">
-                                    <div class="s-row" id="sSpeedRow"><span class="s-lbl">Speed</span><span id="sSpeedVal">Normal</span></div>
-                                    <div class="s-row" id="sQualRow"><span class="s-lbl">Quality</span><span id="sQualVal">Auto</span></div>
-                                </div>
-                                <div class="s-sub" id="sSpeedSub">
-                                    <div class="s-back" id="sSpeedBack">← Speed</div>
-                                    <div class="s-scroll" id="sSpeedOpts"></div>
-                                </div>
-                                <div class="s-sub" id="sQualSub">
-                                    <div class="s-back" id="sQualBack">← Quality</div>
-                                    <div class="s-scroll" id="sQualOpts"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="side-panel"><div class="panel-inner" id="panelInner"></div></div>
+                height: 50%;
+            }
+
+            .video-wrapper {
+                height: 50%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="header-title">Motion in a Straight Line 05 - Physics By Rajwant Sir</div>
+        <div class="live-badge">
+            <div class="live-dot"></div>
+            RECORDED
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-container">
+        
+        <!-- Video Container -->
+        <div class="video-wrapper">
+            <div class="custom-loader" id="loader"></div>
+            <div class="video-container" id="videoContainer">
+                <video id="videoPlayer" controls></video>
             </div>
-            <div id="bottom-panel"><div class="panel-inner" id="panelInnerMob"></div></div>
         </div>
 
-        <script>
-            const SLIDES = [
-                {"image": "https://static.pw.live/5eb393ee95fab7468a79d189/6604fe1e-68e2-421f-8789-139f2837091d.png", "name": "Slide No. 1", "timestamp": 8},
-                {"image": "https://static.pw.live/5eb393ee95fab7468a79d189/d96f6037-e917-4842-a69d-484e7036eb37.png", "name": "Slide No. 2", "timestamp": 68}
-            ];
-            const NOTES = [{ "name": "Motion In a Straight Line 05 : Class Notes", "url": "https://static.pw.live/5eb393ee95fab7468a79d189/ADMIN/dd09f868-7767-4044-8653-46c61196a107.pdf" }];
-            const DPP_NOTES = [{ "name": "Motion In a Straight Line : DPP 03", "url": "https://static.pw.live/5eb393ee95fab7468a79d189/ADMIN/eddf9db1-a63f-433d-a9eb-11fbad3d70be.pdf" }];
-            const TOPIC_NAME = "Motion in a Straight Line 05";
+        <!-- Sidebar / Tabs Section -->
+        <div class="side-panel">
+            <div class="tabs-header">
+                <button class="tab-btn active" onclick="switchTab('slides')">Slides</button>
+                <button class="tab-btn" onclick="switchTab('notes')">Notes</button>
+                <button class="tab-btn" onclick="switchTab('dpp')">DPP</button>
+            </div>
 
-            const vid = document.getElementById('vid');
-            const playBtn = document.getElementById('playBtn');
-            const iPlay = document.getElementById('iPlay');
-            const iPause = document.getElementById('iPause');
-            const curTime = document.getElementById('curTime');
-            const durTime = document.getElementById('durTime');
-            const seekBar = document.getElementById('seekBar');
-            const barFill = document.getElementById('barFill');
-            const barThumb = document.getElementById('barThumb');
-            const ovLoad = document.getElementById('ovLoad');
-            const titleEl = document.getElementById('player-title');
-            
-            let panelOpen = false, curTab = 'tl';
+            <!-- Slides / Timeline Tab -->
+            <div id="tab-slides" class="tab-content active">
+                <div id="timelineContainer"></div>
+            </div>
 
-            titleEl.textContent = TOPIC_NAME;
-
-            function fmt(s) {
-                s = Math.floor(s || 0);
-                const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sc = s % 60;
-                return h > 0 ? `${h}:${String(m).padStart(2, '0')}:${String(sc).padStart(2, '0')}` : `${m}:${String(sc).padStart(2, '0')}`;
-            }
-
-            function isDesktop() { return window.innerWidth >= 768; }
-
-            function applyLayout() {
-                const s = document.getElementById('shell');
-                if (isDesktop()) {
-                    s.classList.remove('layout-mobile'); s.classList.add('layout-desktop');
-                } else {
-                    s.classList.remove('layout-desktop'); s.classList.add('layout-mobile');
-                }
-                if (panelOpen) openPanel(curTab);
-            }
-            window.addEventListener('resize', applyLayout);
-
-            function buildPanelHTML() {
-                let html = `
-                    <div class="panel-hdr">
-                        <span class="panel-hdr-title">${curTab === 'tl' ? 'Timeline' : 'Attachments'}</span>
-                        <button class="panel-close" onclick="closePanel()">✕</button>
+            <!-- Class Notes Tab -->
+            <div id="tab-notes" class="tab-content">
+                <div class="attachment-card">
+                    <div class="attachment-header">
+                        <span class="attachment-title">Class Notes PDF</span>
                     </div>
-                    <div class="panel-tabs" id="panelTabsArea">
-                        <button class="ptab ${curTab==='tl'?'active':''}" onclick="openPanel('tl')">Timeline</button>
-                        <button class="ptab ${curTab==='att'?'active':''}" onclick="openPanel('att')">Attachments</button>
+                    <button class="action-btn" onclick="openPDF('notes')">Preview Notes</button>
+                    <a id="downloadNotesBtn" class="action-btn" style="background-color: var(--bg-tertiary); border: 1px solid var(--border-color); margin-left: 8px;" target="_blank">Download</a>
+                </div>
+            </div>
+
+            <!-- DPP Tab -->
+            <div id="tab-dpp" class="tab-content">
+                <div class="attachment-card">
+                    <div class="attachment-header">
+                        <span class="attachment-title">DPP 05 - Physics</span>
                     </div>
-                    <div class="panel-body" id="mainPanelBody">
+                    <button class="action-btn" onclick="openPDF('dpp')">Preview DPP</button>
+                    <a id="downloadDppBtn" class="action-btn" style="background-color: var(--bg-tertiary); border: 1px solid var(--border-color); margin-left: 8px;" target="_blank">Download</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF Viewer Modal -->
+    <div class="pdf-viewer-container" id="pdfModal">
+        <div class="pdf-viewer-header">
+            <span id="pdfTitle">Document Preview</span>
+            <button class="close-pdf" onclick="closePDF()">&times;</button>
+        </div>
+        <div class="pdf-viewer-body" id="pdfBody">
+            <canvas id="pdfCanvas"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Lecture & Credentials Configuration
+        const AUTH_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGI4MDcyODJjNDExNjE1Mjk3ZmMxYzUiLCJpYXQiOjE3NDIzMTQwNzksImV4cCI6MTc4NzQ5ODA3OX0.zXz9tH-qA9_L53gQp-7H7b0x9U74S9Hj_R98tL4U5vI";
+        
+        const videoStreamUrl = "https://d1d34p8vz63oiq.cloudfront.net/495d4610-d0ef-4f1e-9279-d5e7ef383181/master.m3u8";
+
+        const attachmentsData = {
+            notes: {
+                title: "Class Notes - Motion in a Straight Line 05",
+                url: "https://d2bp242aedm8b.cloudfront.net/notes/pdf/motion_in_a_straight_line_05.pdf"
+            },
+            dpp: {
+                title: "DPP 05 - Motion in a Straight Line",
+                url: "https://d2bp242aedm8b.cloudfront.net/dpp/pdf/dpp_05_motion_straight_line.pdf"
+            }
+        };
+
+        const slidesData = [
+            { time: 0, title: "Slide 1: Introduction", thumb: "https://d1d34p8vz63oiq.cloudfront.net/495d4610-d0ef-4f1e-9279-d5e7ef383181/thumbnails/1.jpg" },
+            { time: 180, title: "Slide 2: Calculus Application", thumb: "https://d1d34p8vz63oiq.cloudfront.net/495d4610-d0ef-4f1e-9279-d5e7ef383181/thumbnails/2.jpg" },
+            { time: 420, title: "Slide 3: Integration Problems", thumb: "https://d1d34p8vz63oiq.cloudfront.net/495d4610-d0ef-4f1e-9279-d5e7ef383181/thumbnails/3.jpg" },
+            { time: 750, title: "Slide 4: Displacement-Time Graph", thumb: "https://d1d34p8vz63oiq.cloudfront.net/495d4610-d0ef-4f1e-9279-d5e7ef383181/thumbnails/4.jpg" },
+            { time: 1100, title: "Slide 5: Acceleration Curves", thumb: "https://d1d34p8vz63oiq.cloudfront.net/495d4610-d0ef-4f1e-9279-d5e7ef383181/thumbnails/5.jpg" }
+        ];
+
+        // Player Setup
+        const video = document.getElementById('videoPlayer');
+        const loader = document.getElementById('loader');
+
+        function initPlayer() {
+            if (Hls.isSupported()) {
+                const hls = new Hls({
+                    xhrSetup: function (xhr, url) {
+                        xhr.setRequestHeader('Authorization', `Bearer ${AUTH_TOKEN}`);
+                        xhr.setRequestHeader('client-type', 'WEB');
+                    }
+                });
+                hls.loadSource(videoStreamUrl);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                    console.log("HLS Manifest loaded successfully");
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = videoStreamUrl;
+            }
+        }
+
+        // Render Slides Timeline
+        function renderTimeline() {
+            const container = document.getElementById('timelineContainer');
+            container.innerHTML = '';
+
+            slidesData.forEach(slide => {
+                const item = document.createElement('div');
+                item.className = 'timeline-item';
+                item.onclick = () => seekTo(slide.time);
+
+                const mins = Math.floor(slide.time / 60);
+                const secs = slide.time % 60;
+                const timeString = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+
+                item.innerHTML = `
+                    <img class="timeline-thumb" src="${slide.thumb}" alt="${slide.title}" onerror="this.src='https://via.placeholder.com/100x56?text=PW'">
+                    <div class="timeline-info">
+                        <div class="timeline-time">${timeString}</div>
+                        <div class="timeline-title">${slide.title}</div>
+                    </div>
                 `;
-
-                if (curTab === 'tl') {
-                    html += '<div class="tl-list">';
-                    SLIDES.forEach((s) => {
-                        html += `
-                            <div class="tl-card" onclick="seekSlide(${s.timestamp})">
-                                <img class="tl-img" src="${s.image}">
-                                <div class="tl-ov">
-                                    <span class="tl-name">${s.name}</span>
-                                    <span class="tl-ts">${fmt(s.timestamp)}</span>
-                                </div>
-                            </div>`;
-                    });
-                    html += '</div>';
-                } else {
-                    html += '<div style="padding:10px">';
-                    [...NOTES, ...DPP_NOTES].forEach(n => {
-                        html += `
-                            <div class="att-item">
-                                <span>${n.name}</span>
-                                <div>
-                                    <button class="att-btn" onclick="previewPDF('${n.url}','${n.name}')">👁️</button>
-                                    <a class="att-btn" href="${n.url}" target="_blank" download>💾</a>
-                                </div>
-                            </div>`;
-                    });
-                    html += '</div>';
-                }
-                html += `</div>
-                <div id="pdfPreviewWrap" style="display:none;flex-direction:column;flex:1">
-                    <div class="panel-hdr"><button class="panel-close" onclick="closePDFPreview()">← Back</button><span class="panel-hdr-title" id="pdfPreviewTitle">PDF</span></div>
-                    <div class="pdf-frame-container" id="pdfFrameContainer"></div>
-                </div>`;
-                return html;
-            }
-
-            function openPanel(tab) {
-                curTab = tab; panelOpen = true;
-                const container = isDesktop() ? document.getElementById('panelInner') : document.getElementById('panelInnerMob');
-                container.innerHTML = buildPanelHTML();
-                if (isDesktop()) document.getElementById('side-panel').classList.add('open');
-                else document.getElementById('bottom-panel').classList.add('open');
-            }
-
-            function closePanel() {
-                panelOpen = false;
-                document.getElementById('side-panel').classList.remove('open');
-                document.getElementById('bottom-panel').classList.remove('open');
-            }
-
-            function seekSlide(ts) {
-                vid.currentTime = ts;
-                vid.play();
-            }
-
-            function previewPDF(url, name) {
-                const fc = document.getElementById('pdfFrameContainer');
-                document.getElementById('mainPanelBody').style.display = 'none';
-                document.getElementById('panelTabsArea').style.display = 'none';
-                document.getElementById('pdfPreviewWrap').style.display = 'flex';
-                document.getElementById('pdfPreviewTitle').textContent = name;
-                fc.innerHTML = `<iframe src="${url}" style="width:100%;height:100%;border:none;"></iframe>`;
-            }
-
-            function closePDFPreview() {
-                document.getElementById('mainPanelBody').style.display = 'block';
-                document.getElementById('panelTabsArea').style.display = 'flex';
-                document.getElementById('pdfPreviewWrap').style.display = 'none';
-                document.getElementById('pdfFrameContainer').innerHTML = '';
-            }
-
-            // Controls & Event Handlers
-            document.getElementById('tdBtn').onclick = () => {
-                const m = document.getElementById('tdMenu');
-                m.classList.toggle('on');
-            };
-            document.getElementById('tdTimeline').onclick = () => { openPanel('tl'); document.getElementById('tdMenu').classList.remove('on'); };
-            document.getElementById('tdAttach').onclick = () => { openPanel('att'); document.getElementById('tdMenu').classList.remove('on'); };
-
-            playBtn.onclick = () => {
-                if (vid.paused) vid.play();
-                else vid.pause();
-            };
-
-            vid.onplay = () => { iPlay.style.display = 'none'; iPause.style.display = 'block'; };
-            vid.onpause = () => { iPlay.style.display = 'block'; iPause.style.display = 'none'; };
-            vid.ontimeupdate = () => {
-                curTime.textContent = fmt(vid.currentTime);
-                durTime.textContent = fmt(vid.duration);
-                if (vid.duration) {
-                    const pct = (vid.currentTime / vid.duration) * 100;
-                    barFill.style.width = pct + '%';
-                    barThumb.style.left = pct + '%';
-                    seekBar.value = (vid.currentTime / vid.duration) * 1000;
-                }
-            };
-
-            seekBar.oninput = () => {
-                if (vid.duration) {
-                    vid.currentTime = (seekBar.value / 1000) * vid.duration;
-                }
-            };
-
-            document.getElementById('rwBtn').onclick = () => vid.currentTime -= 10;
-            document.getElementById('fwBtn').onclick = () => vid.currentTime += 10;
-            document.getElementById('fsBtn').onclick = () => {
-                if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-                else document.exitFullscreen();
-            };
-
-            document.getElementById('settBtn').onclick = () => {
-                document.getElementById('settPanel').classList.toggle('on');
-                document.getElementById('settBd').classList.toggle('on');
-            };
-            document.getElementById('settBd').onclick = () => {
-                document.getElementById('settPanel').classList.remove('on');
-                document.getElementById('settBd').classList.remove('on');
-            };
-
-            // Quality & Speed Logic Options
-            const spdOpts = [0.5, 0.75, 1, 1.25, 1.5, 2];
-            const spdScroll = document.getElementById('sSpeedOpts');
-            spdOpts.forEach(s => {
-                const div = document.createElement('div');
-                div.className = 'sopt';
-                div.innerHTML = `<span>${s === 1 ? 'Normal' : s + 'x'}</span>`;
-                div.onclick = () => {
-                    vid.playbackRate = s;
-                    document.getElementById('spdBadge').textContent = s + 'x';
-                    document.getElementById('sSpeedVal').textContent = s === 1 ? 'Normal' : s + 'x';
-                    document.getElementById('sSpeedSub').classList.remove('on');
-                    document.getElementById('sMain').classList.remove('off');
-                };
-                spdScroll.appendChild(div);
+                container.appendChild(item);
             });
+        }
 
-            document.getElementById('sSpeedRow').onclick = () => {
-                document.getElementById('sMain').classList.add('off');
-                document.getElementById('sSpeedSub').classList.add('on');
-            };
-            document.getElementById('sSpeedBack').onclick = () => {
-                document.getElementById('sSpeedSub').classList.remove('on');
-                document.getElementById('sMain').classList.remove('off');
-            };
+        function seekTo(seconds) {
+            video.currentTime = seconds;
+            video.play();
+        }
 
-            applyLayout();
-            ovLoad.classList.add('off'); // Ready
-        </script>
-    </body>
+        // Tab Switching Logic
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+        }
+
+        // PDF Preview Handlers
+        function openPDF(type) {
+            const data = attachmentsData[type];
+            if (!data) return;
+
+            document.getElementById('pdfTitle').innerText = data.title;
+            document.getElementById('pdfModal').style.display = 'flex';
+
+            // PDF Rendering via pdf.js
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            
+            pdfjsLib.getDocument({
+                url: data.url,
+                httpHeaders: { 'Authorization': `Bearer ${AUTH_TOKEN}` }
+            }).promise.then(pdf => {
+                pdf.getPage(1).then(page => {
+                    const scale = 1.5;
+                    const viewport = page.getViewport({ scale: scale });
+                    const canvas = document.getElementById('pdfCanvas');
+                    const context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+
+                    page.render({
+                        canvasContext: context,
+                        viewport: viewport
+                    });
+                });
+            }).catch(err => {
+                console.error("PDF load error:", err);
+            });
+        }
+
+        function closePDF() {
+            document.getElementById('pdfModal').style.display = 'none';
+        }
+
+        // Attach Links
+        document.getElementById('downloadNotesBtn').href = attachmentsData.notes.url;
+        document.getElementById('downloadDppBtn').href = attachmentsData.dpp.url;
+
+        // Initialize on page load
+        window.onload = () => {
+            initPlayer();
+            renderTimeline();
+        };
+    </script>
+</body>
 </html>
