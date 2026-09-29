@@ -77,6 +77,54 @@
     </div>
 
     <script>
+        // Deep search function in LocalStorage / SessionStorage for Schedule ID
+        function searchTitleInStorage(scheduleId) {
+            const storages = [localStorage, sessionStorage];
+            
+            for (let storage of storages) {
+                for (let i = 0; i < storage.length; i++) {
+                    const key = storage.key(i);
+                    const value = storage.getItem(key);
+                    
+                    if (value && value.includes(scheduleId)) {
+                        try {
+                            const parsed = JSON.parse(value);
+                            
+                            // Recursive search in JSON object
+                            const foundTitle = findTopicInObject(parsed, scheduleId);
+                            if (foundTitle) return foundTitle;
+                        } catch (e) {
+                            // Non-JSON string, check string
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        // Helper to crawl inside nested JS objects
+        function findTopicInObject(obj, targetId) {
+            if (!obj || typeof obj !== 'object') return null;
+
+            if (Array.isArray(obj)) {
+                for (let item of obj) {
+                    const result = findTopicInObject(item, targetId);
+                    if (result) return result;
+                }
+            } else {
+                if ((obj._id === targetId || obj.id === targetId || obj.scheduleId === targetId)) {
+                    return obj.topic || obj.title || obj.topicName || obj.name || obj.caption;
+                }
+                for (let k in obj) {
+                    if (typeof obj[k] === 'object') {
+                        const res = findTopicInObject(obj[k], targetId);
+                        if (res) return res;
+                    }
+                }
+            }
+            return null;
+        }
+
         async function loadLectureData() {
             const urlParams = new URLSearchParams(window.location.search);
 
@@ -86,55 +134,50 @@
 
             let topicName = '';
 
-            // Step 1: Pehle check karo agar URL me direct title pass kiya ho
-            topicName = urlParams.get('title') || urlParams.get('topic') || urlParams.get('topicName');
+            // Method 1: Check Direct URL Parameters
+            topicName = urlParams.get('title') || urlParams.get('topic') || urlParams.get('topicName') || urlParams.get('name');
 
-            // Step 2: Agar URL me nahi hai, toh API se schedule details fetch karo
+            // Method 2: Scan Browser Memory (LocalStorage / SessionStorage)
             if (!topicName && scheduleId) {
-                try {
-                    // Try PW / Penpaper worker API endpoints
-                    const apiUrls = [
-                        `https://api.penpaper.workers.dev/schedule/${scheduleId}`,
-                        `https://pw-steel-beta.vercel.app/api/schedule?scheduleId=${scheduleId}`
-                    ];
+                topicName = searchTitleInStorage(scheduleId);
+            }
 
-                    for (let api of apiUrls) {
-                        try {
-                            const res = await fetch(api);
-                            if (res.ok) {
-                                const json = await res.json();
-                                const data = json.data || json;
-                                if (data.topic || data.title || data.name || data.topicName) {
-                                    topicName = data.topic || data.title || data.name || data.topicName;
-                                    break;
-                                }
+            // Method 3: Try Vercel / Penpaper API Endpoints
+            if (!topicName && scheduleId) {
+                const endpoints = [
+                    `https://pw-steel-beta.vercel.app/api/schedule-details?scheduleId=${scheduleId}`,
+                    `https://pw-steel-beta.vercel.app/api/schedule/${scheduleId}`,
+                    `https://api.penpaper.workers.dev/schedule/${scheduleId}`
+                ];
+
+                for (let api of endpoints) {
+                    try {
+                        const res = await fetch(api);
+                        if (res.ok) {
+                            const json = await res.json();
+                            const data = json.data || json;
+                            const found = data.topic || data.title || data.name || data.topicName;
+                            if (found) {
+                                topicName = found;
+                                break;
                             }
-                        } catch (err) {
-                            console.log("API fetch failed for:", api);
                         }
+                    } catch (e) {
+                        // ignore API error, try next
                     }
-                } catch (e) {
-                    console.log("Error fetching topic from API", e);
                 }
             }
 
-            // Step 3: Agar API se bhi na mile, toh Local/Session Storage check karo
+            // Final fallback if nothing is found anywhere
             if (!topicName) {
-                topicName = localStorage.getItem(`topic_${scheduleId}`) || 
-                            localStorage.getItem('current_topic') || 
-                            sessionStorage.getItem('topicName');
+                topicName = "Lecture Video";
             }
 
-            // Fallback Text if all fail
-            if (!topicName) {
-                topicName = "Lecture " + scheduleId.substring(0, 6);
-            }
-
-            // Update Screen
+            // Update UI
             document.getElementById('loader').style.display = 'none';
             document.getElementById('topicText').innerText = topicName;
 
-            // Generate Target Player URL
+            // Generate Target Player Link for Studyaura
             const playerBaseUrl = 'https://studyaura.online/player';
             const finalPlayerUrl = `${playerBaseUrl}?rc=${encodeURIComponent(batchId)}&subject=${encodeURIComponent(subjectId)}&pro=${encodeURIComponent(scheduleId)}&title=${encodeURIComponent(topicName)}`;
 
