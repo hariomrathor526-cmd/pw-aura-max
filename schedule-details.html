@@ -496,7 +496,7 @@
                         <video id="vid" playsinline preload="auto"></video>
                         <div class="ov" id="ovLoad">
                             <div class="spinner"></div>
-                            <p id="loadMsg">Redirecting to Live Player...</p>
+                            <p id="loadMsg">Connecting to Live Player...</p>
                         </div>
                     </div>
                 </div>
@@ -504,48 +504,69 @@
         </div>
 
         <script>
-            // Helper to build the StudyAura Live player URL
-            function buildPlayerUrl(batchId, subjectId, scheduleId, title) {
+            // Correct Live Player URL Builder for StudyAura
+            function buildLivePlayerUrl(data) {
                 const baseUrl = "https://studyaura.online/player";
                 const params = new URLSearchParams();
                 
-                if (batchId) params.set('rc', batchId);
-                if (subjectId) params.set('subject', subjectId);
-                if (scheduleId) params.set('pro', scheduleId);
-                if (title) params.set('title', title);
+                // Batch ID
+                if (data.rc || data.batchId) {
+                    params.set('rc', data.rc || data.batchId);
+                }
+                
+                // Schedule ID / Schedule Pro ID
+                if (data.pro || data.scheduleId) {
+                    params.set('pro', data.pro || data.scheduleId);
+                }
+
+                // Lecture Title
+                if (data.title) {
+                    params.set('title', data.title);
+                }
+
+                // Subject Slug Name (e.g. physical-chemistry-by-vkt-sir-224416)
+                if (data.subjectSlug || data.subject) {
+                    params.set('subject', data.subjectSlug || data.subject);
+                }
+
+                // Topic Slug Name
+                if (data.topic) {
+                    params.set('topic', data.topic);
+                }
+
+                // Mandatory parameters for Live Stream
+                params.set('live', 'true');
+                params.set('type', 'live');
 
                 return `${baseUrl}?${params.toString()}`;
             }
 
-            // Handles Live vs Recorded Lecture logic
-            function handleLectureOpening(lectureData) {
-                const isLive = lectureData.isLive || lectureData.type === 'LIVE' || lectureData.status === 'LIVE';
-
-                if (isLive) {
-                    const batchId = lectureData.batchId || lectureData.rc || '';
-                    const subjectId = lectureData.subjectId || lectureData.subject || '';
-                    const scheduleId = lectureData.scheduleId || lectureData.pro || lectureData._id || '';
-                    const title = lectureData.title || 'Live Lecture';
-
-                    const targetUrl = buildPlayerUrl(batchId, subjectId, scheduleId, title);
-                    window.location.href = targetUrl;
-                } else {
-                    console.log("Playing recorded video:", lectureData.videoId);
-                }
-            }
-
-            // Automatic URL Param Redirection
-            (function redirectToNewPlayer() {
+            // Redirection Handler
+            (function autoRedirectLiveStream() {
                 const currentParams = new URLSearchParams(window.location.search);
                 
-                const batchId = currentParams.get('batchId') || currentParams.get('rc');
-                const subjectId = currentParams.get('subjectId') || currentParams.get('subject');
-                const scheduleId = currentParams.get('scheduleId') || currentParams.get('pro') || currentParams.get('scheduleId');
-                let title = currentParams.get('title') || document.title;
+                const isLiveQuery = currentParams.get('live') === 'true' || currentParams.get('type') === 'live';
+                
+                // Agar live tag miss hai to use auto-add karke redirect karein
+                if (!isLiveQuery) {
+                    const rc = currentParams.get('rc') || currentParams.get('batchId');
+                    const pro = currentParams.get('pro') || currentParams.get('scheduleId');
+                    const title = currentParams.get('title') || document.title;
+                    const subject = currentParams.get('subject') || currentParams.get('subjectSlug');
+                    const topic = currentParams.get('topic') || '';
 
-                if (batchId && subjectId && scheduleId) {
-                    const targetUrl = buildPlayerUrl(batchId, subjectId, scheduleId, title);
-                    window.location.replace(targetUrl);
+                    if (rc && pro) {
+                        const targetLiveUrl = buildLivePlayerUrl({
+                            rc: rc,
+                            pro: pro,
+                            title: title,
+                            subject: subject,
+                            topic: topic
+                        });
+                        
+                        // New Exact Live URL Redirect
+                        window.location.replace(targetLiveUrl);
+                    }
                 }
             })();
         </script>
