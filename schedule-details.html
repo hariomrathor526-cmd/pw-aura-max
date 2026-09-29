@@ -81,116 +81,96 @@
 <body>
 
     <div class="container">
-        <h2 id="headerTitle">Lectures</h2>
-        <div id="contentArea" class="loading-text">Loading lectures, please wait...</div>
+        <h2 id="headerTitle">Lecture Details</h2>
+        <div id="contentArea" class="loading-text">Loading lecture details...</div>
     </div>
 
     <script>
-        // Get URL Parameters
+        // Extract URL Parameters
         const urlParams = new URLSearchParams(window.location.search);
         const batchId = urlParams.get('batchId') || '';
         const subjectId = urlParams.get('subjectId') || '';
         const scheduleId = urlParams.get('scheduleId') || '';
-        const urlTitle = urlParams.get('title') || urlParams.get('topic') || urlParams.get('topicName');
+        
+        // Check all possible title parameter keys in URL
+        let urlTitle = urlParams.get('title') || 
+                       urlParams.get('topic') || 
+                       urlParams.get('topicName') || 
+                       urlParams.get('name') || 
+                       urlParams.get('caption');
 
-        // Helper to construct Studyaura player URL dynamically with topic title
-        function generatePlayerUrl(bId, sId, schId, topicTitle) {
+        // Helper function to build studyaura player URL
+        function buildStudyauraUrl(bId, sId, schId, titleText) {
             const baseUrl = 'https://studyaura.online/player';
-            const cleanTitle = topicTitle || 'Lecture';
+            const cleanTitle = titleText ? titleText.trim() : 'Lecture';
             return `${baseUrl}?rc=${encodeURIComponent(bId)}&subject=${encodeURIComponent(sId)}&pro=${encodeURIComponent(schId)}&title=${encodeURIComponent(cleanTitle)}`;
         }
 
-        async function initPage() {
-            const contentArea = document.getElementById('contentArea');
-
-            // CASE 1: Directly received a single schedule ID + title in URL
-            if (scheduleId && urlTitle) {
-                const playerUrl = generatePlayerUrl(batchId, subjectId, scheduleId, urlTitle);
-                contentArea.innerHTML = `
-                    <div class="lecture-card">
-                        <div class="lecture-info">
-                            <div class="lecture-title">${urlTitle}</div>
-                        </div>
-                        <a href="${playerUrl}" class="play-btn">Play Video</a>
-                    </div>
-                `;
-                return;
-            }
-
-            // CASE 2: Fetch details from API using scheduleId
-            if (scheduleId) {
-                try {
-                    const response = await fetch(`https://api.penpaper.workers.dev/schedule/${scheduleId}`);
-                    const result = await response.json();
-                    const data = result.data || result;
-                    
-                    const topicTitle = data.topic || data.name || data.title || "Lecture Video";
-                    const playerUrl = generatePlayerUrl(batchId, subjectId, scheduleId, topicTitle);
-
-                    contentArea.innerHTML = `
-                        <div class="lecture-card">
-                            <div class="lecture-info">
-                                <div class="lecture-title">${topicTitle}</div>
-                            </div>
-                            <a href="${playerUrl}" class="play-btn">Play Video</a>
-                        </div>
-                    `;
-                } catch (err) {
-                    // Fallback display if fetch fails
-                    const fallbackTitle = urlTitle || "Lecture Video";
-                    const playerUrl = generatePlayerUrl(batchId, subjectId, scheduleId, fallbackTitle);
-                    contentArea.innerHTML = `
-                        <div class="lecture-card">
-                            <div class="lecture-info">
-                                <div class="lecture-title">${fallbackTitle}</div>
-                            </div>
-                            <a href="${playerUrl}" class="play-btn">Play Video</a>
-                        </div>
-                    `;
-                }
-                return;
-            }
-
-            // CASE 3: Fetch list of schedules using Batch & Subject ID
-            if (batchId) {
-                try {
-                    const response = await fetch(`https://api.penpaper.workers.dev/schedule?batchId=${batchId}&subjectId=${subjectId}`);
-                    const result = await response.json();
-                    const lectures = result.data || result || [];
-
-                    if (!lectures || lectures.length === 0) {
-                        contentArea.innerHTML = "<div class='loading-text'>No lectures available.</div>";
-                        return;
-                    }
-
-                    let htmlContent = '';
-                    lectures.forEach(item => {
-                        const schId = item._id || item.id || item.scheduleId;
-                        const topicTitle = item.topic || item.name || item.title || "Lecture Video";
-                        const playerUrl = generatePlayerUrl(batchId, subjectId, schId, topicTitle);
-
-                        htmlContent += `
-                            <div class="lecture-card">
-                                <div class="lecture-info">
-                                    <div class="lecture-title">${topicTitle}</div>
-                                </div>
-                                <a href="${playerUrl}" class="play-btn">Play Video</a>
-                            </div>
-                        `;
-                    });
-
-                    contentArea.innerHTML = htmlContent;
-
-                } catch (err) {
-                    contentArea.innerHTML = "<div class='loading-text'>Unable to load lecture list. Please refresh the page.</div>";
-                }
-                return;
-            }
-
-            contentArea.innerHTML = "<div class='loading-text'>No batch or schedule details found in URL.</div>";
+        // Extract topic name from API response object
+        function extractTopicName(item) {
+            if (!item) return null;
+            return item.topic || 
+                   item.topicName || 
+                   item.name || 
+                   item.title || 
+                   (item.schedule && item.schedule.topic) ||
+                   (item.details && item.details.topic);
         }
 
-        window.onload = initPage;
+        async function loadLectureInfo() {
+            const contentArea = document.getElementById('contentArea');
+
+            // CASE 1: If URL already has the topic/title passed
+            if (urlTitle) {
+                renderSingleCard(urlTitle);
+                return;
+            }
+
+            // CASE 2: Try fetching from PW Primary Schedule API
+            if (scheduleId) {
+                try {
+                    // Try official PW endpoint structure first
+                    const res = await fetch(`https://api.penpaper.workers.dev/schedule/${scheduleId}`);
+                    const json = await res.json();
+                    
+                    let fetchedTitle = extractTopicName(json.data) || extractTopicName(json);
+
+                    // If primary API didn't return topic, try secondary endpoint
+                    if (!fetchedTitle) {
+                        const res2 = await fetch(`https://api.penpaper.workers.dev/schedule-details?scheduleId=${scheduleId}`);
+                        const json2 = await res2.json();
+                        fetchedTitle = extractTopicName(json2.data) || extractTopicName(json2);
+                    }
+
+                    if (fetchedTitle) {
+                        renderSingleCard(fetchedTitle);
+                        return;
+                    }
+                } catch (e) {
+                    console.warn("API fetch failed, falling back to URL or document title", e);
+                }
+            }
+
+            // CASE 3: Fallback if API didn't provide topic name
+            const fallbackTitle = document.title !== "Schedule Details" ? document.title : "Lecture";
+            renderSingleCard(fallbackTitle);
+        }
+
+        function renderSingleCard(topicName) {
+            const contentArea = document.getElementById('contentArea');
+            const playerUrl = buildStudyauraUrl(batchId, subjectId, scheduleId, topicName);
+
+            contentArea.innerHTML = `
+                <div class="lecture-card">
+                    <div class="lecture-info">
+                        <div class="lecture-title">${topicName}</div>
+                    </div>
+                    <a href="${playerUrl}" class="play-btn">Play Video</a>
+                </div>
+            `;
+        }
+
+        window.onload = loadLectureInfo;
     </script>
 </body>
 </html>
