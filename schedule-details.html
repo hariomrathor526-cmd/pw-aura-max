@@ -118,7 +118,7 @@
                         <video id="vid" playsinline preload="auto"></video>
                         <div class="ov" id="ovLoad">
                             <div class="spinner"></div>
-                            <p id="loadMsg">Opening Player...</p>
+                            <p id="loadMsg">Detecting Stream Type...</p>
                         </div>
                     </div>
                 </div>
@@ -126,33 +126,31 @@
         </div>
 
         <script>
-            // Target Studyaura Player URL Constructor
-            function buildPlayerUrl(p) {
+            function buildPlayerUrl(data) {
                 const baseUrl = "https://studyaura.online/player";
-                const query = new URLSearchParams();
+                const params = new URLSearchParams();
 
-                if (p.isLive) {
-                    // LIVE LECTURE URL FORMAT
-                    if (p.rc) query.set('rc', p.rc);
-                    if (p.pro) query.set('pro', p.pro);
-                    if (p.title) query.set('title', p.title);
-                    if (p.subject) query.set('subject', p.subject);
-                    if (p.topic) query.set('topic', p.topic);
-                    query.set('live', 'true');
-                    query.set('type', 'live');
+                if (data.isLive) {
+                    // LIVE URL FORMAT
+                    if (data.rc) params.set('rc', data.rc);
+                    if (data.pro) params.set('pro', data.pro);
+                    if (data.title) params.set('title', data.title);
+                    if (data.subject) params.set('subject', data.subject);
+                    if (data.topic) params.set('topic', data.topic);
+                    params.set('live', 'true');
+                    params.set('type', 'live');
                 } else {
-                    // RECORDED LECTURE URL FORMAT
-                    if (p.rc) query.set('rc', p.rc);
-                    if (p.subject) query.set('subject', p.subject);
-                    if (p.pro) query.set('pro', p.pro);
-                    query.set('title', p.title || 'StudyAura Video Player');
+                    // RECORDED URL FORMAT
+                    if (data.rc) params.set('rc', data.rc);
+                    if (data.subject) params.set('subject', data.subject);
+                    if (data.pro) params.set('pro', data.pro);
+                    params.set('title', data.title || 'StudyAura Video Player');
                 }
 
-                return `${baseUrl}?${query.toString()}`;
+                return `${baseUrl}?${params.toString()}`;
             }
 
-            // Processing and Redirecting Logic
-            (function handleRedirect() {
+            (function processAndRedirect() {
                 const urlParams = new URLSearchParams(window.location.search);
 
                 const rc = urlParams.get('rc') || urlParams.get('batchId');
@@ -161,21 +159,25 @@
                 const title = urlParams.get('title');
                 const topic = urlParams.get('topic') || '';
 
-                // LIVE DETECTION CRITERIA:
-                // Checks if URL explicitly has live/type parameters OR if it comes from stream.html
-                const isLiveExplicit = urlParams.get('live') === 'true' || 
-                                       urlParams.get('type') === 'live' || 
-                                       urlParams.get('isLive') === 'true';
+                // Automatic Live Detection:
+                // 1. Agar URL me explicitly live/type pass kiya ho
+                // 2. Ya referrer page stream.html ho
+                // 3. Ya title/topic pass kiya gaya ho
+                const hasLiveParam = urlParams.get('live') === 'true' || 
+                                     urlParams.get('type') === 'live' || 
+                                     urlParams.get('isLive') === 'true';
                 
-                const isStreamSource = document.referrer.includes('stream.html');
-                const isLive = isLiveExplicit || isStreamSource;
+                const isFromStreamPage = document.referrer.includes('stream.html');
+                const hasLiveTitle = title && title !== 'StudyAura Video Player';
+
+                const isLive = hasLiveParam || isFromStreamPage || (hasLiveTitle && topic !== '');
 
                 if (rc && pro) {
                     const finalUrl = buildPlayerUrl({
                         rc: rc,
                         pro: pro,
                         subject: subject,
-                        title: title,
+                        title: title || 'StudyAura Video Player',
                         topic: topic,
                         isLive: isLive
                     });
