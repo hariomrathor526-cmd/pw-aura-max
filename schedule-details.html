@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lecture Details</title>
+    <title>Playing Lecture...</title>
     <style>
         * {
             box-sizing: border-box;
@@ -14,50 +14,39 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f0f2f5;
             color: #333;
-            padding: 20px;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-        h2 {
-            margin-bottom: 20px;
-            color: #1a73e8;
-            font-size: 22px;
-            border-bottom: 2px solid #e8eaed;
-            padding-bottom: 10px;
-        }
-        .lecture-card {
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
+            min-height: 100vh;
+            padding: 20px;
         }
-        .lecture-title {
-            font-size: 16px;
+        .card {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        .title-display {
+            font-size: 18px;
             font-weight: 600;
-            color: #202124;
-            line-height: 1.4;
-            padding-right: 15px;
+            color: #1a73e8;
+            margin: 15px 0;
+            word-break: break-word;
         }
         .play-btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 24px;
             background-color: #1a73e8;
             color: #ffffff;
-            padding: 10px 20px;
             text-decoration: none;
             border-radius: 6px;
             font-weight: bold;
-            font-size: 14px;
-            white-space: nowrap;
-            display: inline-block;
+            font-size: 15px;
+            transition: background 0.2s;
         }
         .play-btn:hover {
             background-color: #1557b0;
@@ -66,47 +55,51 @@
 </head>
 <body>
 
-    <div class="container">
-        <h2>Lecture</h2>
-        <div id="contentArea">Loading lecture details...</div>
+    <div class="card">
+        <h3>Lecture Ready</h3>
+        <div id="topicText" class="title-display">Checking Title...</div>
+        <a id="playLink" href="#" class="play-btn">Play Video</a>
     </div>
 
     <script>
-        // Extract URL Parameters
-        const urlParams = new URLSearchParams(window.location.search);
-        const batchId = urlParams.get('batchId') || '';
-        const subjectId = urlParams.get('subjectId') || '';
-        const scheduleId = urlParams.get('scheduleId') || '';
-        
-        // Extract Title from URL parameters
-        let topicTitle = urlParams.get('title') || 
-                         urlParams.get('topic') || 
-                         urlParams.get('topicName') || 
-                         urlParams.get('name') || 
-                         urlParams.get('caption');
+        function setupPlayer() {
+            const urlParams = new URLSearchParams(window.location.search);
 
-        function initPage() {
-            const contentArea = document.getElementById('contentArea');
+            const batchId = urlParams.get('batchId') || '';
+            const subjectId = urlParams.get('subjectId') || '';
+            const scheduleId = urlParams.get('scheduleId') || '';
 
-            // Fallback Title if missing in URL
-            if (!topicTitle) {
-                topicTitle = "Lecture Details";
+            // Check all possible title parameter keys in URL
+            let extractedTitle = urlParams.get('title') || 
+                                 urlParams.get('topic') || 
+                                 urlParams.get('topicName') || 
+                                 urlParams.get('name') || 
+                                 urlParams.get('caption');
+
+            // Decoding URI Component if needed
+            if (extractedTitle) {
+                try {
+                    extractedTitle = decodeURIComponent(extractedTitle);
+                } catch(e) {
+                    // Keep original if decoding fails
+                }
+            } else {
+                // Default display title if missing
+                extractedTitle = "Units and Measurement / Class Lecture";
             }
 
-            // Build Studyaura Player URL
-            const playerBaseUrl = 'https://studyaura.online/player';
-            const finalPlayerUrl = `${playerBaseUrl}?rc=${encodeURIComponent(batchId)}&subject=${encodeURIComponent(subjectId)}&pro=${encodeURIComponent(scheduleId)}&title=${encodeURIComponent(topicTitle)}`;
+            // Update UI
+            document.getElementById('topicText').innerText = extractedTitle;
 
-            // Render Card with Title & Player Link
-            contentArea.innerHTML = `
-                <div class="lecture-card">
-                    <div class="lecture-title">${topicTitle}</div>
-                    <a href="${finalPlayerUrl}" class="play-btn">Play Video</a>
-                </div>
-            `;
+            // Generate Final Studyaura Player URL
+            const playerBaseUrl = 'https://studyaura.online/player';
+            const finalPlayerUrl = `${playerBaseUrl}?rc=${encodeURIComponent(batchId)}&subject=${encodeURIComponent(subjectId)}&pro=${encodeURIComponent(scheduleId)}&title=${encodeURIComponent(extractedTitle)}`;
+
+            // Set link to button
+            document.getElementById('playLink').href = finalPlayerUrl;
         }
 
-        window.onload = initPage;
+        window.onload = setupPlayer;
     </script>
 </body>
 </html>
