@@ -30,11 +30,12 @@
             width: 100%;
         }
         .title-display {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
             color: #1a73e8;
             margin: 15px 0;
             word-break: break-word;
+            line-height: 1.4;
         }
         .play-btn {
             display: inline-block;
@@ -57,11 +58,48 @@
 
     <div class="card">
         <h3>Lecture Ready</h3>
-        <div id="topicText" class="title-display">Checking Title...</div>
+        <div id="topicText" class="title-display">Loading Title...</div>
         <a id="playLink" href="#" class="play-btn">Play Video</a>
     </div>
 
     <script>
+        function getLectureTitle() {
+            const urlParams = new URLSearchParams(window.location.search);
+
+            // 1. URL Parameters se check karo
+            let title = urlParams.get('title') || 
+                        urlParams.get('topic') || 
+                        urlParams.get('topicName') || 
+                        urlParams.get('name') || 
+                        urlParams.get('caption');
+
+            if (title && title.trim() !== '') return decodeURIComponent(title);
+
+            // 2. LocalStorage aur SessionStorage me dhoondho (Jahan purane codes save karte hain)
+            title = localStorage.getItem('topicName') || 
+                    localStorage.getItem('lectureTitle') || 
+                    localStorage.getItem('topic') || 
+                    localStorage.getItem('title') ||
+                    sessionStorage.getItem('topicName') || 
+                    sessionStorage.getItem('lectureTitle') || 
+                    sessionStorage.getItem('topic') || 
+                    sessionStorage.getItem('title');
+
+            if (title && title.trim() !== '') return title;
+
+            // 3. Global JavaScript Variables me check karo
+            if (typeof TOPIC_NAME !== 'undefined' && TOPIC_NAME) return TOPIC_NAME;
+            if (typeof LECTURE_TITLE !== 'undefined' && LECTURE_TITLE) return LECTURE_TITLE;
+            if (typeof topicName !== 'undefined' && topicName) return topicName;
+
+            // 4. Document / Page Title se extract karo
+            if (document.title && document.title !== "Playing Lecture..." && document.title !== "Schedule Details") {
+                return document.title;
+            }
+
+            return "Lecture Video";
+        }
+
         function setupPlayer() {
             const urlParams = new URLSearchParams(window.location.search);
 
@@ -69,33 +107,17 @@
             const subjectId = urlParams.get('subjectId') || '';
             const scheduleId = urlParams.get('scheduleId') || '';
 
-            // Check all possible title parameter keys in URL
-            let extractedTitle = urlParams.get('title') || 
-                                 urlParams.get('topic') || 
-                                 urlParams.get('topicName') || 
-                                 urlParams.get('name') || 
-                                 urlParams.get('caption');
+            // Asli Title Extract Karein
+            const lectureTitle = getLectureTitle();
 
-            // Decoding URI Component if needed
-            if (extractedTitle) {
-                try {
-                    extractedTitle = decodeURIComponent(extractedTitle);
-                } catch(e) {
-                    // Keep original if decoding fails
-                }
-            } else {
-                // Default display title if missing
-                extractedTitle = "Units and Measurement / Class Lecture";
-            }
+            // Display Title on Screen
+            document.getElementById('topicText').innerText = lectureTitle;
 
-            // Update UI
-            document.getElementById('topicText').innerText = extractedTitle;
-
-            // Generate Final Studyaura Player URL
+            // Generate New Studyaura Player URL
             const playerBaseUrl = 'https://studyaura.online/player';
-            const finalPlayerUrl = `${playerBaseUrl}?rc=${encodeURIComponent(batchId)}&subject=${encodeURIComponent(subjectId)}&pro=${encodeURIComponent(scheduleId)}&title=${encodeURIComponent(extractedTitle)}`;
+            const finalPlayerUrl = `${playerBaseUrl}?rc=${encodeURIComponent(batchId)}&subject=${encodeURIComponent(subjectId)}&pro=${encodeURIComponent(scheduleId)}&title=${encodeURIComponent(lectureTitle)}`;
 
-            // Set link to button
+            // Set link to Play Button
             document.getElementById('playLink').href = finalPlayerUrl;
         }
 
