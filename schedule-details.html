@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Schedule Details</title>
+    <title>Lecture Details</title>
     <style>
         * {
             box-sizing: border-box;
@@ -17,7 +17,7 @@
             padding: 20px;
         }
         .container {
-            max-width: 900px;
+            max-width: 800px;
             margin: 0 auto;
             background: #ffffff;
             padding: 20px;
@@ -40,21 +40,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .lecture-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .lecture-info {
-            flex-grow: 1;
-            padding-right: 15px;
         }
         .lecture-title {
             font-size: 16px;
             font-weight: 600;
             color: #202124;
             line-height: 1.4;
+            padding-right: 15px;
         }
         .play-btn {
             background-color: #1a73e8;
@@ -70,19 +62,13 @@
         .play-btn:hover {
             background-color: #1557b0;
         }
-        .loading-text {
-            text-align: center;
-            padding: 30px;
-            font-size: 16px;
-            color: #5f6368;
-        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2 id="headerTitle">Lecture Details</h2>
-        <div id="contentArea" class="loading-text">Loading lecture details...</div>
+        <h2>Lecture</h2>
+        <div id="contentArea">Loading lecture details...</div>
     </div>
 
     <script>
@@ -92,85 +78,35 @@
         const subjectId = urlParams.get('subjectId') || '';
         const scheduleId = urlParams.get('scheduleId') || '';
         
-        // Check all possible title parameter keys in URL
-        let urlTitle = urlParams.get('title') || 
-                       urlParams.get('topic') || 
-                       urlParams.get('topicName') || 
-                       urlParams.get('name') || 
-                       urlParams.get('caption');
+        // Extract Title from URL parameters
+        let topicTitle = urlParams.get('title') || 
+                         urlParams.get('topic') || 
+                         urlParams.get('topicName') || 
+                         urlParams.get('name') || 
+                         urlParams.get('caption');
 
-        // Helper function to build studyaura player URL
-        function buildStudyauraUrl(bId, sId, schId, titleText) {
-            const baseUrl = 'https://studyaura.online/player';
-            const cleanTitle = titleText ? titleText.trim() : 'Lecture';
-            return `${baseUrl}?rc=${encodeURIComponent(bId)}&subject=${encodeURIComponent(sId)}&pro=${encodeURIComponent(schId)}&title=${encodeURIComponent(cleanTitle)}`;
-        }
-
-        // Extract topic name from API response object
-        function extractTopicName(item) {
-            if (!item) return null;
-            return item.topic || 
-                   item.topicName || 
-                   item.name || 
-                   item.title || 
-                   (item.schedule && item.schedule.topic) ||
-                   (item.details && item.details.topic);
-        }
-
-        async function loadLectureInfo() {
+        function initPage() {
             const contentArea = document.getElementById('contentArea');
 
-            // CASE 1: If URL already has the topic/title passed
-            if (urlTitle) {
-                renderSingleCard(urlTitle);
-                return;
+            // Fallback Title if missing in URL
+            if (!topicTitle) {
+                topicTitle = "Lecture Details";
             }
 
-            // CASE 2: Try fetching from PW Primary Schedule API
-            if (scheduleId) {
-                try {
-                    // Try official PW endpoint structure first
-                    const res = await fetch(`https://api.penpaper.workers.dev/schedule/${scheduleId}`);
-                    const json = await res.json();
-                    
-                    let fetchedTitle = extractTopicName(json.data) || extractTopicName(json);
+            // Build Studyaura Player URL
+            const playerBaseUrl = 'https://studyaura.online/player';
+            const finalPlayerUrl = `${playerBaseUrl}?rc=${encodeURIComponent(batchId)}&subject=${encodeURIComponent(subjectId)}&pro=${encodeURIComponent(scheduleId)}&title=${encodeURIComponent(topicTitle)}`;
 
-                    // If primary API didn't return topic, try secondary endpoint
-                    if (!fetchedTitle) {
-                        const res2 = await fetch(`https://api.penpaper.workers.dev/schedule-details?scheduleId=${scheduleId}`);
-                        const json2 = await res2.json();
-                        fetchedTitle = extractTopicName(json2.data) || extractTopicName(json2);
-                    }
-
-                    if (fetchedTitle) {
-                        renderSingleCard(fetchedTitle);
-                        return;
-                    }
-                } catch (e) {
-                    console.warn("API fetch failed, falling back to URL or document title", e);
-                }
-            }
-
-            // CASE 3: Fallback if API didn't provide topic name
-            const fallbackTitle = document.title !== "Schedule Details" ? document.title : "Lecture";
-            renderSingleCard(fallbackTitle);
-        }
-
-        function renderSingleCard(topicName) {
-            const contentArea = document.getElementById('contentArea');
-            const playerUrl = buildStudyauraUrl(batchId, subjectId, scheduleId, topicName);
-
+            // Render Card with Title & Player Link
             contentArea.innerHTML = `
                 <div class="lecture-card">
-                    <div class="lecture-info">
-                        <div class="lecture-title">${topicName}</div>
-                    </div>
-                    <a href="${playerUrl}" class="play-btn">Play Video</a>
+                    <div class="lecture-title">${topicTitle}</div>
+                    <a href="${finalPlayerUrl}" class="play-btn">Play Video</a>
                 </div>
             `;
         }
 
-        window.onload = loadLectureInfo;
+        window.onload = initPage;
     </script>
 </body>
 </html>
