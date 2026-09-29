@@ -118,7 +118,7 @@
                         <video id="vid" playsinline preload="auto"></video>
                         <div class="ov" id="ovLoad">
                             <div class="spinner"></div>
-                            <p id="loadMsg">Connecting Live Engine...</p>
+                            <p id="loadMsg">Verifying Video Stream Engine...</p>
                         </div>
                     </div>
                 </div>
@@ -160,22 +160,21 @@
                 return `${baseUrl}?${params.toString()}`;
             }
 
-            async function processLiveAndRecorded() {
+            async function verifyStreamAndRedirect() {
                 const urlParams = new URLSearchParams(window.location.search);
 
                 const rc = urlParams.get('rc') || urlParams.get('batchId');
                 const subject = urlParams.get('subject') || urlParams.get('subjectId');
                 const pro = urlParams.get('pro') || urlParams.get('scheduleId');
-                const tagId = urlParams.get('tagId') || '';
 
                 if (!rc || !pro) {
-                    document.getElementById('loadMsg').innerText = "Invalid Parameters!";
+                    document.getElementById('loadMsg').innerText = "Missing Required IDs!";
                     return;
                 }
 
                 let isLive = false;
                 let title = urlParams.get('title') || 'StudyAura Video Player';
-                let topicName = urlParams.get('topic') || 'thermodynamics';
+                let topicName = urlParams.get('topic') || '';
                 let subjectName = subject;
 
                 try {
@@ -185,31 +184,27 @@
                     const schedJson = await schedRes.json();
                     const sData = schedJson.data || {};
 
-                    // 2. Fetch Contents/Lectures List API
-                    const contentsApi = `https://api.studyaura.online/api/penpencil/batch-service/v3/batch-subject-schedules/${rc}/subject/${subject}/contents?skip=0&limit=30&contentType=LECTURES${tagId ? '&tagId=' + tagId : ''}`;
-                    const contRes = await fetch(contentsApi);
-                    const contJson = await contRes.json();
-                    const contentsList = contJson.data || [];
-
-                    // Find matching lecture in contents API
-                    const matchedLecture = contentsList.find(item => item._id === pro || item.scheduleId === pro) || {};
-
-                    // Extract Metadata
-                    title = sData.topic || sData.title || matchedLecture.topic || title;
-                    topicName = sData.topic || matchedLecture.topic || topicName;
+                    title = sData.topic || sData.title || title;
+                    topicName = sData.topic || topicName || title;
                     if (sData.subjectId && sData.subjectId.name) {
                         subjectName = sData.subjectId.name;
                     }
 
-                    // Strict Penpencil Live Detection Logic
-                    const isScheduleLive = sData.status === 'LIVE' || sData.isLive === true || sData.isLiveStream === true;
-                    const isContentLive = matchedLecture.status === 'LIVE' || matchedLecture.isLive === true || matchedLecture.type === 'LIVE';
-                    const isUrlLive = urlParams.get('live') === 'true' || urlParams.get('type') === 'live';
+                    // 2. Fetch Video Link API (StudySpark Engine)
+                    const videoLinkApi = `https://api.studyspark.study/api/video-link?batchId=${rc}&subjectId=${subject}&scheduleId=${pro}`;
+                    const videoRes = await fetch(videoLinkApi);
+                    const videoJson = await videoRes.json();
+                    const vData = videoJson.data || videoJson || {};
 
-                    isLive = isScheduleLive || isContentLive || isUrlLive;
+                    // Checking Live Status across all API responses
+                    const isScheduleLive = sData.status === 'LIVE' || sData.isLive === true || sData.isLiveStream === true;
+                    const isVideoApiLive = vData.isLive === true || vData.type === 'LIVE' || vData.streamType === 'LIVE' || vData.isLiveStream === true;
+                    const isUrlFlag = urlParams.get('live') === 'true' || urlParams.get('type') === 'live';
+
+                    isLive = isScheduleLive || isVideoApiLive || isUrlFlag;
 
                 } catch (err) {
-                    console.log("API check failed, falling back to params:", err);
+                    console.log("API check failed:", err);
                     isLive = urlParams.get('live') === 'true' || urlParams.get('type') === 'live';
                 }
 
@@ -218,14 +213,14 @@
                     pro: pro,
                     subject: subjectName,
                     title: title,
-                    topic: topicName,
+                    topic: topicName || title,
                     isLive: isLive
                 });
 
                 window.location.replace(finalTarget);
             }
 
-            processLiveAndRecorded();
+            verifyStreamAndRedirect();
         </script>
     </body>
 </html>
