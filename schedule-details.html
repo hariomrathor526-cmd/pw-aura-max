@@ -101,6 +101,10 @@
                 background: rgba(0,0,0,.82)
             }
 
+            #ovLoad.off {
+                display: none
+            }
+
             .spinner {
                 width: 40px;
                 height: 40px;
@@ -138,56 +142,59 @@
         </div>
 
         <script>
-            // Target player URL build karne ka function
-            function buildPlayerUrl(data) {
+            // Helper to build URL according to Live / Recorded requirement
+            function buildPlayerUrl(paramsObj) {
                 const baseUrl = "https://studyaura.online/player";
                 const params = new URLSearchParams();
 
-                // Common parameters (Both Live & Recorded)
-                if (data.rc) params.set('rc', data.rc);
-                if (data.pro) params.set('pro', data.pro);
-                if (data.title) params.set('title', data.title);
-                if (data.subject) params.set('subject', data.subject);
-
-                // Conditional parameters (Only for Live)
-                if (data.isLive) {
-                    if (data.topic) params.set('topic', data.topic);
+                if (paramsObj.isLive) {
+                    // LIVE URL Structure
+                    // Example: ?rc=...&pro=...&title=...&subject=...&topic=...&live=true&type=live
+                    if (paramsObj.rc) params.set('rc', paramsObj.rc);
+                    if (paramsObj.pro) params.set('pro', paramsObj.pro);
+                    if (paramsObj.title) params.set('title', paramsObj.title);
+                    if (paramsObj.subject) params.set('subject', paramsObj.subject);
+                    if (paramsObj.topic) params.set('topic', paramsObj.topic);
                     params.set('live', 'true');
                     params.set('type', 'live');
+                } else {
+                    // RECORDED URL Structure
+                    // Example: ?rc=...&subject=...&pro=...&title=...
+                    if (paramsObj.rc) params.set('rc', paramsObj.rc);
+                    if (paramsObj.subject) params.set('subject', paramsObj.subject);
+                    if (paramsObj.pro) params.set('pro', paramsObj.pro);
+                    if (paramsObj.title) params.set('title', paramsObj.title);
                 }
 
                 return `${baseUrl}?${params.toString()}`;
             }
 
-            // Detection & Redirection Logic
-            (function handleRedirection() {
-                const urlParams = new URLSearchParams(window.location.search);
+            // Automatic URL conversion & redirection
+            (function redirectToNewPlayer() {
+                const currentParams = new URLSearchParams(window.location.search);
 
-                // Parameters extract karna
-                const rc = urlParams.get('rc') || urlParams.get('batchId');
-                const pro = urlParams.get('pro') || urlParams.get('scheduleId');
-                const title = urlParams.get('title') || document.title;
-                const subject = urlParams.get('subject') || urlParams.get('subjectId');
-                const topic = urlParams.get('topic') || '';
+                const rc = currentParams.get('rc') || currentParams.get('batchId');
+                const subject = currentParams.get('subject') || currentParams.get('subjectId');
+                const pro = currentParams.get('pro') || currentParams.get('scheduleId');
+                const title = currentParams.get('title') || document.title;
+                const topic = currentParams.get('topic') || '';
 
-                // Live check karne ke tarike:
-                // 1. URL me explicitly 'live=true' ya 'type=live' pass hua ho
-                // 2. Ya fir stream.html se request aayi ho
-                const isLiveParam = urlParams.get('live') === 'true' || urlParams.get('type') === 'live';
-                const isStreamPage = window.location.pathname.includes('stream.html');
-                const isLive = isLiveParam || isStreamPage;
+                // Live Detection Logic:
+                // Agar URL me 'live=true' / 'type=live' / 'isLive=true' pass ho raha ho
+                const isLive = currentParams.get('live') === 'true' || 
+                               currentParams.get('type') === 'live' || 
+                               currentParams.get('isLive') === 'true';
 
                 if (rc && pro) {
                     const targetUrl = buildPlayerUrl({
                         rc: rc,
+                        subject: subject,
                         pro: pro,
                         title: title,
-                        subject: subject,
                         topic: topic,
                         isLive: isLive
                     });
 
-                    // External player page par redirect karna
                     window.location.replace(targetUrl);
                 }
             })();
