@@ -25,9 +25,7 @@
                 --surface2: #1c1c27;
                 --border: rgba(255,255,255,.1);
                 --text: #e8e8f0;
-                --muted: #7070a0;
-                --note: #3ecfcf;
-                --dpp: #ff9f43
+                --muted: #7070a0
             }
 
             html,body {
@@ -82,8 +80,7 @@
                 object-fit: contain;
                 background: #000;
                 display: block;
-                outline: none;
-                pointer-events: none
+                outline: none
             }
 
             .ov {
@@ -94,15 +91,16 @@
                 align-items: center;
                 justify-content: center;
                 gap: 10px;
-                z-index: 10
+                z-index: 10;
+                transition: opacity 0.3s ease;
             }
 
             #ovLoad {
-                background: rgba(0,0,0,.82)
+                background: rgba(0,0,0,.88)
             }
 
             #ovLoad.off {
-                display: none
+                display: none !important;
             }
 
             .spinner {
@@ -116,67 +114,11 @@
 
             #ovLoad p {
                 font-size: 13px;
-                color: rgba(255,255,255,.65)
-            }
-
-            #ovErr {
-                background: rgba(0,0,0,.88);
-                display: none;
-                padding: 20px;
-                text-align: center
-            }
-
-            #ovErr.on {
-                display: flex
-            }
-
-            #ovErr p {
-                font-size: 14px;
-                color: #ff6584;
-                max-width: 300px;
-                line-height: 1.5
-            }
-
-            #ovErr button {
-                padding: 8px 22px;
-                background: var(--accent);
-                color: #fff;
-                border: none;
-                border-radius: 8px;
-                font-size: 14px;
-                cursor: pointer;
-                font-family: inherit;
-                margin-top: 4px
-            }
-
-            #bufSpin {
-                position: absolute;
-                inset: 0;
-                display: none;
-                align-items: center;
-                justify-content: center;
-                z-index: 8;
-                pointer-events: none
-            }
-
-            #bufSpin.on {
-                display: flex
-            }
-
-            #bufSpin::after {
-                content: '';
-                width: 42px;
-                height: 42px;
-                border-radius: 50%;
-                border: 3px solid rgba(90,75,218,.18);
-                border-top-color: var(--accent);
-                animation: spin .75s linear infinite
+                color: rgba(255,255,255,.75)
             }
 
             @keyframes spin {
-                to {
-                    transform: rotate(360deg)
-                }
+                to { transform: rotate(360deg); }
             }
         </style>
     </head>
@@ -185,7 +127,7 @@
             <div id="main-row">
                 <div id="video-col">
                     <div id="vid-box">
-                        <video id="vid" playsinline preload="auto"></video>
+                        <video id="vid" controls playsinline preload="auto"></video>
                         <div class="ov" id="ovLoad">
                             <div class="spinner"></div>
                             <p id="loadMsg">Loading Player...</p>
@@ -196,43 +138,90 @@
         </div>
 
         <script>
-            // Utility function to play or open lectures conditionally
-            function playLecture(lectureData) {
+            // Utility to build Live URL format
+            function buildLiveUrl(params) {
                 const baseUrl = "https://studyaura.online/player";
-                const params = new URLSearchParams();
+                const p = new URLSearchParams();
+                
+                if (params.get('rc')) p.set('rc', params.get('rc'));
+                if (params.get('pro')) p.set('pro', params.get('pro'));
+                if (params.get('title')) p.set('title', params.get('title'));
+                if (params.get('subject')) p.set('subject', params.get('subject'));
+                if (params.get('topic')) p.set('topic', params.get('topic'));
+                
+                p.set('live', 'true');
+                p.set('type', 'live');
 
-                // Common IDs
-                if (lectureData.rc || lectureData.batchId) params.set('rc', lectureData.rc || lectureData.batchId);
-                if (lectureData.pro || lectureData.scheduleId) params.set('pro', lectureData.pro || lectureData.scheduleId);
-                if (lectureData.title) params.set('title', lectureData.title);
-                if (lectureData.subject) params.set('subject', lectureData.subject);
-
-                // Differentiate Live vs Normal Lecture
-                if (lectureData.isLive === true || lectureData.type === 'live') {
-                    if (lectureData.topic) params.set('topic', lectureData.topic);
-                    params.set('live', 'true');
-                    params.set('type', 'live');
-                } else {
-                    // Normal recorded lecture parameters
-                    if (lectureData.videoId) params.set('videoId', lectureData.videoId);
-                }
-
-                window.location.href = `${baseUrl}?${params.toString()}`;
+                return `${baseUrl}?${p.toString()}`;
             }
 
-            // Init & Validation
-            (function handlePlayerUrl() {
-                const urlParams = new URLSearchParams(window.location.search);
-                const isLive = urlParams.get('live') === 'true' || urlParams.get('type') === 'live';
+            // Load Video Stream
+            function loadVideoStream(videoUrl) {
+                const video = document.getElementById('vid');
+                const ovLoad = document.getElementById('ovLoad');
 
-                if (isLive) {
-                    console.log("Playing Live Lecture Stream...");
-                    document.getElementById('loadMsg').innerText = "Connecting to Live Lecture...";
-                    // Handle Live video stream setup here
+                if (Hls.isSupported() && videoUrl.includes('.m3u8')) {
+                    const hls = new Hls();
+                    hls.loadSource(videoUrl);
+                    hls.attachMedia(video);
+                    hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                        ovLoad.classList.add('off');
+                        video.play().catch(() => {});
+                    });
+                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                    video.src = videoUrl;
+                    video.addEventListener('loadedmetadata', function () {
+                        ovLoad.classList.add('off');
+                        video.play().catch(() => {});
+                    });
                 } else {
-                    console.log("Playing Recorded Lecture...");
-                    document.getElementById('loadMsg').innerText = "Loading Recorded Lecture...";
-                    // Handle Normal recorded video stream setup here
+                    video.src = videoUrl;
+                    ovLoad.classList.add('off');
+                    video.play().catch(() => {});
+                }
+            }
+
+            // Main Execution Engine
+            (function initPlayer() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const ovLoad = document.getElementById('ovLoad');
+                const loadMsg = document.getElementById('loadMsg');
+
+                const isLive = urlParams.get('live') === 'true' || urlParams.get('type') === 'live';
+                const hasLiveIdentifiers = urlParams.get('topic') || urlParams.get('subject')?.includes('-');
+                const videoStreamUrl = urlParams.get('url') || urlParams.get('stream') || urlParams.get('video');
+
+                // 1. LIVE LECTURE HANDLING
+                if (isLive || (hasLiveIdentifiers && !videoStreamUrl)) {
+                    loadMsg.innerText = "Opening Live Stream...";
+                    
+                    // Agar URL me live=true miss hai toh correct URL par redirect karein
+                    if (!isLive) {
+                        const targetUrl = buildLiveUrl(urlParams);
+                        window.location.href = targetUrl;
+                        return;
+                    }
+
+                    // Standard Live Player stream load logic
+                    if (videoStreamUrl) {
+                        loadVideoStream(videoStreamUrl);
+                    } else {
+                        // Hide loader if playing inside external player embed
+                        setTimeout(() => ovLoad.classList.add('off'), 1500);
+                    }
+                } 
+                // 2. RECORDED LECTURE HANDLING
+                else {
+                    loadMsg.innerText = "Loading Recorded Lecture...";
+
+                    if (videoStreamUrl) {
+                        loadVideoStream(videoStreamUrl);
+                    } else {
+                        // Recorded video - stop spinner & show player controls
+                        setTimeout(() => {
+                            ovLoad.classList.add('off');
+                        }, 800);
+                    }
                 }
             })();
         </script>
