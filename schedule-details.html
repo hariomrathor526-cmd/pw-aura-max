@@ -173,318 +173,10 @@
                 animation: spin .75s linear infinite
             }
 
-            #ctrl-overlay {
-                position: absolute;
-                inset: 0;
-                z-index: 20;
-                display: flex;
-                flex-direction: column;
-                transition: opacity .35s ease
-            }
-
-            #ctrl-overlay.visible {
-                opacity: 1;
-                pointer-events: auto
-            }
-
-            #ctrl-overlay.hidden {
-                opacity: 0;
-                pointer-events: none
-            }
-
-            #tap-shield {
-                position: absolute;
-                inset: 0;
-                z-index: 19;
-                background: transparent;
-                cursor: pointer;
-                display: none
-            }
-
-            #tap-shield.on {
-                display: block
-            }
-
-            #player-header {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                padding: 10px 14px;
-                background: linear-gradient(rgba(0,0,0,.72) 0%,transparent 100%);
-                flex-shrink: 0
-            }
-
-            .hdr-back {
-                background: none;
-                border: none;
-                color: #fff;
-                cursor: pointer;
-                padding: 6px;
-                display: flex;
-                align-items: center;
-                border-radius: 8px;
-                flex-shrink: 0;
-                transition: transform .12s
-            }
-
-            .hdr-back:active {
-                transform: scale(.88)
-            }
-
-            .hdr-back svg {
-                width: 22px;
-                height: 22px;
-                stroke: #fff;
-                fill: none;
-                stroke-width: 2;
-                stroke-linecap: round;
-                stroke-linejoin: round
-            }
-
-            #player-title {
-                flex: 1;
-                min-width: 0;
-                font-size: 14px;
-                font-weight: 500;
-                color: #fff;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis
-            }
-
-            #tdBtn {
-                background: none;
-                border: none;
-                color: #fff;
-                cursor: pointer;
-                padding: 6px;
-                display: flex;
-                align-items: center;
-                border-radius: 8px;
-                flex-shrink: 0;
-                position: relative
-            }
-
-            #tdBtn>svg {
-                width: 22px;
-                height: 22px;
-                fill: #fff
-            }
-
-            #tdMenu {
-                position: absolute;
-                top: calc(100% + 2px);
-                right: 0;
-                background: rgba(12,12,20,.98);
-                border: 1px solid rgba(255,255,255,.12);
-                border-radius: 12px;
-                overflow: hidden;
-                min-width: 190px;
-                z-index: 200;
-                display: none;
-                box-shadow: 0 8px 32px rgba(0,0,0,.9)
-            }
-
-            #tdMenu.on {
-                display: block
-            }
-
-            .tdm-row {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                padding: 14px 16px;
-                color: #fff;
-                font-size: 14px;
-                cursor: pointer;
-                border-bottom: 1px solid rgba(255,255,255,.07)
-            }
-
-            .tdm-row:last-child {
-                border-bottom: none
-            }
-
-            .tdm-row:active {
-                background: rgba(255,255,255,.08)
-            }
-
-            .tdm-row svg {
-                width: 18px;
-                height: 18px;
-                flex-shrink: 0;
-                stroke: currentColor;
-                fill: none
-            }
-
-            #ctrl-mid {
-                flex: 1
-            }
-
-            #player-footer {
-                flex-shrink: 0;
-                background: linear-gradient(transparent 0%,rgba(0,0,0,.82) 100%);
-                padding: 6px 0 10px
-            }
-
-            .prog-wrap {
-                padding: 0 14px 6px
-            }
-
-            .time-row {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                margin-bottom: 6px
-            }
-
-            .t-left {
-                display: flex;
-                align-items: center;
-                gap: 6px
-            }
-
-            .t-time {
-                color: #fff;
-                font-size: 13px;
-                font-family: monospace;
-                font-weight: 500
-            }
-
-            .spd-badge {
-                background: rgba(255,255,255,.92);
-                color: #000;
-                font-size: 10px;
-                font-weight: 800;
-                padding: 1px 5px;
-                border-radius: 4px;
-                font-family: sans-serif
-            }
-
-            .live-badge {
-                display: none;
-                align-items: center;
-                gap: 4px;
-                font-size: 11px;
-                font-weight: 700;
-                color: #fff
-            }
-
-            .live-badge.on {
-                display: flex
-            }
-
-            .live-dot {
-                width: 7px;
-                height: 7px;
-                border-radius: 50%;
-                background: red;
-                animation: blink 1.4s ease infinite
-            }
-
-            .bar-wrap {
-                position: relative;
-                height: 22px;
-                display: flex;
-                align-items: center;
-                cursor: pointer;
-                touch-action: none
-            }
-
-            .bar-bg {
-                position: absolute;
-                left: 0;
-                right: 0;
-                height: 4px;
-                background: rgba(255,255,255,.2);
-                border-radius: 2px;
-                overflow: hidden
-            }
-
-            .bar-buf {
-                height: 100%;
-                background: rgba(255,255,255,.3);
-                position: absolute;
-                left: 0;
-                border-radius: 2px
-            }
-
-            .bar-fill {
-                height: 100%;
-                background: var(--accent);
-                position: absolute;
-                left: 0;
-                border-radius: 2px
-            }
-
-            .bar-thumb {
-                position: absolute;
-                top: 50%;
-                transform: translate(-50%,-50%);
-                width: 14px;
-                height: 14px;
-                background: #fff;
-                border-radius: 50%;
-                pointer-events: none;
-                box-shadow: 0 0 5px rgba(0,0,0,.6);
-                will-change: left
-            }
-
-            .bar-wrap:hover .bar-thumb {
-                transform: translate(-50%,-50%) scale(1.3)
-            }
-
-            .bar-input {
-                position: absolute;
-                inset: 0;
-                opacity: 0;
-                cursor: pointer;
-                width: 100%;
-                height: 100%
-            }
-
-            .btn-row {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 0 6px
-            }
-
-            .btn-l,.btn-r {
-                display: flex;
-                align-items: center
-            }
-
-            .cbtn {
-                background: none;
-                border: none;
-                color: #fff;
-                cursor: pointer;
-                min-width: 44px;
-                min-height: 44px;
-                padding: 4px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 8px;
-                flex-shrink: 0;
-                outline: none;
-                transition: transform .12s,opacity .12s
-            }
-
-            .cbtn:active {
-                transform: scale(.85);
-                opacity: .65
-            }
-
             @keyframes spin {
                 to {
                     transform: rotate(360deg)
                 }
-            }
-
-            @keyframes blink {
-                0%, 100% { opacity: 1; }
-                50% { opacity: 0.3; }
             }
         </style>
     </head>
@@ -496,7 +188,7 @@
                         <video id="vid" playsinline preload="auto"></video>
                         <div class="ov" id="ovLoad">
                             <div class="spinner"></div>
-                            <p id="loadMsg">Connecting to Live Player...</p>
+                            <p id="loadMsg">Loading Player...</p>
                         </div>
                     </div>
                 </div>
@@ -504,69 +196,43 @@
         </div>
 
         <script>
-            // Correct Live Player URL Builder for StudyAura
-            function buildLivePlayerUrl(data) {
+            // Utility function to play or open lectures conditionally
+            function playLecture(lectureData) {
                 const baseUrl = "https://studyaura.online/player";
                 const params = new URLSearchParams();
-                
-                // Batch ID
-                if (data.rc || data.batchId) {
-                    params.set('rc', data.rc || data.batchId);
-                }
-                
-                // Schedule ID / Schedule Pro ID
-                if (data.pro || data.scheduleId) {
-                    params.set('pro', data.pro || data.scheduleId);
-                }
 
-                // Lecture Title
-                if (data.title) {
-                    params.set('title', data.title);
-                }
+                // Common IDs
+                if (lectureData.rc || lectureData.batchId) params.set('rc', lectureData.rc || lectureData.batchId);
+                if (lectureData.pro || lectureData.scheduleId) params.set('pro', lectureData.pro || lectureData.scheduleId);
+                if (lectureData.title) params.set('title', lectureData.title);
+                if (lectureData.subject) params.set('subject', lectureData.subject);
 
-                // Subject Slug Name (e.g. physical-chemistry-by-vkt-sir-224416)
-                if (data.subjectSlug || data.subject) {
-                    params.set('subject', data.subjectSlug || data.subject);
+                // Differentiate Live vs Normal Lecture
+                if (lectureData.isLive === true || lectureData.type === 'live') {
+                    if (lectureData.topic) params.set('topic', lectureData.topic);
+                    params.set('live', 'true');
+                    params.set('type', 'live');
+                } else {
+                    // Normal recorded lecture parameters
+                    if (lectureData.videoId) params.set('videoId', lectureData.videoId);
                 }
 
-                // Topic Slug Name
-                if (data.topic) {
-                    params.set('topic', data.topic);
-                }
-
-                // Mandatory parameters for Live Stream
-                params.set('live', 'true');
-                params.set('type', 'live');
-
-                return `${baseUrl}?${params.toString()}`;
+                window.location.href = `${baseUrl}?${params.toString()}`;
             }
 
-            // Redirection Handler
-            (function autoRedirectLiveStream() {
-                const currentParams = new URLSearchParams(window.location.search);
-                
-                const isLiveQuery = currentParams.get('live') === 'true' || currentParams.get('type') === 'live';
-                
-                // Agar live tag miss hai to use auto-add karke redirect karein
-                if (!isLiveQuery) {
-                    const rc = currentParams.get('rc') || currentParams.get('batchId');
-                    const pro = currentParams.get('pro') || currentParams.get('scheduleId');
-                    const title = currentParams.get('title') || document.title;
-                    const subject = currentParams.get('subject') || currentParams.get('subjectSlug');
-                    const topic = currentParams.get('topic') || '';
+            // Init & Validation
+            (function handlePlayerUrl() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const isLive = urlParams.get('live') === 'true' || urlParams.get('type') === 'live';
 
-                    if (rc && pro) {
-                        const targetLiveUrl = buildLivePlayerUrl({
-                            rc: rc,
-                            pro: pro,
-                            title: title,
-                            subject: subject,
-                            topic: topic
-                        });
-                        
-                        // New Exact Live URL Redirect
-                        window.location.replace(targetLiveUrl);
-                    }
+                if (isLive) {
+                    console.log("Playing Live Lecture Stream...");
+                    document.getElementById('loadMsg').innerText = "Connecting to Live Lecture...";
+                    // Handle Live video stream setup here
+                } else {
+                    console.log("Playing Recorded Lecture...");
+                    document.getElementById('loadMsg').innerText = "Loading Recorded Lecture...";
+                    // Handle Normal recorded video stream setup here
                 }
             })();
         </script>
