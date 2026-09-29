@@ -1,192 +1,533 @@
 <!DOCTYPE html>
-<html lang="hi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Schedule Details</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
-            color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .card {
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            text-align: center;
-            max-width: 500px;
-            width: 100%;
-        }
-        .title-display {
-            font-size: 16px;
-            font-weight: 600;
-            color: #1a73e8;
-            margin: 15px 0;
-            word-break: break-word;
-            line-height: 1.4;
-            min-height: 40px;
-        }
-        .loader {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #1a73e8;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-            margin: 10px auto;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .play-btn {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 12px 24px;
-            background-color: #1a73e8;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: bold;
-            font-size: 15px;
-            transition: background 0.2s;
-        }
-        .play-btn:hover {
-            background-color: #1557b0;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="card">
-        <div id="loader" class="loader"></div>
-        <div id="topicText" class="title-display">Lecture Title Loading...</div>
-        <a id="playLink" href="#" class="play-btn" style="display:none;">Play Video</a>
-    </div>
-
-    <script>
-        // Deep search function in LocalStorage / SessionStorage for Schedule ID
-        function searchTitleInStorage(scheduleId) {
-            const storages = [localStorage, sessionStorage];
-            
-            for (let storage of storages) {
-                for (let i = 0; i < storage.length; i++) {
-                    const key = storage.key(i);
-                    const value = storage.getItem(key);
-                    
-                    if (value && value.includes(scheduleId)) {
-                        try {
-                            const parsed = JSON.parse(value);
-                            
-                            // Recursive search in JSON object
-                            const foundTitle = findTopicInObject(parsed, scheduleId);
-                            if (foundTitle) return foundTitle;
-                        } catch (e) {
-                            // Non-JSON string, check string
-                        }
-                    }
-                }
-            }
-            return null;
-        }
-
-        // Helper to crawl inside nested JS objects
-        function findTopicInObject(obj, targetId) {
-            if (!obj || typeof obj !== 'object') return null;
-
-            if (Array.isArray(obj)) {
-                for (let item of obj) {
-                    const result = findTopicInObject(item, targetId);
-                    if (result) return result;
-                }
-            } else {
-                if ((obj._id === targetId || obj.id === targetId || obj.scheduleId === targetId)) {
-                    return obj.topic || obj.title || obj.topicName || obj.name || obj.caption;
-                }
-                for (let k in obj) {
-                    if (typeof obj[k] === 'object') {
-                        const res = findTopicInObject(obj[k], targetId);
-                        if (res) return res;
-                    }
-                }
-            }
-            return null;
-        }
-
-        async function loadLectureData() {
-            const urlParams = new URLSearchParams(window.location.search);
-
-            const batchId = urlParams.get('batchId') || '';
-            const subjectId = urlParams.get('subjectId') || '';
-            const scheduleId = urlParams.get('scheduleId') || '';
-
-            let topicName = '';
-
-            // Method 1: Check Direct URL Parameters
-            topicName = urlParams.get('title') || urlParams.get('topic') || urlParams.get('topicName') || urlParams.get('name');
-
-            // Method 2: Scan Browser Memory (LocalStorage / SessionStorage)
-            if (!topicName && scheduleId) {
-                topicName = searchTitleInStorage(scheduleId);
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <title>StudyAura Video Player</title>
+        <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.compiled.min.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+        <style>
+            *,*::before,*::after {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                -webkit-tap-highlight-color: transparent;
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                user-select: none
             }
 
-            // Method 3: Try Vercel / Penpaper API Endpoints
-            if (!topicName && scheduleId) {
-                const endpoints = [
-                    `https://pw-steel-beta.vercel.app/api/schedule-details?scheduleId=${scheduleId}`,
-                    `https://pw-steel-beta.vercel.app/api/schedule/${scheduleId}`,
-                    `https://api.penpaper.workers.dev/schedule/${scheduleId}`
-                ];
+            :root {
+                --accent: #5a4bda;
+                --bg: #000;
+                --surface: #111118;
+                --surface2: #1c1c27;
+                --border: rgba(255,255,255,.1);
+                --text: #e8e8f0;
+                --muted: #7070a0;
+                --note: #3ecfcf;
+                --dpp: #ff9f43
+            }
 
-                for (let api of endpoints) {
-                    try {
-                        const res = await fetch(api);
-                        if (res.ok) {
-                            const json = await res.json();
-                            const data = json.data || json;
-                            const found = data.topic || data.title || data.name || data.topicName;
-                            if (found) {
-                                topicName = found;
-                                break;
-                            }
-                        }
-                    } catch (e) {
-                        // ignore API error, try next
-                    }
+            html,body {
+                height: 100%;
+                width: 100%;
+                overflow: hidden;
+                background: var(--bg);
+                font-family: 'DM Sans',-apple-system,sans-serif;
+                color: var(--text)
+            }
+
+            #shell {
+                position: fixed;
+                inset: 0;
+                display: flex;
+                flex-direction: column;
+                background: var(--bg);
+                overflow: hidden
+            }
+
+            #main-row {
+                flex: 1;
+                min-height: 0;
+                display: flex;
+                flex-direction: row;
+                overflow: hidden
+            }
+
+            #video-col {
+                flex: 1;
+                min-width: 0;
+                min-height: 0;
+                position: relative;
+                background: #000;
+                overflow: hidden
+            }
+
+            #vid-box {
+                position: absolute;
+                inset: 0;
+                background: #000;
+                display: flex;
+                align-items: center;
+                justify-content: center
+            }
+
+            video {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                background: #000;
+                display: block;
+                outline: none;
+                pointer-events: none
+            }
+
+            .ov {
+                position: absolute;
+                inset: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                z-index: 10
+            }
+
+            #ovLoad {
+                background: rgba(0,0,0,.82)
+            }
+
+            #ovLoad.off {
+                display: none
+            }
+
+            .spinner {
+                width: 40px;
+                height: 40px;
+                border: 3px solid rgba(90,75,218,.18);
+                border-top-color: var(--accent);
+                border-radius: 50%;
+                animation: spin .8s linear infinite
+            }
+
+            #ovLoad p {
+                font-size: 13px;
+                color: rgba(255,255,255,.65)
+            }
+
+            #ovErr {
+                background: rgba(0,0,0,.88);
+                display: none;
+                padding: 20px;
+                text-align: center
+            }
+
+            #ovErr.on {
+                display: flex
+            }
+
+            #ovErr p {
+                font-size: 14px;
+                color: #ff6584;
+                max-width: 300px;
+                line-height: 1.5
+            }
+
+            #ovErr button {
+                padding: 8px 22px;
+                background: var(--accent);
+                color: #fff;
+                border: none;
+                border-radius: 8px;
+                font-size: 14px;
+                cursor: pointer;
+                font-family: inherit;
+                margin-top: 4px
+            }
+
+            #bufSpin {
+                position: absolute;
+                inset: 0;
+                display: none;
+                align-items: center;
+                justify-content: center;
+                z-index: 8;
+                pointer-events: none
+            }
+
+            #bufSpin.on {
+                display: flex
+            }
+
+            #bufSpin::after {
+                content: '';
+                width: 42px;
+                height: 42px;
+                border-radius: 50%;
+                border: 3px solid rgba(90,75,218,.18);
+                border-top-color: var(--accent);
+                animation: spin .75s linear infinite
+            }
+
+            #ctrl-overlay {
+                position: absolute;
+                inset: 0;
+                z-index: 20;
+                display: flex;
+                flex-direction: column;
+                transition: opacity .35s ease
+            }
+
+            #ctrl-overlay.visible {
+                opacity: 1;
+                pointer-events: auto
+            }
+
+            #ctrl-overlay.hidden {
+                opacity: 0;
+                pointer-events: none
+            }
+
+            #tap-shield {
+                position: absolute;
+                inset: 0;
+                z-index: 19;
+                background: transparent;
+                cursor: pointer;
+                display: none
+            }
+
+            #tap-shield.on {
+                display: block
+            }
+
+            #player-header {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 14px;
+                background: linear-gradient(rgba(0,0,0,.72) 0%,transparent 100%);
+                flex-shrink: 0
+            }
+
+            .hdr-back {
+                background: none;
+                border: none;
+                color: #fff;
+                cursor: pointer;
+                padding: 6px;
+                display: flex;
+                align-items: center;
+                border-radius: 8px;
+                flex-shrink: 0;
+                transition: transform .12s
+            }
+
+            .hdr-back:active {
+                transform: scale(.88)
+            }
+
+            .hdr-back svg {
+                width: 22px;
+                height: 22px;
+                stroke: #fff;
+                fill: none;
+                stroke-width: 2;
+                stroke-linecap: round;
+                stroke-linejoin: round
+            }
+
+            #player-title {
+                flex: 1;
+                min-width: 0;
+                font-size: 14px;
+                font-weight: 500;
+                color: #fff;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis
+            }
+
+            #tdBtn {
+                background: none;
+                border: none;
+                color: #fff;
+                cursor: pointer;
+                padding: 6px;
+                display: flex;
+                align-items: center;
+                border-radius: 8px;
+                flex-shrink: 0;
+                position: relative
+            }
+
+            #tdBtn>svg {
+                width: 22px;
+                height: 22px;
+                fill: #fff
+            }
+
+            #tdMenu {
+                position: absolute;
+                top: calc(100% + 2px);
+                right: 0;
+                background: rgba(12,12,20,.98);
+                border: 1px solid rgba(255,255,255,.12);
+                border-radius: 12px;
+                overflow: hidden;
+                min-width: 190px;
+                z-index: 200;
+                display: none;
+                box-shadow: 0 8px 32px rgba(0,0,0,.9)
+            }
+
+            #tdMenu.on {
+                display: block
+            }
+
+            .tdm-row {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 14px 16px;
+                color: #fff;
+                font-size: 14px;
+                cursor: pointer;
+                border-bottom: 1px solid rgba(255,255,255,.07)
+            }
+
+            .tdm-row:last-child {
+                border-bottom: none
+            }
+
+            .tdm-row:active {
+                background: rgba(255,255,255,.08)
+            }
+
+            .tdm-row svg {
+                width: 18px;
+                height: 18px;
+                flex-shrink: 0;
+                stroke: currentColor;
+                fill: none
+            }
+
+            #ctrl-mid {
+                flex: 1
+            }
+
+            #player-footer {
+                flex-shrink: 0;
+                background: linear-gradient(transparent 0%,rgba(0,0,0,.82) 100%);
+                padding: 6px 0 10px
+            }
+
+            .prog-wrap {
+                padding: 0 14px 6px
+            }
+
+            .time-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 6px
+            }
+
+            .t-left {
+                display: flex;
+                align-items: center;
+                gap: 6px
+            }
+
+            .t-time {
+                color: #fff;
+                font-size: 13px;
+                font-family: monospace;
+                font-weight: 500
+            }
+
+            .spd-badge {
+                background: rgba(255,255,255,.92);
+                color: #000;
+                font-size: 10px;
+                font-weight: 800;
+                padding: 1px 5px;
+                border-radius: 4px;
+                font-family: sans-serif
+            }
+
+            .live-badge {
+                display: none;
+                align-items: center;
+                gap: 4px;
+                font-size: 11px;
+                font-weight: 700;
+                color: #fff
+            }
+
+            .live-badge.on {
+                display: flex
+            }
+
+            .live-dot {
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+                background: red;
+                animation: blink 1.4s ease infinite
+            }
+
+            .bar-wrap {
+                position: relative;
+                height: 22px;
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+                touch-action: none
+            }
+
+            .bar-bg {
+                position: absolute;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: rgba(255,255,255,.2);
+                border-radius: 2px;
+                overflow: hidden
+            }
+
+            .bar-buf {
+                height: 100%;
+                background: rgba(255,255,255,.3);
+                position: absolute;
+                left: 0;
+                border-radius: 2px
+            }
+
+            .bar-fill {
+                height: 100%;
+                background: var(--accent);
+                position: absolute;
+                left: 0;
+                border-radius: 2px
+            }
+
+            .bar-thumb {
+                position: absolute;
+                top: 50%;
+                transform: translate(-50%,-50%);
+                width: 14px;
+                height: 14px;
+                background: #fff;
+                border-radius: 50%;
+                pointer-events: none;
+                box-shadow: 0 0 5px rgba(0,0,0,.6);
+                will-change: left
+            }
+
+            .bar-wrap:hover .bar-thumb {
+                transform: translate(-50%,-50%) scale(1.3)
+            }
+
+            .bar-input {
+                position: absolute;
+                inset: 0;
+                opacity: 0;
+                cursor: pointer;
+                width: 100%;
+                height: 100%
+            }
+
+            .btn-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 6px
+            }
+
+            .btn-l,.btn-r {
+                display: flex;
+                align-items: center
+            }
+
+            .cbtn {
+                background: none;
+                border: none;
+                color: #fff;
+                cursor: pointer;
+                min-width: 44px;
+                min-height: 44px;
+                padding: 4px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 8px;
+                flex-shrink: 0;
+                outline: none;
+                transition: transform .12s,opacity .12s
+            }
+
+            .cbtn:active {
+                transform: scale(.85);
+                opacity: .65
+            }
+
+            @keyframes spin {
+                to {
+                    transform: rotate(360deg)
                 }
             }
+        </style>
+    </head>
+    <body>
+        <div id="shell">
+            <div id="main-row">
+                <div id="video-col">
+                    <div id="vid-box">
+                        <video id="vid" playsinline preload="auto"></video>
+                        <div class="ov" id="ovLoad">
+                            <div class="spinner"></div>
+                            <p id="loadMsg">Redirecting to StudyAura Player…</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-            // Final fallback if nothing is found anywhere
-            if (!topicName) {
-                topicName = "Lecture Video";
+        <script>
+            // Helper to build the new StudyAura player link
+            function buildPlayerUrl(batchId, subjectId, scheduleId, title) {
+                const baseUrl = "https://studyaura.online/player";
+                const params = new URLSearchParams();
+                
+                if (batchId) params.set('rc', batchId);
+                if (subjectId) params.set('subject', subjectId);
+                if (scheduleId) params.set('pro', scheduleId);
+                if (title) params.set('title', title);
+
+                return `${baseUrl}?${params.toString()}`;
             }
 
-            // Update UI
-            document.getElementById('loader').style.display = 'none';
-            document.getElementById('topicText').innerText = topicName;
+            // Automatic URL conversion & redirection
+            (function redirectToNewPlayer() {
+                const currentParams = new URLSearchParams(window.location.search);
+                
+                const batchId = currentParams.get('batchId') || currentParams.get('rc');
+                const subjectId = currentParams.get('subjectId') || currentParams.get('subject');
+                const scheduleId = currentParams.get('scheduleId') || currentParams.get('pro');
+                
+                // Fetch dynamic title or fallback
+                let title = currentParams.get('title') || document.title;
 
-            // Generate Target Player Link for Studyaura
-            const playerBaseUrl = 'https://studyaura.online/player';
-            const finalPlayerUrl = `${playerBaseUrl}?rc=${encodeURIComponent(batchId)}&subject=${encodeURIComponent(subjectId)}&pro=${encodeURIComponent(scheduleId)}&title=${encodeURIComponent(topicName)}`;
-
-            const playBtn = document.getElementById('playLink');
-            playBtn.href = finalPlayerUrl;
-            playBtn.style.display = 'inline-block';
-        }
-
-        window.onload = loadLectureData;
-    </script>
-</body>
+                if (batchId && subjectId && scheduleId) {
+                    const targetUrl = buildPlayerUrl(batchId, subjectId, scheduleId, title);
+                    window.location.replace(targetUrl);
+                }
+            })();
+        </script>
+    </body>
 </html>
