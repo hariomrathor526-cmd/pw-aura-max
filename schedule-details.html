@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Playing Lecture...</title>
+    <title>Loading Player...</title>
     <style>
         * {
             box-sizing: border-box;
@@ -36,6 +36,20 @@
             margin: 15px 0;
             word-break: break-word;
             line-height: 1.4;
+            min-height: 40px;
+        }
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #1a73e8;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: 10px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         .play-btn {
             display: inline-block;
@@ -57,71 +71,77 @@
 <body>
 
     <div class="card">
-        <h3>Lecture Ready</h3>
-        <div id="topicText" class="title-display">Loading Title...</div>
-        <a id="playLink" href="#" class="play-btn">Play Video</a>
+        <h3>Playing Lecture</h3>
+        <div id="loader" class="loader"></div>
+        <div id="topicText" class="title-display">Fetching exact title...</div>
+        <a id="playLink" href="#" class="play-btn" style="display:none;">Play Video</a>
     </div>
 
     <script>
-        function getLectureTitle() {
+        async function fetchExactTitle(scheduleId, batchId, subjectId) {
+            // 1. URL Parameter check
             const urlParams = new URLSearchParams(window.location.search);
+            let title = urlParams.get('title') || urlParams.get('topic') || urlParams.get('topicName');
+            if (title && title.trim()) return decodeURIComponent(title);
 
-            // 1. URL Parameters se check karo
-            let title = urlParams.get('title') || 
-                        urlParams.get('topic') || 
-                        urlParams.get('topicName') || 
-                        urlParams.get('name') || 
-                        urlParams.get('caption');
-
-            if (title && title.trim() !== '') return decodeURIComponent(title);
-
-            // 2. LocalStorage aur SessionStorage me dhoondho (Jahan purane codes save karte hain)
+            // 2. Local/Session Storage check
             title = localStorage.getItem('topicName') || 
                     localStorage.getItem('lectureTitle') || 
                     localStorage.getItem('topic') || 
-                    localStorage.getItem('title') ||
                     sessionStorage.getItem('topicName') || 
-                    sessionStorage.getItem('lectureTitle') || 
-                    sessionStorage.getItem('topic') || 
-                    sessionStorage.getItem('title');
+                    sessionStorage.getItem('topic');
+            if (title && title.trim()) return title;
 
-            if (title && title.trim() !== '') return title;
+            // 3. Direct PW Schedule CDN Fetching
+            if (scheduleId) {
+                try {
+                    const endpoints = [
+                        `https://dev.penpaper.workers.dev/schedule/${scheduleId}`,
+                        `https://api.penpaper.workers.dev/schedule/${scheduleId}`
+                    ];
 
-            // 3. Global JavaScript Variables me check karo
-            if (typeof TOPIC_NAME !== 'undefined' && TOPIC_NAME) return TOPIC_NAME;
-            if (typeof LECTURE_TITLE !== 'undefined' && LECTURE_TITLE) return LECTURE_TITLE;
-            if (typeof topicName !== 'undefined' && topicName) return topicName;
-
-            // 4. Document / Page Title se extract karo
-            if (document.title && document.title !== "Playing Lecture..." && document.title !== "Schedule Details") {
-                return document.title;
+                    for (let url of endpoints) {
+                        const res = await fetch(url);
+                        if (res.ok) {
+                            const data = await res.json();
+                            const item = data.data || data;
+                            const foundTopic = item.topic || item.topicName || item.name || item.title;
+                            if (foundTopic) return foundTopic;
+                        }
+                    }
+                } catch (e) {
+                    console.log("Failed to fetch from API", e);
+                }
             }
 
-            return "Lecture Video";
+            return "Lecture Details";
         }
 
-        function setupPlayer() {
+        async function initPlayer() {
             const urlParams = new URLSearchParams(window.location.search);
 
             const batchId = urlParams.get('batchId') || '';
             const subjectId = urlParams.get('subjectId') || '';
             const scheduleId = urlParams.get('scheduleId') || '';
 
-            // Asli Title Extract Karein
-            const lectureTitle = getLectureTitle();
+            // Get exact title
+            const exactTitle = await fetchExactTitle(scheduleId, batchId, subjectId);
 
-            // Display Title on Screen
-            document.getElementById('topicText').innerText = lectureTitle;
+            // Hide loader & display title
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('topicText').innerText = exactTitle;
 
-            // Generate New Studyaura Player URL
+            // Generate player URL
             const playerBaseUrl = 'https://studyaura.online/player';
-            const finalPlayerUrl = `${playerBaseUrl}?rc=${encodeURIComponent(batchId)}&subject=${encodeURIComponent(subjectId)}&pro=${encodeURIComponent(scheduleId)}&title=${encodeURIComponent(lectureTitle)}`;
+            const finalPlayerUrl = `${playerBaseUrl}?rc=${encodeURIComponent(batchId)}&subject=${encodeURIComponent(subjectId)}&pro=${encodeURIComponent(scheduleId)}&title=${encodeURIComponent(exactTitle)}`;
 
-            // Set link to Play Button
-            document.getElementById('playLink').href = finalPlayerUrl;
+            // Set link and show play button
+            const playBtn = document.getElementById('playLink');
+            playBtn.href = finalPlayerUrl;
+            playBtn.style.display = 'inline-block';
         }
 
-        window.onload = setupPlayer;
+        window.onload = initPlayer;
     </script>
 </body>
 </html>
