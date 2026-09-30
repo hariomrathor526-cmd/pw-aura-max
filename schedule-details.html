@@ -118,7 +118,7 @@
                         <video id="vid" playsinline preload="auto"></video>
                         <div class="ov" id="ovLoad">
                             <div class="spinner"></div>
-                            <p id="loadMsg">Fetching Complete Stream Details...</p>
+                            <p id="loadMsg">Fetching Details from Main API...</p>
                         </div>
                     </div>
                 </div>
@@ -155,23 +155,26 @@
                 let topicRaw = urlParams.get('topic') || '';
                 let subjectSlug = subjectInput;
 
-                // All APIs Integration
-                const v1ScheduleApi = `https://api.studyaura.online/api/penpencil/v1/batches/${rc}/subject/${subjectInput}/schedule/${pro}/schedule-details`;
-                const v2TodaysApi = `https://api.studyaura.online/api/penpencil/v2/batches/${rc}/todays-schedule?batchId=${rc}`;
-                const v3ContentsApi = `https://api.studyaura.online/api/penpencil/batch-service/v3/batch-subject-schedules/${rc}/subject/${subjectInput}/contents?skip=0&limit=30&contentType=LECTURES${tagId ? '&tagId=' + tagId : ''}`;
+                // Base API Endpoint
+                const API_BASE = "https://api.studyaura.online/api";
+
+                // Main APIs
+                const mainScheduleDetailsApi = `${API_BASE}/penpencil/v1/batches/${rc}/subject/${subjectInput}/schedule/${pro}/schedule-details`;
+                const v2TodaysApi = `${API_BASE}/penpencil/v2/batches/${rc}/todays-schedule?batchId=${rc}`;
+                const v3ContentsApi = `${API_BASE}/penpencil/batch-service/v3/batch-subject-schedules/${rc}/subject/${subjectInput}/contents?skip=0&limit=30&contentType=LECTURES${tagId ? '&tagId=' + tagId : ''}`;
                 const chatApi = `https://api.studyspark.study/api/conversation/${conversationId}/chat?batchId=${rc}`;
 
                 try {
-                    const [resV1, resV2, resV3, resChat] = await Promise.allSettled([
-                        fetch(v1ScheduleApi),
+                    const [resMain, resV2, resV3, resChat] = await Promise.allSettled([
+                        fetch(mainScheduleDetailsApi),
                         fetch(v2TodaysApi),
                         fetch(v3ContentsApi),
                         fetch(chatApi)
                     ]);
 
-                    // 1. Process V1 Schedule Details
-                    if (resV1.status === 'fulfilled' && resV1.value.ok) {
-                        const json = await resV1.value.json();
+                    // 1. Process Main API (penpencil/v1/.../schedule-details)
+                    if (resMain.status === 'fulfilled' && resMain.value.ok) {
+                        const json = await resMain.value.json();
                         const data = json.data || {};
 
                         if (data.topic) topicRaw = data.topic;
@@ -183,7 +186,15 @@
                         }
 
                         const statusUpper = String(data.status || '').toUpperCase();
-                        if (statusUpper === 'LIVE' || statusUpper === 'UPCOMING' || data.isLive === true || data.isLiveStream === true) {
+                        const typeUpper = String(data.type || '').toUpperCase();
+                        if (
+                            statusUpper === 'LIVE' || 
+                            statusUpper === 'UPCOMING' || 
+                            typeUpper === 'LIVE' || 
+                            data.isLive === true || 
+                            data.isLiveStream === true ||
+                            data.live === true
+                        ) {
                             isLive = true;
                         }
                     }
@@ -205,7 +216,7 @@
                         }
                     }
 
-                    // 3. Process V3 Contents API (To fetch correct Title/Topic from lectures list)
+                    // 3. Process V3 Contents API
                     if (resV3.status === 'fulfilled' && resV3.value.ok) {
                         const json = await resV3.value.json();
                         const contents = json.data || [];
@@ -233,7 +244,7 @@
                     console.warn("API processing warning:", e);
                 }
 
-                // Fallback for Topic extraction from Title if empty
+                // Topic fallback
                 if (!topicRaw && title) {
                     topicRaw = title.split(':')[0].split('-')[0].trim();
                 }
@@ -242,7 +253,6 @@
                 const params = new URLSearchParams();
 
                 if (isLive) {
-                    // LIVE URL FORMAT
                     params.set('rc', rc);
                     params.set('pro', pro);
                     params.set('title', title);
@@ -251,7 +261,6 @@
                     params.set('live', 'true');
                     params.set('type', 'live');
                 } else {
-                    // RECORDED URL FORMAT
                     params.set('rc', rc);
                     params.set('subject', subjectInput);
                     params.set('pro', pro);
