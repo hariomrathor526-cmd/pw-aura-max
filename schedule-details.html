@@ -118,7 +118,7 @@
                         <video id="vid" playsinline preload="auto"></video>
                         <div class="ov" id="ovLoad">
                             <div class="spinner"></div>
-                            <p id="loadMsg">Detecting Live Stream & Slugs...</p>
+                            <p id="loadMsg">Fetching Complete Stream Details...</p>
                         </div>
                     </div>
                 </div>
@@ -126,7 +126,6 @@
         </div>
 
         <script>
-            // Text ko slug format me convert karne ka function (e.g., "Mechanical Properties of Fluids" -> "mechanical-properties-of-fluids")
             function slugify(text) {
                 if (!text) return '';
                 return text.toString().toLowerCase()
@@ -137,12 +136,14 @@
                     .replace(/-+$/, '');
             }
 
-            async function processScheduleDetails() {
+            async function processAllDataAndRedirect() {
                 const urlParams = new URLSearchParams(window.location.search);
 
                 const rc = urlParams.get('rc') || urlParams.get('batchId');
                 const subjectInput = urlParams.get('subject') || urlParams.get('subjectId');
                 const pro = urlParams.get('pro') || urlParams.get('scheduleId');
+                const tagId = urlParams.get('tagId') || '';
+                const conversationId = urlParams.get('conversationId') || pro;
 
                 if (!rc || !pro) {
                     document.getElementById('loadMsg').innerText = "Missing Batch or Schedule ID!";
@@ -154,17 +155,21 @@
                 let topicRaw = urlParams.get('topic') || '';
                 let subjectSlug = subjectInput;
 
-                // APIs to check data
+                // All APIs Integration
                 const v1ScheduleApi = `https://api.studyaura.online/api/penpencil/v1/batches/${rc}/subject/${subjectInput}/schedule/${pro}/schedule-details`;
                 const v2TodaysApi = `https://api.studyaura.online/api/penpencil/v2/batches/${rc}/todays-schedule?batchId=${rc}`;
+                const v3ContentsApi = `https://api.studyaura.online/api/penpencil/batch-service/v3/batch-subject-schedules/${rc}/subject/${subjectInput}/contents?skip=0&limit=30&contentType=LECTURES${tagId ? '&tagId=' + tagId : ''}`;
+                const chatApi = `https://api.studyspark.study/api/conversation/${conversationId}/chat?batchId=${rc}`;
 
                 try {
-                    const [resV1, resV2] = await Promise.allSettled([
+                    const [resV1, resV2, resV3, resChat] = await Promise.allSettled([
                         fetch(v1ScheduleApi),
-                        fetch(v2TodaysApi)
+                        fetch(v2TodaysApi),
+                        fetch(v3ContentsApi),
+                        fetch(chatApi)
                     ]);
 
-                    // 1. Check V1 API
+                    // 1. Process V1 Schedule Details
                     if (resV1.status === 'fulfilled' && resV1.value.ok) {
                         const json = await resV1.value.json();
                         const data = json.data || {};
@@ -172,13 +177,9 @@
                         if (data.topic) topicRaw = data.topic;
                         if (data.title) title = data.title;
 
-                        // Subject slug extraction (e.g. physics-948847)
                         if (data.subjectId) {
-                            if (data.subjectId.slug) {
-                                subjectSlug = data.subjectId.slug;
-                            } else if (data.subjectId.name) {
-                                subjectSlug = slugify(data.subjectId.name);
-                            }
+                            if (data.subjectId.slug) subjectSlug = data.subjectId.slug;
+                            else if (data.subjectId.name) subjectSlug = slugify(data.subjectId.name);
                         }
 
                         const statusUpper = String(data.status || '').toUpperCase();
@@ -187,14 +188,14 @@
                         }
                     }
 
-                    // 2. Check Today's Schedule V2 API
+                    // 2. Process V2 Today's Schedule
                     if (resV2.status === 'fulfilled' && resV2.value.ok) {
                         const json = await resV2.value.json();
                         const list = json.data || json || [];
                         if (Array.isArray(list)) {
                             const match = list.find(i => i._id === pro || i.scheduleId === pro || i.id === pro);
                             if (match) {
-                                isLive = true; // Agar today's schedule me mila toh definitely live/upcoming hai
+                                isLive = true;
                                 if (match.topic) topicRaw = match.topic;
                                 if (match.title) title = match.title;
                                 if (match.subjectId && match.subjectId.name) {
@@ -203,11 +204,36 @@
                             }
                         }
                     }
+
+                    // 3. Process V3 Contents API (To fetch correct Title/Topic from lectures list)
+                    if (resV3.status === 'fulfilled' && resV3.value.ok) {
+                        const json = await resV3.value.json();
+                        const contents = json.data || [];
+                        if (Array.isArray(contents)) {
+                            const match = contents.find(i => i._id === pro || i.scheduleId === pro);
+                            if (match) {
+                                if (match.topic) topicRaw = match.topic;
+                                if (match.title) title = match.title;
+                                if (match.status === 'LIVE' || match.isLive === true || match.isLiveStream === true) {
+                                    isLive = true;
+                                }
+                            }
+                        }
+                    }
+
+                    // 4. Process Chat API
+                    if (resChat.status === 'fulfilled' && resChat.value.ok) {
+                        const chatData = await resChat.value.json();
+                        if (chatData && (chatData.isLive === true || chatData.status === 'LIVE')) {
+                            isLive = true;
+                        }
+                    }
+
                 } catch (e) {
-                    console.warn("API check error:", e);
+                    console.warn("API processing warning:", e);
                 }
 
-                // Title se topic extract agar topic explicitly na mila ho
+                // Fallback for Topic extraction from Title if empty
                 if (!topicRaw && title) {
                     topicRaw = title.split(':')[0].split('-')[0].trim();
                 }
@@ -216,18 +242,18 @@
                 const params = new URLSearchParams();
 
                 if (isLive) {
-                    // EXACT LIVE FORMAT MATCHING YOUR ORIGINAL LINK
+                    // LIVE URL FORMAT
                     params.set('rc', rc);
                     params.set('pro', pro);
                     params.set('title', title);
-                    params.set('subject', subjectSlug); 
-                    params.set('topic', slugify(topicRaw)); 
+                    params.set('subject', subjectSlug);
+                    params.set('topic', slugify(topicRaw));
                     params.set('live', 'true');
                     params.set('type', 'live');
                 } else {
-                    // RECORDED FORMAT
+                    // RECORDED URL FORMAT
                     params.set('rc', rc);
-                    params.set('subject', subjectInput); // Subject ID
+                    params.set('subject', subjectInput);
                     params.set('pro', pro);
                     params.set('title', title);
                 }
@@ -235,7 +261,7 @@
                 window.location.replace(`${baseUrl}?${params.toString()}`);
             }
 
-            processScheduleDetails();
+            processAllDataAndRedirect();
         </script>
     </body>
 </html>
