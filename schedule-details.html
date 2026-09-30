@@ -48,42 +48,6 @@
                 overflow: hidden
             }
 
-            /* Video Details Header Header Bar */
-            #info-header {
-                padding: 12px 16px;
-                background: var(--surface);
-                border-bottom: 1px solid var(--border);
-                z-index: 20;
-            }
-
-            .badge {
-                display: inline-block;
-                padding: 2px 8px;
-                font-size: 11px;
-                font-weight: 600;
-                border-radius: 4px;
-                background: var(--accent);
-                color: #fff;
-                margin-bottom: 4px;
-                text-transform: uppercase;
-            }
-
-            .badge.live {
-                background: #ff4757;
-            }
-
-            #video-title {
-                font-size: 16px;
-                font-weight: 600;
-                color: var(--text);
-                margin-bottom: 2px;
-            }
-
-            #video-topic {
-                font-size: 13px;
-                color: var(--muted);
-            }
-
             #main-row {
                 flex: 1;
                 min-height: 0;
@@ -148,20 +112,13 @@
     </head>
     <body>
         <div id="shell">
-            <!-- Header for Title and Topic -->
-            <div id="info-header">
-                <span id="video-badge" class="badge">RECORDED</span>
-                <div id="video-title">Loading title...</div>
-                <div id="video-topic">Loading topic...</div>
-            </div>
-
             <div id="main-row">
                 <div id="video-col">
                     <div id="vid-box">
                         <video id="vid" playsinline preload="auto"></video>
                         <div class="ov" id="ovLoad">
                             <div class="spinner"></div>
-                            <p id="loadMsg">Fetching Details from API...</p>
+                            <p id="loadMsg">Detecting Live Stream & Slugs...</p>
                         </div>
                     </div>
                 </div>
@@ -169,7 +126,7 @@
         </div>
 
         <script>
-            // Text ko slug format me convert karne ka function
+            // Text ko slug format me convert karne ka function (e.g., "Mechanical Properties of Fluids" -> "mechanical-properties-of-fluids")
             function slugify(text) {
                 if (!text) return '';
                 return text.toString().toLowerCase()
@@ -183,21 +140,26 @@
             async function processScheduleDetails() {
                 const urlParams = new URLSearchParams(window.location.search);
 
-                // Sample default IDs for fallback (jo aapne provided URL me diye the)
-                const defaultBatchId = "698ad3519549b300a5e1cc6a";
-                const defaultSubjectId = "69b569aeeffdf9567d75f816";
-                const defaultScheduleId = "6a0191586c12456e9078970e";
+                // Default IDs aapke dwara diye gaye URL se add ki gayi hain
+                const defaultRc = "698ad3519549b300a5e1cc6a";
+                const defaultSubject = "69b569aeeffdf9567d75f816";
+                const defaultPro = "6a0191586c12456e9078970e";
 
-                const rc = urlParams.get('rc') || urlParams.get('batchId') || defaultBatchId;
-                const subjectInput = urlParams.get('subject') || urlParams.get('subjectId') || defaultSubjectId;
-                const pro = urlParams.get('pro') || urlParams.get('scheduleId') || defaultScheduleId;
+                const rc = urlParams.get('rc') || urlParams.get('batchId') || defaultRc;
+                const subjectInput = urlParams.get('subject') || urlParams.get('subjectId') || defaultSubject;
+                const pro = urlParams.get('pro') || urlParams.get('scheduleId') || defaultPro;
+
+                if (!rc || !pro) {
+                    document.getElementById('loadMsg').innerText = "Missing Batch or Schedule ID!";
+                    return;
+                }
 
                 let isLive = urlParams.get('live') === 'true' || urlParams.get('type') === 'live';
-                let title = urlParams.get('title') || '';
+                let title = urlParams.get('title') || 'StudyAura Video Player';
                 let topicRaw = urlParams.get('topic') || '';
                 let subjectSlug = subjectInput;
 
-                // Targeted Schedule Details API
+                // APIs to check data
                 const v1ScheduleApi = `https://api.studyaura.online/api/penpencil/v1/batches/${rc}/subject/${subjectInput}/schedule/${pro}/schedule-details`;
                 const v2TodaysApi = `https://api.studyaura.online/api/penpencil/v2/batches/${rc}/todays-schedule?batchId=${rc}`;
 
@@ -207,18 +169,20 @@
                         fetch(v2TodaysApi)
                     ]);
 
-                    // 1. Fetch details from main Schedule API (V1)
+                    // 1. Check V1 API
                     if (resV1.status === 'fulfilled' && resV1.value.ok) {
                         const json = await resV1.value.json();
-                        const data = json.data || json || {};
+                        const data = json.data || {};
 
                         if (data.topic) topicRaw = data.topic;
                         if (data.title) title = data.title;
 
-                        // Extracting Subject Slug / Name
+                        // Subject slug extraction (e.g. physics-948847)
                         if (data.subjectId) {
-                            if (typeof data.subjectId === 'object') {
-                                subjectSlug = data.subjectId.slug || slugify(data.subjectId.name) || subjectInput;
+                            if (typeof data.subjectId === 'object' && data.subjectId.slug) {
+                                subjectSlug = data.subjectId.slug;
+                            } else if (typeof data.subjectId === 'object' && data.subjectId.name) {
+                                subjectSlug = slugify(data.subjectId.name);
                             }
                         }
 
@@ -228,14 +192,14 @@
                         }
                     }
 
-                    // 2. Fetch details from Today's Schedule API (V2)
+                    // 2. Check Today's Schedule V2 API
                     if (resV2.status === 'fulfilled' && resV2.value.ok) {
                         const json = await resV2.value.json();
                         const list = json.data || json || [];
                         if (Array.isArray(list)) {
                             const match = list.find(i => i._id === pro || i.scheduleId === pro || i.id === pro);
                             if (match) {
-                                isLive = true;
+                                isLive = true; // Agar today's schedule me mila toh definitely live/upcoming hai
                                 if (match.topic) topicRaw = match.topic;
                                 if (match.title) title = match.title;
                                 if (match.subjectId && match.subjectId.name) {
@@ -245,46 +209,35 @@
                         }
                     }
                 } catch (e) {
-                    console.warn("API Fetching Error:", e);
+                    console.warn("API check error:", e);
                 }
 
-                // Fallback for Topic if missing
+                // Title se topic extract agar topic explicitly na mila ho
                 if (!topicRaw && title) {
                     topicRaw = title.split(':')[0].split('-')[0].trim();
                 }
 
-                // Set default titles if still empty
-                title = title || 'StudyAura Video Lecture';
-                topicRaw = topicRaw || 'General Topic';
-
-                // DOM UPDATE - UI Me title & topic set karna
-                document.getElementById('video-title').innerText = title;
-                document.getElementById('video-topic').innerText = `Topic: ${topicRaw}`;
-                
-                const badgeEl = document.getElementById('video-badge');
-                if (isLive) {
-                    badgeEl.innerText = "LIVE STREAM";
-                    badgeEl.classList.add('live');
-                } else {
-                    badgeEl.innerText = "RECORDED";
-                    badgeEl.classList.remove('live');
-                }
-
-                // Hide loader overlay after data load
-                document.getElementById('ovLoad').style.display = 'none';
-
-                // Note: Agar aap automatic redirect chahte hain to neeche wali lines uncomment karein:
-                /*
                 const baseUrl = "https://studyaura.online/player";
                 const params = new URLSearchParams();
-                params.set('rc', rc);
-                params.set('pro', pro);
-                params.set('title', title);
-                params.set('subject', subjectSlug); 
-                params.set('topic', slugify(topicRaw)); 
-                if (isLive) params.set('live', 'true');
+
+                if (isLive) {
+                    // EXACT LIVE FORMAT MATCHING YOUR ORIGINAL LINK
+                    params.set('rc', rc);
+                    params.set('pro', pro);
+                    params.set('title', title);
+                    params.set('subject', subjectSlug); 
+                    params.set('topic', slugify(topicRaw)); 
+                    params.set('live', 'true');
+                    params.set('type', 'live');
+                } else {
+                    // RECORDED FORMAT
+                    params.set('rc', rc);
+                    params.set('subject', subjectInput); // Subject ID
+                    params.set('pro', pro);
+                    params.set('title', title);
+                }
+
                 window.location.replace(`${baseUrl}?${params.toString()}`);
-                */
             }
 
             processScheduleDetails();
