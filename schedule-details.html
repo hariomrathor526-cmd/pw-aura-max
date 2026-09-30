@@ -126,7 +126,6 @@
         </div>
 
         <script>
-            // Text ko slug format me convert karne ka function (e.g., "Mechanical Properties of Fluids" -> "mechanical-properties-of-fluids")
             function slugify(text) {
                 if (!text) return '';
                 return text.toString().toLowerCase()
@@ -140,7 +139,6 @@
             async function processScheduleDetails() {
                 const urlParams = new URLSearchParams(window.location.search);
 
-                // Default IDs aapke dwara diye gaye URL se add ki gayi hain
                 const defaultRc = "698ad3519549b300a5e1cc6a";
                 const defaultSubject = "69b569aeeffdf9567d75f816";
                 const defaultPro = "6a0191586c12456e9078970e";
@@ -155,11 +153,10 @@
                 }
 
                 let isLive = urlParams.get('live') === 'true' || urlParams.get('type') === 'live';
-                let title = urlParams.get('title') || 'StudyAura Video Player';
+                let title = urlParams.get('title') || urlParams.get('t') || '';
                 let topicRaw = urlParams.get('topic') || '';
                 let subjectSlug = subjectInput;
 
-                // APIs to check data
                 const v1ScheduleApi = `https://api.studyaura.online/api/penpencil/v1/batches/${rc}/subject/${subjectInput}/schedule/${pro}/schedule-details`;
                 const v2TodaysApi = `https://api.studyaura.online/api/penpencil/v2/batches/${rc}/todays-schedule?batchId=${rc}`;
 
@@ -169,20 +166,22 @@
                         fetch(v2TodaysApi)
                     ]);
 
-                    // 1. Check V1 API
+                    // 1. Fetch from V1 API
                     if (resV1.status === 'fulfilled' && resV1.value.ok) {
                         const json = await resV1.value.json();
-                        const data = json.data || {};
+                        const data = json.data || json || {};
+
+                        // Multi-check for title & topic keys inside API
+                        if (data.title) title = data.title;
+                        else if (data.topic) title = data.topic;
+                        else if (data.name) title = data.name;
 
                         if (data.topic) topicRaw = data.topic;
-                        if (data.title) title = data.title;
+                        else if (data.topicName) topicRaw = data.topicName;
 
-                        // Subject slug extraction (e.g. physics-948847)
                         if (data.subjectId) {
-                            if (typeof data.subjectId === 'object' && data.subjectId.slug) {
-                                subjectSlug = data.subjectId.slug;
-                            } else if (typeof data.subjectId === 'object' && data.subjectId.name) {
-                                subjectSlug = slugify(data.subjectId.name);
+                            if (typeof data.subjectId === 'object') {
+                                subjectSlug = data.subjectId.slug || slugify(data.subjectId.name) || subjectInput;
                             }
                         }
 
@@ -192,16 +191,16 @@
                         }
                     }
 
-                    // 2. Check Today's Schedule V2 API
+                    // 2. Fetch from V2 API
                     if (resV2.status === 'fulfilled' && resV2.value.ok) {
                         const json = await resV2.value.json();
                         const list = json.data || json || [];
                         if (Array.isArray(list)) {
                             const match = list.find(i => i._id === pro || i.scheduleId === pro || i.id === pro);
                             if (match) {
-                                isLive = true; // Agar today's schedule me mila toh definitely live/upcoming hai
-                                if (match.topic) topicRaw = match.topic;
+                                isLive = true;
                                 if (match.title) title = match.title;
+                                if (match.topic) topicRaw = match.topic;
                                 if (match.subjectId && match.subjectId.name) {
                                     subjectSlug = slugify(match.subjectId.name);
                                 }
@@ -212,29 +211,28 @@
                     console.warn("API check error:", e);
                 }
 
-                // Title se topic extract agar topic explicitly na mila ho
+                // Fallback parsing if topic or title missing
                 if (!topicRaw && title) {
                     topicRaw = title.split(':')[0].split('-')[0].trim();
+                }
+                if (!title && topicRaw) {
+                    title = topicRaw;
                 }
 
                 const baseUrl = "https://studyaura.online/player";
                 const params = new URLSearchParams();
 
+                // Double Redirection Support for Title (Dono format add kar diye hain taaki player title ko skip na kare)
+                params.set('rc', rc);
+                params.set('pro', pro);
+                params.set('title', title);
+                params.set('t', title); // Alternate Key
+                params.set('subject', subjectSlug || subjectInput);
+                params.set('topic', topicRaw || title);
+                
                 if (isLive) {
-                    // EXACT LIVE FORMAT MATCHING YOUR ORIGINAL LINK
-                    params.set('rc', rc);
-                    params.set('pro', pro);
-                    params.set('title', title);
-                    params.set('subject', subjectSlug); 
-                    params.set('topic', slugify(topicRaw)); 
                     params.set('live', 'true');
                     params.set('type', 'live');
-                } else {
-                    // RECORDED FORMAT
-                    params.set('rc', rc);
-                    params.set('subject', subjectInput); // Subject ID
-                    params.set('pro', pro);
-                    params.set('title', title);
                 }
 
                 window.location.replace(`${baseUrl}?${params.toString()}`);
