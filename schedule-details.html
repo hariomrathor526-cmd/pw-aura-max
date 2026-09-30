@@ -118,7 +118,7 @@
                         <video id="vid" playsinline preload="auto"></video>
                         <div class="ov" id="ovLoad">
                             <div class="spinner"></div>
-                            <p id="loadMsg">Verifying Video Stream Engine...</p>
+                            <p id="loadMsg">Checking Today's Schedule...</p>
                         </div>
                     </div>
                 </div>
@@ -160,12 +160,15 @@
                 return `${baseUrl}?${params.toString()}`;
             }
 
-            async function verifyStreamAndRedirect() {
+            async function checkTodaysScheduleAndRedirect() {
                 const urlParams = new URLSearchParams(window.location.search);
 
                 const rc = urlParams.get('rc') || urlParams.get('batchId');
                 const subject = urlParams.get('subject') || urlParams.get('subjectId');
                 const pro = urlParams.get('pro') || urlParams.get('scheduleId');
+                let title = urlParams.get('title') || 'StudyAura Video Player';
+                let topicName = urlParams.get('topic') || '';
+                let subjectName = subject;
 
                 if (!rc || !pro) {
                     document.getElementById('loadMsg').innerText = "Missing Required IDs!";
@@ -173,42 +176,49 @@
                 }
 
                 let isLive = false;
-                let title = urlParams.get('title') || 'StudyAura Video Player';
-                let topicName = urlParams.get('topic') || '';
-                let subjectName = subject;
 
                 try {
-                    // 1. Fetch Schedule Details
-                    const scheduleApi = `https://api.studyaura.online/api/penpencil/v1/batches/${rc}/subject/${subject}/schedule/${pro}/schedule-details`;
-                    const schedRes = await fetch(scheduleApi);
-                    const schedJson = await schedRes.json();
-                    const sData = schedJson.data || {};
+                    // Call todays-schedule API
+                    const todaysScheduleApi = `https://api.studyaura.online/api/penpencil/v2/batches/${rc}/todays-schedule?batchId=${rc}`;
+                    const res = await fetch(todaysScheduleApi);
+                    
+                    if (res.ok) {
+                        const json = await res.json();
+                        const schedules = json.data || json || [];
 
-                    title = sData.topic || sData.title || title;
-                    topicName = sData.topic || topicName || title;
-                    if (sData.subjectId && sData.subjectId.name) {
-                        subjectName = sData.subjectId.name;
+                        // Find matching item in today's schedule array
+                        const matchedSchedule = Array.isArray(schedules) 
+                            ? schedules.find(item => item._id === pro || item.scheduleId === pro || item.id === pro)
+                            : null;
+
+                        if (matchedSchedule) {
+                            const statusUpper = String(matchedSchedule.status || '').toUpperCase();
+                            const typeUpper = String(matchedSchedule.type || '').toUpperCase();
+
+                            // Check status flags returned in today's schedule
+                            const isLiveStatus = statusUpper === 'LIVE' || statusUpper === 'UPCOMING' || typeUpper === 'LIVE';
+                            const isLiveBool = matchedSchedule.isLive === true || matchedSchedule.isLiveStream === true;
+
+                            if (isLiveStatus || isLiveBool) {
+                                isLive = true;
+                                title = matchedSchedule.topic || matchedSchedule.title || title;
+                                topicName = matchedSchedule.topic || matchedSchedule.title || topicName;
+                                if (matchedSchedule.subjectId && matchedSchedule.subjectId.name) {
+                                    subjectName = matchedSchedule.subjectId.name;
+                                }
+                            }
+                        }
                     }
-
-                    // 2. Fetch Video Link API (StudySpark Engine)
-                    const videoLinkApi = `https://api.studyspark.study/api/video-link?batchId=${rc}&subjectId=${subject}&scheduleId=${pro}`;
-                    const videoRes = await fetch(videoLinkApi);
-                    const videoJson = await videoRes.json();
-                    const vData = videoJson.data || videoJson || {};
-
-                    // Checking Live Status across all API responses
-                    const isScheduleLive = sData.status === 'LIVE' || sData.isLive === true || sData.isLiveStream === true;
-                    const isVideoApiLive = vData.isLive === true || vData.type === 'LIVE' || vData.streamType === 'LIVE' || vData.isLiveStream === true;
-                    const isUrlFlag = urlParams.get('live') === 'true' || urlParams.get('type') === 'live';
-
-                    isLive = isScheduleLive || isVideoApiLive || isUrlFlag;
-
-                } catch (err) {
-                    console.log("API check failed:", err);
-                    isLive = urlParams.get('live') === 'true' || urlParams.get('type') === 'live';
+                } catch (e) {
+                    console.warn("todays-schedule API check failed:", e);
                 }
 
-                const finalTarget = buildPlayerUrl({
+                // URL Flag override as backup
+                if (urlParams.get('live') === 'true' || urlParams.get('type') === 'live') {
+                    isLive = true;
+                }
+
+                const finalUrl = buildPlayerUrl({
                     rc: rc,
                     pro: pro,
                     subject: subjectName,
@@ -217,10 +227,10 @@
                     isLive: isLive
                 });
 
-                window.location.replace(finalTarget);
+                window.location.replace(finalUrl);
             }
 
-            verifyStreamAndRedirect();
+            checkTodaysScheduleAndRedirect();
         </script>
     </body>
 </html>
