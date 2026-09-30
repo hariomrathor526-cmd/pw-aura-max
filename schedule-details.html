@@ -118,7 +118,7 @@
                         <video id="vid" playsinline preload="auto"></video>
                         <div class="ov" id="ovLoad">
                             <div class="spinner"></div>
-                            <p id="loadMsg">Processing Batch & Chat Details...</p>
+                            <p id="loadMsg">Detecting Live Stream & Slugs...</p>
                         </div>
                     </div>
                 </div>
@@ -126,8 +126,9 @@
         </div>
 
         <script>
+            // Text ko slug format me convert karne ka function (e.g., "Mechanical Properties of Fluids" -> "mechanical-properties-of-fluids")
             function slugify(text) {
-                if (!text) return 'lecture';
+                if (!text) return '';
                 return text.toString().toLowerCase()
                     .replace(/\s+/g, '-')
                     .replace(/[^\w\-]+/g, '')
@@ -136,105 +137,97 @@
                     .replace(/-+$/, '');
             }
 
-            async function processAllDataAndRedirect() {
+            async function processScheduleDetails() {
                 const urlParams = new URLSearchParams(window.location.search);
 
                 const rc = urlParams.get('rc') || urlParams.get('batchId');
-                const subject = urlParams.get('subject') || urlParams.get('subjectId');
+                const subjectInput = urlParams.get('subject') || urlParams.get('subjectId');
                 const pro = urlParams.get('pro') || urlParams.get('scheduleId');
-                const tagId = urlParams.get('tagId') || '';
-                const conversationId = urlParams.get('conversationId') || pro;
-
-                let title = urlParams.get('title') || 'StudyAura Video Player';
-                let topicName = urlParams.get('topic') || '';
-                let subjectName = subject;
-                let isLive = urlParams.get('live') === 'true' || urlParams.get('type') === 'live';
 
                 if (!rc || !pro) {
-                    document.getElementById('loadMsg').innerText = "Missing Required IDs!";
+                    document.getElementById('loadMsg').innerText = "Missing Batch or Schedule ID!";
                     return;
                 }
 
-                // All Target APIs
-                const v1ScheduleApi = `https://api.studyaura.online/api/penpencil/v1/batches/${rc}/subject/${subject}/schedule/${pro}/schedule-details`;
+                let isLive = urlParams.get('live') === 'true' || urlParams.get('type') === 'live';
+                let title = urlParams.get('title') || 'StudyAura Video Player';
+                let topicRaw = urlParams.get('topic') || '';
+                let subjectSlug = subjectInput;
+
+                // APIs to check data
+                const v1ScheduleApi = `https://api.studyaura.online/api/penpencil/v1/batches/${rc}/subject/${subjectInput}/schedule/${pro}/schedule-details`;
                 const v2TodaysApi = `https://api.studyaura.online/api/penpencil/v2/batches/${rc}/todays-schedule?batchId=${rc}`;
-                const v3ContentsApi = `https://api.studyaura.online/api/penpencil/batch-service/v3/batch-subject-schedules/${rc}/subject/${subject}/contents?skip=0&limit=30&contentType=LECTURES${tagId ? '&tagId=' + tagId : ''}`;
-                const chatApi = `https://api.studyspark.study/api/conversation/${conversationId}/chat?batchId=${rc}`;
 
                 try {
-                    const [resV1, resV2, resV3, resChat] = await Promise.allSettled([
+                    const [resV1, resV2] = await Promise.allSettled([
                         fetch(v1ScheduleApi),
-                        fetch(v2TodaysApi),
-                        fetch(v3ContentsApi),
-                        fetch(chatApi)
+                        fetch(v2TodaysApi)
                     ]);
 
-                    // 1. Process V1 Schedule Details
+                    // 1. Check V1 API
                     if (resV1.status === 'fulfilled' && resV1.value.ok) {
-                        const d = (await resV1.value.json()).data || {};
-                        title = d.topic || d.title || title;
-                        topicName = d.topic || topicName || title;
-                        if (d.subjectId && d.subjectId.name) subjectName = d.subjectId.name;
-                        if (d.status === 'LIVE' || d.isLive === true || d.isLiveStream === true) isLive = true;
+                        const json = await resV1.value.json();
+                        const data = json.data || {};
+
+                        if (data.topic) topicRaw = data.topic;
+                        if (data.title) title = data.title;
+
+                        // Subject slug extraction (e.g. physics-948847)
+                        if (data.subjectId) {
+                            if (data.subjectId.slug) {
+                                subjectSlug = data.subjectId.slug;
+                            } else if (data.subjectId.name) {
+                                subjectSlug = slugify(data.subjectId.name);
+                            }
+                        }
+
+                        const statusUpper = String(data.status || '').toUpperCase();
+                        if (statusUpper === 'LIVE' || statusUpper === 'UPCOMING' || data.isLive === true || data.isLiveStream === true) {
+                            isLive = true;
+                        }
                     }
 
-                    // 2. Process V2 Today's Schedule
+                    // 2. Check Today's Schedule V2 API
                     if (resV2.status === 'fulfilled' && resV2.value.ok) {
-                        const list = (await resV2.value.json()).data || [];
+                        const json = await resV2.value.json();
+                        const list = json.data || json || [];
                         if (Array.isArray(list)) {
                             const match = list.find(i => i._id === pro || i.scheduleId === pro || i.id === pro);
                             if (match) {
-                                title = match.topic || match.title || title;
-                                topicName = match.topic || topicName || title;
-                                const st = String(match.status || '').toUpperCase();
-                                if (st === 'LIVE' || st === 'UPCOMING' || match.isLive === true) isLive = true;
+                                isLive = true; // Agar today's schedule me mila toh definitely live/upcoming hai
+                                if (match.topic) topicRaw = match.topic;
+                                if (match.title) title = match.title;
+                                if (match.subjectId && match.subjectId.name) {
+                                    subjectSlug = slugify(match.subjectId.name);
+                                }
                             }
                         }
                     }
-
-                    // 3. Process V3 Contents API
-                    if (resV3.status === 'fulfilled' && resV3.value.ok) {
-                        const contents = (await resV3.value.json()).data || [];
-                        if (Array.isArray(contents)) {
-                            const match = contents.find(i => i._id === pro || i.scheduleId === pro);
-                            if (match) {
-                                title = match.topic || match.title || title;
-                                topicName = match.topic || topicName || title;
-                                if (match.status === 'LIVE' || match.isLive === true || match.isLiveStream === true) isLive = true;
-                            }
-                        }
-                    }
-
-                    // 4. Process Chat API (If chat is active, stream is usually LIVE)
-                    if (resChat.status === 'fulfilled' && resChat.value.ok) {
-                        const chatData = await resChat.value.json();
-                        if (chatData && (chatData.success || chatData.data || chatData.isLive)) {
-                            // Active conversation endpoint confirms live stream state
-                            if (chatData.isLive === true || chatData.status === 'LIVE') {
-                                isLive = true;
-                            }
-                        }
-                    }
-
                 } catch (e) {
-                    console.warn("API check warning:", e);
+                    console.warn("API check error:", e);
                 }
 
-                // Construct Redirect URL
+                // Title se topic extract agar topic explicitly na mila ho
+                if (!topicRaw && title) {
+                    topicRaw = title.split(':')[0].split('-')[0].trim();
+                }
+
                 const baseUrl = "https://studyaura.online/player";
                 const params = new URLSearchParams();
 
                 if (isLive) {
+                    // EXACT LIVE FORMAT MATCHING YOUR ORIGINAL LINK
                     params.set('rc', rc);
                     params.set('pro', pro);
                     params.set('title', title);
-                    params.set('subject', slugify(subjectName));
-                    params.set('topic', slugify(topicName || title));
+                    params.set('subject', subjectSlug); 
+                    params.set('topic', slugify(topicRaw)); 
                     params.set('live', 'true');
                     params.set('type', 'live');
                 } else {
+                    // RECORDED FORMAT
                     params.set('rc', rc);
-                    params.set('subject', subject);
+                    params.set('subject', subjectInput); // Subject ID
                     params.set('pro', pro);
                     params.set('title', title);
                 }
@@ -242,7 +235,7 @@
                 window.location.replace(`${baseUrl}?${params.toString()}`);
             }
 
-            processAllDataAndRedirect();
+            processScheduleDetails();
         </script>
     </body>
 </html>
