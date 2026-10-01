@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Motion in a Straight Line — AURA MAX</title>
-<link rel="icon" type="image/png" href="https://rarestudy.in/static/site_logo.png">
+<link rel="icon" type="image/png" href="https://cdn.phototourl.com/free/2026-08-27-938d1ac8-e30e-4606-b896-5eba77b57b13.jpg">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;outline:none;-webkit-tap-highlight-color:transparent;user-select:none}
 body,html{min-height:100%;font-family:Inter,sans-serif;background:#0f172a;color:#e2e8f0}
@@ -101,7 +101,7 @@ const INIT_SEC     = QS.get('section')    ||'videos';
 
 if(!BATCH_ID||!SUBJECT_ID||!CHAPTER_ID) location.href='https://pw-aura-max.vercel.app/batches';
 document.getElementById('back-label').textContent = CHAPTER_NAME||'Chapters';
-const SITE_NAME='rarestudy';
+const SITE_NAME='AURA MAX';
 document.title = (CHAPTER_NAME||'Content')+' — '+SITE_NAME;
 
 const PW_HDR={
@@ -122,7 +122,7 @@ function ep(v){return encodeURIComponent(v||'')}
 function fmtDate(iso){if(!iso)return'';try{const d=new Date(iso),M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return`${d.getUTCDate()} ${M[d.getUTCMonth()]}, ${d.getUTCFullYear()}`;}catch{return'';}}
 function showMsg(t){const p=document.getElementById('popup');p.textContent=t;p.classList.add('show');setTimeout(()=>p.classList.remove('show'),3000);}
 
-const CK='rarestudy_completed';
+const CK='AURAMAX_completed';
 function getC(){try{return JSON.parse(localStorage.getItem(CK)||'{}')}catch{return{}}}
 function saveC(d){localStorage.setItem(CK,JSON.stringify(d))}
 function toggleC(ev,id,name){
