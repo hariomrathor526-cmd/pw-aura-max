@@ -228,8 +228,12 @@
                         if (apiData.topic) topicRaw = apiData.topic;
                         else if (apiData.topicName) topicRaw = apiData.topicName;
 
-                        if (apiData.subjectId && typeof apiData.subjectId === 'object') {
-                            subjectSlug = apiData.subjectId.slug || slugify(apiData.subjectId.name) || subjectInput;
+                        if (apiData.subjectId) {
+                            if (typeof apiData.subjectId === 'object') {
+                                subjectSlug = apiData.subjectId.slug || slugify(apiData.subjectId.name) || subjectInput;
+                            } else if (typeof apiData.subjectId === 'string' && isNaN(apiData.subjectId)) {
+                                subjectSlug = slugify(apiData.subjectId);
+                            }
                         }
 
                         const statusUpper = String(apiData.status || '').toUpperCase();
@@ -272,18 +276,19 @@
                 if (!topicRaw && title) topicRaw = title.split(':')[0].split('-')[0].trim();
                 if (!title && topicRaw) title = topicRaw;
 
-                const baseUrl = "https://studyaura.online/player";
+                // Naya Target Player URL
+                const baseUrl = "https://studyaura.online/study/player";
                 const params = new URLSearchParams();
                 params.set('rc', rc);
+                params.set('subject', subjectSlug || subjectInput);
                 params.set('pro', pro);
                 params.set('title', title);
-                params.set('t', title);
-                params.set('subject', subjectSlug || subjectInput);
-                params.set('topic', topicRaw || title);
 
                 if (isLive) {
                     params.set('live', 'true');
                     params.set('type', 'live');
+                } else {
+                    params.set('type', 'regular');
                 }
 
                 window.location.replace(`${baseUrl}?${params.toString()}`);
